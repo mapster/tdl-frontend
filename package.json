@@ -1,0 +1,28 @@
+{
+  "name": "app-client",
+  "version": "0.0.1",
+  "description": "Vår beskrivelse",
+  "main": "index.js",
+  "dependencies": {
+    "react": "^0.13.2",
+    "react-router": "^0.13.3"
+  },
+  "devDependencies": {
+    "browserify": 	"^10.2.1",
+    "browser-sync": "^2.7.2",
+    "del": 			"^1.1.1",
+    "esnext": 		"^0.14.0",
+    "gulp": 		"^3.8.11",
+    "gulp-myth": "^1.0.3",
+    "gulp-rename": "^1.2.2",
+    "gulp-util":	"^3.0.4",
+    "immutable": 	"^3.7.3",
+    "run-sequence": "^1.1.0",
+    "vinyl-source-stream": "^1.1.0",
+    "watchify":		"^3.2.1"
+  },
+  "scripts": {
+    "start": "gulp serve",
+    "build": "gulp build"
+  }
+}
