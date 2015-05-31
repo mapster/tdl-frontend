@@ -1,3 +1,5 @@
+/*jslint node: true */
+/*jslint browser: true */
 'use strict';
 
 var React = require('react');
