@@ -2,6 +2,7 @@
 
 var React = require('react');
 var Router = require('react-router');
+global.jQuery = require('jquery');
 
 var routes = require('./routes.react');
 

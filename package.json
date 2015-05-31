@@ -4,8 +4,10 @@
   "description": "Vår beskrivelse",
   "main": "index.js",
   "dependencies": {
+    "jquery": "^2.1.4",
     "react": "^0.13.2",
-    "react-router": "^0.13.3"
+    "react-router": "^0.13.3",
+    "bootstrap": "^3.3.4"
   },
   "devDependencies": {
     "browserify": 	"^10.2.1",
