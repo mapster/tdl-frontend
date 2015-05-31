@@ -1,3 +1,4 @@
+/*jslint node: true */
 'use strict';
 
 var browserify = require('browserify');
@@ -25,13 +26,13 @@ var paths = {
     src: './css/app.css'
   },
   dist: './dist'
-}
+};
 
 var browserifyOpts = Immutable.Map({ from: paths.js.src, to: paths.js.dest, dist: paths.dist });
 var watchifyOpts = browserifyOpts.set('watch', true);
 
 gulp.task('serve', ['watch'], function() {
-  browserSync.init({ server: "./" });
+  browserSync.init({ server: "./" , browser: "chromium" });
 });
 
 gulp.task('default', ['build']);
@@ -102,7 +103,7 @@ function browserifyTask(options) {
       .pipe(source(dest))
       .pipe(gulp.dest(dist))
       .pipe(reload({stream:true}));
-    };
+    }
 
   };
-};
+}
