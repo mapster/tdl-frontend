@@ -82,17 +82,18 @@ var Exercise = React.createClass({
 
     var reportsData = data.reports;
     var reports;
-    if(reportsData){
+    if(reportsData && reportsData.length > 0){
       reports = reportsData.map(function(r) {
         return (<li key={r.name}><Report {...r} /></li>);
       });
+      reports = (<ul>{reports}</ul>);
     }
 
     var containerId = "ExerciseContainer-"+this.props.name;
     return (
       <div id={containerId} className="panel-group">
-        <Panel id={data.name} parent={containerId} kind="default" collapsable={true} heading={heading}>
-          <ul>{reports}</ul>
+        <Panel id={'ExercisePanel-'+data.name} parent={containerId} kind="default" collapsable={true} heading={heading}>
+          {reports}
         </Panel>
       </div>
     );

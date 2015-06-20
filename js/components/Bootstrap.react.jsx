@@ -40,11 +40,12 @@ var Panel = React.createClass({
     };
   },
   render: function() {
+    var collapsable = this.props.collapsable && this.props.children;
     // Set heading if given, and wrap with collapsable if active
     var heading;
     if(this.props.heading) {
       heading = this.props.heading;
-      if(this.props.collapsable) {
+      if(collapsable) {
         heading = (
           <a data-toggle="collapse" data-parent={'#'+this.props.parent} className="collapsed accordion-toggle" href={'#'+this.props.id} aria-expanded="false" aria-controls={this.props.id}>
             {heading}
@@ -59,13 +60,16 @@ var Panel = React.createClass({
     }
 
     // Set body, and wrap with collapsable stuff if active
-    var body = (<div className={"panel-body"}>{this.props.children}</div>);
-    if(this.props.collapsable) {
-      body = (
-        <div id={this.props.id} className="collapse" aria-expanded="false">
-          {body}
-        </div>
-      );
+    var body;
+    if(this.props.children) {
+      body = (<div className={"panel-body"}>{this.props.children}</div>);
+      if(collapsable) {
+        body = (
+          <div id={this.props.id} className="collapse" aria-expanded="false">
+            {body}
+          </div>
+        );
+      }
     }
     return (
       <div className={(this.props.className || '') + (' panel panel-' + this.props.kind)}>
