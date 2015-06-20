@@ -30,20 +30,47 @@ var Label = React.createClass({
 });
 
 var Panel = React.createClass({
+  propTypes: {
+    collapsable: React.PropTypes.bool
+  },
   getDefaultProps: function() {
-    return {kind: "default"};
+    return {
+      kind: "default",
+      collapsable: false
+    };
   },
   render: function() {
+    // Set heading if given, and wrap with collapsable if active
     var heading;
     if(this.props.heading) {
-      heading = (<div className="panel-heading">{this.props.heading}</div>);
+      heading = this.props.heading;
+      if(this.props.collapsable) {
+        heading = (
+          <a data-toggle="collapse" data-parent={'#'+this.props.parent} className="collapsed accordion-toggle" href={'#'+this.props.id} aria-expanded="false" aria-controls={this.props.id}>
+            {heading}
+          </a>
+        );
+      }
+      heading = (
+        <div className="panel-heading">
+          {heading}
+        </div>
+      );
+    }
+
+    // Set body, and wrap with collapsable stuff if active
+    var body = (<div className={"panel-body"}>{this.props.children}</div>);
+    if(this.props.collapsable) {
+      body = (
+        <div id={this.props.id} className="collapse" aria-expanded="false">
+          {body}
+        </div>
+      );
     }
     return (
       <div className={(this.props.className || '') + (' panel panel-' + this.props.kind)}>
         {heading}
-        <div className="panel-body">
-          {this.props.children}
-        </div>
+        {body}
       </div>
     );
   }

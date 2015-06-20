@@ -9,20 +9,23 @@ var Exercise = require('../components/Exercise.react');
 var Exercises = React.createClass({
   getInitialState: function() {
     return {
-      data: '{}'
+      exercises: []
     };
   },
   componentDidMount: function() {
-    $.get('http://127.0.0.1/exercise/firmahytte', function(result) {
+    $.get('http://127.0.0.1/exercises', function(result) {
       if(this.isMounted()) {
-        this.setState({data: result});
+        this.setState({exercises: result});
       }
     }.bind(this));
   },
   render: function() {
+    var exercises = $.map(this.state.exercises,function(ex) {
+        return (<Exercise key={ex} name={ex} />);
+    });
     return (
       <div id="exercises">
-        <Exercise data={this.state.data} />
+        {exercises}
       </div>
     );
   }

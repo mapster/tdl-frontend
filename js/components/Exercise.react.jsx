@@ -2,6 +2,7 @@
 'use strict';
 
 var React = require('react');
+var $ = require('jquery');
 
 var {Button, Label, Panel} = require('./Bootstrap.react');
 
@@ -23,7 +24,7 @@ var Report = React.createClass({
     var testcases;
     if(testcasesData) {
       testcases = testcasesData.map(function(tc) {
-        return (<li><TestCase name={tc[0]} passed={tc[1]} /></li>);
+        return (<li key={tc[0]}><TestCase name={tc[0]} passed={tc[1]} /></li>);
       });
     }
 
@@ -45,40 +46,57 @@ var Report = React.createClass({
 });
 
 var Exercise = React.createClass({
+  getInitialState: function() {
+    return {
+      data: '{}'
+    };
+  },
+  componentDidMount: function() {
+    $.get('http://127.0.0.1/exercises/'+this.props.name, function(result) {
+      if(this.isMounted()) {
+        this.setState({data: result});
+      }
+    }.bind(this));
+  },
   render: function() {
+    var data = this.state.data;
     var statusText;
-    if(this.props.data.tested) {
-      var passedText = this.props.data.passed + "/" + this.props.data.tests;
+    if(data.tested) {
+      var passedText = data.passed + "/" + data.tests;
       var errorText;
-      if(this.props.data.errors) {
-        errorText = (<span> | Kritiske feil <Label kind="danger">{this.props.data.errors}</Label></span>);
+      if(data.errors) {
+        errorText = (<span> | Kritiske feil <Label kind="danger">{data.errors}</Label></span>);
       }
       statusText = (
-        <span>Vellykkede tester <Label kind={this.props.data.success ? "success" : "warning"}>{passedText}</Label>
+        <span>Vellykkede tester <Label kind={data.success ? "success" : "warning"}>{passedText}</Label>
           {errorText}
         </span>);
     }
 
     var heading = (
       <div>
-        <h4>{this.props.data.pretty_name}</h4>
+        <h4>{data.pretty_name}</h4>
         {statusText}
       </div>
       );
 
-    var reportsData = this.props.data.reports;
+    var reportsData = data.reports;
     var reports;
     if(reportsData){
       reports = reportsData.map(function(r) {
-        return (<li><Report {...r} /></li>);
+        return (<li key={r.name}><Report {...r} /></li>);
       });
     }
+
+    var containerId = "ExerciseContainer-"+this.props.name;
     return (
-      <Panel kind="default" heading={heading}>
-        <ul>{reports}</ul>
-      </Panel>
+      <div id={containerId} className="panel-group">
+        <Panel id={data.name} parent={containerId} kind="default" collapsable={true} heading={heading}>
+          <ul>{reports}</ul>
+        </Panel>
+      </div>
     );
   }
-});
+  });
 
 module.exports = Exercise;
