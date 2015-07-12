@@ -10,7 +10,7 @@ var Button = React.createClass({
   },
   render: function() {
     return (
-      <a {...this.props} href="javascript:;" role="button"
+      <a {...this.props} role="button"
         className={(this.props.className || '') + (' btn btn-' + this.props.kind)} />
     );
   }

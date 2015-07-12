@@ -17,6 +17,9 @@ var Exercises = React.createClass({
       if(this.isMounted()) {
         this.setState({exercises: result});
       }
+    }.bind(this))
+    .fail(function() {
+        this.setState({exercises: []});
     }.bind(this));
   },
   render: function() {
