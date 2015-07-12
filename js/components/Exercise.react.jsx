@@ -3,16 +3,14 @@
 
 var React = require('react');
 var $ = require('jquery');
-
-var {Button, Label, Panel} = require('./Bootstrap.react');
+var {Accordion, Panel, Label} = require('react-bootstrap');
 
 var TestCase = React.createClass({
   render: function() {
-    var kind = this.props.passed ? "success" : "danger";
-    var label = this.props.passed ? "OK" : "Feil";
+    var [kind, label] = this.props.passed ? ["success", "OK"] : ["danger", "Feil"] ;
     return (
       <div>
-        <Label kind={kind}>{label}</Label> {this.props.name}
+        <Label bsStyle={kind}>{label}</Label> {this.props.name}
       </div>
     );
   }
@@ -31,13 +29,13 @@ var Report = React.createClass({
     var errorsData = this.props.errors;
     var errors;
     if(errorsData) {
-      errors = (<span> | Kritiske feil <Label kind="danger">{errorsData}</Label></span>);
+      errors = (<span> | Kritiske feil <Label bsStyle="danger">{errorsData}</Label></span>);
     }
 
     return (
       <div>
         <strong>{this.props.name} </strong>
-        <Label kind={this.props.success ? "success" : "warning"}>{this.props.passed}/{this.props.tests}</Label>
+        <Label bsStyle={this.props.success ? "success" : "warning"}>{this.props.passed}/{this.props.tests}</Label>
         {errors}
         <ul>{testcases}</ul>
       </div>
@@ -65,10 +63,10 @@ var Exercise = React.createClass({
       var passedText = data.passed + "/" + data.tests;
       var errorText;
       if(data.errors) {
-        errorText = (<span> | Kritiske feil <Label kind="danger">{data.errors}</Label></span>);
+        errorText = (<span> | Kritiske feil <Label bsStyle="danger">{data.errors}</Label></span>);
       }
       statusText = (
-        <span>Vellykkede tester <Label kind={data.success ? "success" : "warning"}>{passedText}</Label>
+        <span>Vellykkede tester <Label bsStyle={data.success ? "success" : "warning"}>{passedText}</Label>
           {errorText}
         </span>);
     }
@@ -91,11 +89,11 @@ var Exercise = React.createClass({
 
     var containerId = "ExerciseContainer-"+this.props.name;
     return (
-      <div id={containerId} className="panel-group">
-        <Panel id={'ExercisePanel-'+data.name} parent={containerId} kind="default" collapsable={true} heading={heading}>
+      <Accordion>
+        <Panel collapsable={reports} header={heading} eventKey={data.name}>
           {reports}
         </Panel>
-      </div>
+      </Accordion>
     );
   }
   });
