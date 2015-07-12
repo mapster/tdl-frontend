@@ -3,7 +3,7 @@
 
 var React = require('react');
 var $ = require('jquery');
-var {Accordion, Panel, Label} = require('react-bootstrap');
+var {Accordion, Button, Col, Grid, Label, Panel, Row} = require('react-bootstrap');
 
 var TestCase = React.createClass({
   render: function() {
@@ -46,15 +46,12 @@ var Report = React.createClass({
 var Exercise = React.createClass({
   getInitialState: function() {
     return {
-      data: '{}'
+      data: '{}',
+      isRunningTests: false
     };
   },
   componentDidMount: function() {
-    $.get('http://127.0.0.1/exercises/'+this.props.name, function(result) {
-      if(this.isMounted()) {
-        this.setState({data: result});
-      }
-    }.bind(this));
+    this.updateExercise();
   },
   render: function() {
     var data = this.state.data;
@@ -76,7 +73,9 @@ var Exercise = React.createClass({
         <h4>{data.pretty_name}</h4>
         {statusText}
       </div>
-      );
+    );
+
+    var footer = (<Button disabled={this.state.isRunningTests} onClick={this.state.isRunningTests ? null : this.handleRunTestClick }>Run tests</Button>);
 
     var reportsData = data.reports;
     var reports;
@@ -89,12 +88,31 @@ var Exercise = React.createClass({
 
     return (
       <Accordion>
-        <Panel collapsable={reports} header={heading} eventKey={data.name}>
+        <Panel header={heading} eventKey={data.name} footer={footer}>
           {reports}
         </Panel>
       </Accordion>
-    );
+      );
+  },
+  handleRunTestClick: function() {
+    this.setState({isRunningTests: true});
+
+    $.get('http://127.0.0.1/test/'+this.props.name, function(response) {
+      this.updateExercise(() => {
+        this.setState({isRunningTests: false});
+      });
+    }.bind(this));
+  },
+  updateExercise: function(callback) {
+    $.get('http://127.0.0.1/exercises/'+this.props.name, function(result) {
+      if(this.isMounted()) {
+        this.setState({data: result});
+      }
+      if(callback){
+        callback();
+      }
+    }.bind(this));
   }
-  });
+});
 
 module.exports = Exercise;

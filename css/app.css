@@ -3,3 +3,8 @@
 @import url("pages/app.css");
 @import url("pages/stopwatch.css");
 @import url("components/timer.css");
+@import url("components/exercise.css");
+
+.right {
+  text-align: right;
+}

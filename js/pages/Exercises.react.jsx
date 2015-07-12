@@ -3,6 +3,7 @@
 
 var React = require('react');
 var $ = require('jquery');
+var {Accordion} = require('react-bootstrap');
 
 var Exercise = require('../components/Exercise.react');
 
@@ -27,7 +28,7 @@ var Exercises = React.createClass({
         return (<Exercise key={ex} name={ex} />);
     });
     return (
-      <div id="exercises">
+      <div>
         {exercises}
       </div>
     );
