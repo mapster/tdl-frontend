@@ -87,7 +87,6 @@ var Exercise = React.createClass({
       reports = (<ul>{reports}</ul>);
     }
 
-    var containerId = "ExerciseContainer-"+this.props.name;
     return (
       <Accordion>
         <Panel collapsable={reports} header={heading} eventKey={data.name}>
