@@ -3,7 +3,6 @@
 
 var React = require('react');
 var $ = require('jquery');
-var {Accordion} = require('react-bootstrap');
 
 var Exercise = require('../components/Exercise.react');
 
@@ -15,17 +14,17 @@ var Exercises = React.createClass({
   },
   componentDidMount: function() {
     $.get('http://127.0.0.1/exercises', function(result) {
-      if(this.isMounted()) {
+      if (this.isMounted()) {
         this.setState({exercises: result});
       }
     }.bind(this))
     .fail(function() {
-        this.setState({exercises: []});
+      this.setState({exercises: []});
     }.bind(this));
   },
   render: function() {
     var exercises = $.map(this.state.exercises,function(ex) {
-        return (<Exercise key={ex} name={ex} />);
+      return (<Exercise key={ex} name={ex} />);
     });
     return (
       <div>
