@@ -5,6 +5,8 @@
 @import url("components/timer.css");
 @import url("components/exercise.css");
 
+@import url("bs-grid-highlight.css");
+
 .right {
   text-align: right;
 }
