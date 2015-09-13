@@ -57,6 +57,9 @@ AppDispatcher.register(function(payload) {
       _session = action.data;
       SessionStore.emitChange();
       break;
+    case SessionConstants.LOGIN:
+      SessionDAO.login(action.credentials).then(_updateFromServer);
+      break;
     case SessionConstants.LOGOUT:
       SessionDAO.logout().then(_updateFromServer);
       break;

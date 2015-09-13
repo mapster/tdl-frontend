@@ -12,11 +12,12 @@ var RESOURCE_URL = AppConfig.Host + '/user_session';
 
 var _promises = [];
 
-function login(email, password) {
+function login(credentials) {
   return _promiseRequest(LOGIN, {
     type: 'POST',
     url: RESOURCE_URL,
-    data: {email: email, password: password}
+    contentType: 'application/json',
+    data: JSON.stringify(credentials)
   });
 }
 
