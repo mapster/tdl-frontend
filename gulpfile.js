@@ -14,6 +14,8 @@ var runSequence = require('run-sequence');
 var source = require('vinyl-source-stream');
 var watchify = require('watchify');
 var browserSync = require('browser-sync').create();
+var url = require('url');
+var proxy = require('proxy-middleware');
 var reload = browserSync.reload;
 
 var paths = {
@@ -32,7 +34,18 @@ var browserifyOpts = Immutable.Map({ from: paths.js.src, to: paths.js.dest, dist
 var watchifyOpts = browserifyOpts.set('watch', true);
 
 gulp.task('serve', ['watch'], function() {
-  browserSync.init({ server: "./" , browser: "chromium" });
+  var proxyOptions = url.parse('http://localhost:9000/');
+  proxyOptions.route = '/rest';
+
+  browserSync.init({
+    open: true,
+    port: 3000,
+    browser: 'chromium',
+    server: {
+      baseDir: './',
+      middleware: [proxy(proxyOptions)]
+    }
+  });
 });
 
 gulp.task('default', ['build']);
@@ -83,9 +96,9 @@ function browserifyTask(options) {
 
     if (watch) {
       bundler = watchify(bundler)
-      .on("update", bundle)
-      .on("log", function(message) {
-        util.log("Browserify: ", message);
+      .on('update', bundle)
+      .on('log', function(message) {
+        util.log('Browserify: ', message);
       });
     }
 
@@ -94,11 +107,11 @@ function browserifyTask(options) {
 
     function bundle() {
       return bundler.bundle()
-      .on("error", function(error) {
-        util.log(util.colors.red("Error: "), error);
+      .on('error', function(error) {
+        util.log(util.colors.red('Error: '), error);
       })
-      .on("end", function() {
-        util.log("Created: ", util.colors.cyan(dest));
+      .on('end', function() {
+        util.log('Created: ', util.colors.cyan(dest));
       })
       .pipe(source(dest))
       .pipe(gulp.dest(dist))
