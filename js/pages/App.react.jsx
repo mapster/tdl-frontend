@@ -31,7 +31,7 @@ var App = React.createClass({
   render: function() {
     return (
       <div className='container'>
-        {this.props.children}
+        {React.cloneElement(this.props.children, {session: this.state.session})}
       </div>
     );
   }
