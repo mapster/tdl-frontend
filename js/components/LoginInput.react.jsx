@@ -28,10 +28,10 @@ var LoginInput = React.createClass({
         <form>
           <Row>
             <Col lg={5}>
-              <Input bsSize='small' type='email' label='Email' placeholder='user@email.com' onChange={_onTextChange.bind(this,'email')} />
+              <Input bsSize='small' type='email' placeholder='user@email.com' onChange={_onTextChange.bind(this,'email')} />
             </Col>
             <Col lg={5}>
-              <Input bsSize='small' type='password' label='Password' onChange={_onTextChange.bind(this,'password')} />
+              <Input bsSize='small' type='password' onChange={_onTextChange.bind(this,'password')} />
             </Col>
             <Col lg={2}>
               <ButtonInput type='submit' value='Login' onClick={_login.bind(this)}/>

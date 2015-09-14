@@ -32,7 +32,7 @@ var Header = React.createClass({
       <div>
         <Row>
           <Col lg={12}>
-            <Navbar brand='JCoru'>
+            <Navbar brand='Java TDL'>
               <Nav>
                 <NavItem href='#/exercises'>Exercises</NavItem>
               </Nav>

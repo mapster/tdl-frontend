@@ -2,11 +2,9 @@
 
 var React = require('react');
 var Router = require('react-router');
-var {Grid,Row,Col} = require('react-bootstrap');
 
 var SessionStore = require('../stores/SessionStore');
 var RouteHandler = Router.RouteHandler;
-var Header = require('../components/Header.react');
 
 function _getState() {
   return {
@@ -35,18 +33,7 @@ var App = React.createClass({
   render: function() {
     return (
       <div className='container'>
-        <Grid>
-          <Row>
-            <Col lg={12}>
-              <Header session={this.state.session} />
-            </Col>
-          </Row>
-          <Row>
-            <Col lg={12}>
-              <RouteHandler />
-            </Col>
-          </Row>
-        </Grid>
+        <RouteHandler />
       </div>
     );
   }
