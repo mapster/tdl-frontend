@@ -1,10 +1,8 @@
 'use strict';
 
 var React = require('react');
-var Router = require('react-router');
 
 var SessionStore = require('../stores/SessionStore');
-var RouteHandler = Router.RouteHandler;
 
 function _getState() {
   return {
@@ -33,7 +31,7 @@ var App = React.createClass({
   render: function() {
     return (
       <div className='container'>
-        <RouteHandler />
+        {this.props.children}
       </div>
     );
   }

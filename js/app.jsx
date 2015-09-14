@@ -1,11 +1,8 @@
 'use strict';
 
 var React = require('react');
-var Router = require('react-router');
+var {Router} = require('react-router');
 
 var routes = require('./routes.react');
 
-Router.run(routes, function (Handler) {
-  React.render(<Handler />, document.getElementById('app-contents'), function() {
-  });
-});
+React.render(<Router routes={routes}/>, document.getElementById('app-contents'));

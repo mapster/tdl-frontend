@@ -1,4 +1,3 @@
-/*jslint node: true */
 'use strict';
 
 var browserify = require('browserify');
@@ -72,8 +71,8 @@ gulp.task('watch-css', ['build-css'], function() {
 });
 
 
-gulp.task('clean', function(cb) {
-  del([paths.dist], cb);
+gulp.task('clean', function() {
+  del([paths.dist]);
 });
 
 function browserifyTask(options) {

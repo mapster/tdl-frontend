@@ -1,10 +1,8 @@
 'use strict';
 
 var React = require('react');
-var Router = require('react-router');
 var {Grid,Row,Col} = require('react-bootstrap');
 
-var RouteHandler = Router.RouteHandler;
 var Header = require('../components/Header.react');
 
 function _getState() {
@@ -30,8 +28,8 @@ var App = React.createClass({
             </Col>
           </Row>
           <Row>
-            <Col lg={12}>
-              <RouteHandler />
+            <Col lg={12}> 
+              {this.props.children}
             </Col>
           </Row>
         </Grid>
