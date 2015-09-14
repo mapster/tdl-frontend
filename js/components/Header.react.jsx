@@ -3,49 +3,53 @@
 var React = require('react');
 var {Row,Col,Navbar,Nav,NavItem,NavDropdown,MenuItem} = require('react-bootstrap');
 
-var LoginInput = require('./LoginInput.react');
 var SessionActions = require('../actions/SessionActions');
+var LoginInput = require('./LoginInput.react');
 
 var Header = React.createClass({
+  getDefaultProps: function() {
+    return {
+      menu: [],
+      title: '',
+      session: false
+    };
+  },
   render: function() {
-    var sessionNav;
-    var loginWell;
-    if(this.props.session && this.props.session.name) {
-      sessionNav = (
-        <Nav right>
-          <NavDropdown title={this.props.session.name} id="session-nav">
-            <MenuItem eventKey='1' onSelect={this._onLogoutClick}>Logout</MenuItem>
-          </NavDropdown>
-        </Nav>
-      );
-    } else {
-      loginWell = (
-        <Row>
-          <Col lg={5} lgPush={7}>
-            <LoginInput />
-          </Col>
-        </Row>
-      );
-    }
+    var isLoggedIn = (this.props.session && this.props.session.name);
+    var loginWell = (
+      <Row>
+        <Col lg={5} lgPush={7}>
+          <LoginInput />
+        </Col>
+      </Row>
+    );
+
+    var sessionNav = (
+      <Nav right>
+        <NavDropdown title={this.props.session.name || ''} id="session-nav">
+          <MenuItem href='#/admin'>Admin</MenuItem>
+          <MenuItem onSelect={SessionActions.logout}>Logout</MenuItem>
+        </NavDropdown>
+      </Nav>
+    );
 
     return (
       <div>
         <Row>
           <Col lg={12}>
-            <Navbar brand='Java TDL'>
+            <Navbar brand={this.props.title}>
               <Nav>
-                <NavItem href='#/exercises'>Exercises</NavItem>
+                {this.props.menu.map(function(item, index) {
+                  return <NavItem key={index} href={item.href}>{item.text}</NavItem>;
+                })}
               </Nav>
-              {sessionNav}
+              {isLoggedIn && sessionNav}
             </Navbar>
           </Col>
         </Row>
-        {loginWell}
+        {!isLoggedIn && loginWell}
       </div>
     );
-  },
-  _onLogoutClick: function() {
-    SessionActions.logout();
   }
 });
 

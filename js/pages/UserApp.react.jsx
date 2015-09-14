@@ -5,30 +5,22 @@ var {Grid,Row,Col} = require('react-bootstrap');
 
 var Header = require('../components/Header.react');
 
-function _getState() {
-  return {
-  };
-}
-
-var App = React.createClass({
-  getInitialState: function() {
-    return _getState();
-  },
-  componentDidMount: function() {
-  },
-  componentWillUnmount: function() {
-  },
+var UserApp = React.createClass({
   render: function() {
+    var menu= [
+      {href: '#/exercises', text: 'Exercises'},
+      {href: '#/editor', text: 'Editor'}
+    ];
     return (
       <div className='container'>
         <Grid>
           <Row>
             <Col lg={12}>
-              <Header session={this.props.session} />
+              <Header title='JavaTDL' menu={menu} session={this.props.session} />
             </Col>
           </Row>
           <Row>
-            <Col lg={12}> 
+            <Col lg={12}>
               {this.props.children}
             </Col>
           </Row>
@@ -38,4 +30,4 @@ var App = React.createClass({
   }
 });
 
-module.exports = App;
+module.exports = UserApp;

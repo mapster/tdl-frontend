@@ -1,18 +1,30 @@
 'use strict';
 
 var React = require('react');
+var {Grid,Row,Col} = require('react-bootstrap');
+
+var Header = require('../../components/Header.react');
 
 var AdminApp = React.createClass({
-  getInitialState: function() {
-    return {
-    };
-  },
-  componentDidMount: function() {
-  },
   render: function() {
+    var menu = [
+      {href: '#/admin/users', text: 'Users'},
+      {href: '#/admin/exercises', text: 'Exercises'}
+    ];
     return (
-      <div>
-        "Hei"
+      <div className='container'>
+        <Grid>
+          <Row>
+            <Col lg={12}>
+              <Header title='JavaTDL Admin' menu={menu} session={this.props.session} />
+            </Col>
+          </Row>
+          <Row>
+            <Col lg={12}>
+              {this.props.children}
+            </Col>
+          </Row>
+        </Grid>
       </div>
     );
   }
