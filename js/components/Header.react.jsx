@@ -1,12 +1,18 @@
 'use strict';
 
 var React = require('react');
+var PropTypes = React.PropTypes;
 var {Row,Col,Navbar,Nav,NavItem,NavDropdown,MenuItem} = require('react-bootstrap');
 
 var SessionActions = require('../actions/SessionActions');
 var LoginInput = require('./LoginInput.react');
 
 var Header = React.createClass({
+  propTypes: {
+    menu: PropTypes.array,
+    session: PropTypes.oneOfType([PropTypes.object, PropTypes.bool]),
+    title: PropTypes.string
+  },
   getDefaultProps: function() {
     return {
       menu: [],

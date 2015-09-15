@@ -3,7 +3,7 @@
 
 var React = require('react');
 var $ = require('jquery');
-var {Accordion, Button, Col, Grid, Label, Panel, Row} = require('react-bootstrap');
+var {Accordion, Button, Label, Panel} = require('react-bootstrap');
 
 var TestCase = React.createClass({
   render: function() {

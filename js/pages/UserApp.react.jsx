@@ -1,11 +1,16 @@
 'use strict';
 
 var React = require('react');
+var {PropTypes} = React;
 var {Grid,Row,Col} = require('react-bootstrap');
 
 var Header = require('../components/Header.react');
 
 var UserApp = React.createClass({
+  propTypes: {
+    children: PropTypes.node,
+    session: PropTypes.oneOfType([PropTypes.object, PropTypes.bool])
+  },
   render: function() {
     var menu= [
       {href: '#/exercises', text: 'Exercises'},
