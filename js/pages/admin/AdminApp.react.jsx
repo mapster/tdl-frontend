@@ -13,6 +13,7 @@ var AdminApp = React.createClass({
   },
   render: function() {
     var menu = [
+      {href: '#/', text: 'JavaTDL'},
       {href: '#/admin/users', text: 'Users'},
       {href: '#/admin/exercises', text: 'Exercises'}
     ];
