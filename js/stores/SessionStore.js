@@ -43,10 +43,10 @@ AppDispatcher.register(function(payload) {
       SessionStore.emitChange();
       break;
     case SessionConstants.LOGIN:
-      SessionDAO.login(action.credentials).then(_updateFromServer);
+      SessionDAO.login(action.credentials).then(_updateFromServer).catch(_updateFromServerError);
       break;
     case SessionConstants.LOGOUT:
-      SessionDAO.logout().then(_updateFromServer);
+      SessionDAO.logout().then(_updateFromServer).catch(_updateFromServerError);
       break;
     default:
   }

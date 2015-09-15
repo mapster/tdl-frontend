@@ -4,6 +4,7 @@ var assign = require('object-assign');
 
 var AppDispatcher = require('../dispatcher/AppDispatcher');
 var UserDAO = require('../dao/UserDAO');
+var SessionConstants = require('../constants/SessionConstants');
 var UserConstants = require('../constants/UserConstants');
 var StoreListenBase = require('./StoreListenBase');
 
@@ -58,6 +59,11 @@ AppDispatcher.register(function(payload) {
     case UserConstants.UPDATE_USER_AUTH_FROM_SERVER:
       _auth = action.data;
       UserStore.emitChange();
+      break;
+    case SessionConstants.UPDATE_SESSION_FROM_SERVER:
+      _user = _auth = false;
+      UserStore.getUser();
+      UserStore.getAuth();
       break;
     default:
   }
