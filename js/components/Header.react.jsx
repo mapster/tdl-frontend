@@ -9,6 +9,7 @@ var LoginInput = require('./LoginInput.react');
 
 var Header = React.createClass({
   propTypes: {
+    auth: PropTypes.oneOfType([PropTypes.object, PropTypes.bool]),
     menu: PropTypes.array,
     session: PropTypes.oneOfType([PropTypes.object, PropTypes.bool]),
     title: PropTypes.string
@@ -30,10 +31,12 @@ var Header = React.createClass({
       </Row>
     );
 
+    var auth = this.props.auth;
+    var isAdmin = auth && Object.keys(auth).some((k) => auth[k]);
     var sessionNav = (
       <Nav right>
         <NavDropdown title={this.props.session.name || ''} id="session-nav">
-          <MenuItem href='#/admin'>Admin</MenuItem>
+          {isAdmin && <MenuItem href='#/admin'>Admin</MenuItem>}
           <MenuItem onSelect={SessionActions.logout}>Logout</MenuItem>
         </NavDropdown>
       </Nav>

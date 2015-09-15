@@ -9,7 +9,8 @@ var Header = require('../components/Header.react');
 var UserApp = React.createClass({
   propTypes: {
     children: PropTypes.node,
-    session: PropTypes.oneOfType([PropTypes.object, PropTypes.bool])
+    session: PropTypes.oneOfType([PropTypes.object, PropTypes.bool]),
+    user: PropTypes.oneOfType([PropTypes.object, PropTypes.bool])
   },
   render: function() {
     var menu= [
@@ -21,7 +22,7 @@ var UserApp = React.createClass({
         <Grid>
           <Row>
             <Col lg={12}>
-              <Header title='JavaTDL' menu={menu} session={this.props.session} />
+              <Header title='JavaTDL' menu={menu} auth={this.props.user.auth} session={this.props.session} />
             </Col>
           </Row>
           <Row>
