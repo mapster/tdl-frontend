@@ -13,22 +13,28 @@ var _auth = false;
 
 var UserStore = assign({}, StoreListenBase, {
   getUser: function() {
-    var actionType = UserConstants.UPDATE_USER_FROM_SERVER;
     if (!_user) {
-      UserDAO.getUser()
-        .then(_updateFromServer.bind(null, actionType))
-        .catch(_updateFromServerError.bind(null, actionType));
+      this.refreshUser();
     }
     return _user;
   },
   getAuth: function() {
-    var actionType = UserConstants.UPDATE_USER_AUTH_FROM_SERVER;
     if (!_auth) {
-      UserDAO.getAuth()
-        .then(_updateFromServer.bind(null, actionType))
-        .catch(_updateFromServerError.bind(null, actionType));
+      this.refreshAuth();
     }
     return _auth;
+  },
+  refreshUser: function() {
+    var actionType = UserConstants.USER_UPDATE_FROM_SERVER;
+    UserDAO.getUser()
+      .then(_updateFromServer.bind(null, actionType))
+      .catch(_updateFromServerError.bind(null, actionType));
+  },
+  refreshAuth: function() {
+    var actionType = UserConstants.USER_AUTH_UPDATE_FROM_SERVER;
+    UserDAO.getAuth()
+      .then(_updateFromServer.bind(null, actionType))
+      .catch(_updateFromServerError.bind(null, actionType));
   }
 });
 
@@ -52,11 +58,11 @@ AppDispatcher.register(function(payload) {
   var action = payload.action;
 
   switch (action.actionType) {
-    case UserConstants.UPDATE_USER_FROM_SERVER:
+    case UserConstants.USER_UPDATE_FROM_SERVER:
       _user = action.data;
       UserStore.emitChange();
       break;
-    case UserConstants.UPDATE_USER_AUTH_FROM_SERVER:
+    case UserConstants.USER_AUTH_UPDATE_FROM_SERVER:
       _auth = action.data;
       UserStore.emitChange();
       break;
