@@ -9,6 +9,8 @@ var SessionConstants = require('../../constants/SessionConstants');
 var StoreListenBase = require('../StoreListenBase');
 
 var _users = false;
+var _editUser = false;
+var _editError = false;
 
 var UsersStore = assign({}, StoreListenBase, {
   getUsers: function() {
@@ -22,6 +24,12 @@ var UsersStore = assign({}, StoreListenBase, {
     UsersDAO.getUsers()
       .then(_updateFromServer.bind(null, actionType))
       .catch(_updateFromServerError.bind(null, actionType));
+  },
+  getEditUser: function() {
+    return _editUser;
+  },
+  getEditError: function() {
+    return _editError;
   }
 });
 
@@ -48,6 +56,38 @@ AppDispatcher.register(function(payload) {
     case UsersConstants.USERS_UPDATE_FROM_SERVER:
       _users = action.data;
       UsersStore.emitChange();
+      break;
+    case UsersConstants.EDIT_USER:
+      _editUser = action.data;
+      UsersStore.emitChange();
+      break;
+    case UsersConstants.CLOSE_EDIT_USER:
+      _editUser = false;
+      UsersStore.emitChange();
+      break;
+    case UsersConstants.SAVE_USER:
+      UsersDAO.putUser(action.id, action.data)
+        .then(function() {
+          _editUser = false;
+          UsersStore.refreshUsers();
+        })
+        .catch(function(response) {
+          switch (response.status) {
+            case 400:
+              _editError = {
+                type: UsersConstants.INVALID_USER_DATA,
+                messages: response.responseText
+              };
+              UsersStore.emitChange();
+              break;
+            default:
+              _editError = {
+                type: 'Uhandled error',
+                status: response.status,
+                messages: response.responseText
+              };
+          }
+        });
       break;
     case SessionConstants.SESSION_UPDATE_FROM_SERVER:
       UsersStore.refreshUsers();

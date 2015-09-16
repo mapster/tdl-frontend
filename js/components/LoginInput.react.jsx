@@ -24,7 +24,7 @@ var LoginInput = React.createClass({
   },
   render: function() {
     return (
-      <Well>
+      <Well bsSize='small'>
         <form>
           <Row>
             <Col lg={5}>
@@ -33,7 +33,7 @@ var LoginInput = React.createClass({
             <Col lg={5}>
               <Input bsSize='small' type='password' onChange={_onTextChange.bind(this,'password')} />
             </Col>
-            <Col lg={2}>
+            <Col lg={1}>
               <ButtonInput type='submit' value='Login' onClick={_login.bind(this)}/>
             </Col>
           </Row>
