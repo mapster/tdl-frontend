@@ -60,7 +60,7 @@ AppDispatcher.register(function(payload) {
       _auth = action.data;
       UserStore.emitChange();
       break;
-    case SessionConstants.UPDATE_SESSION_FROM_SERVER:
+    case SessionConstants.SESSION_UPDATE_FROM_SERVER:
       _user = _auth = false;
       UserStore.getUser();
       UserStore.getAuth();

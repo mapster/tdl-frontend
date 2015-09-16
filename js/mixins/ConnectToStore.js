@@ -10,7 +10,6 @@ function buildMixin(name, store, getState) {
   function getStateFromStore() {
     return getState(store);
   }
-
   return {
     getInitialState: function() {
       var state = {};

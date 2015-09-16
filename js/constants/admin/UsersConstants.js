@@ -1,0 +1,7 @@
+'use strict';
+
+var PREFIX = 'ADMIN_USERS_STORE_';
+
+module.exports = {
+  USERS_UPDATE_FROM_SERVER: PREFIX + 'UPDATE_USERS_FROM_SERVER'
+};

@@ -20,7 +20,7 @@ var SessionStore = assign({}, StoreListenBase, {
 
 function _updateFromServer(response) {
   AppDispatcher.handleStoreRefreshAction({
-    actionType: SessionConstants.UPDATE_SESSION_FROM_SERVER,
+    actionType: SessionConstants.SESSION_UPDATE_FROM_SERVER,
     data: response
   });
 }
@@ -28,7 +28,7 @@ function _updateFromServer(response) {
 function _updateFromServerError(response) {
   if (response.status == 404) {
     AppDispatcher.handleStoreRefreshAction({
-      actionType: SessionConstants.UPDATE_SESSION_FROM_SERVER,
+      actionType: SessionConstants.SESSION_UPDATE_FROM_SERVER,
       data: {}
     });
   }
@@ -38,7 +38,7 @@ AppDispatcher.register(function(payload) {
   var action = payload.action;
 
   switch (action.actionType) {
-    case SessionConstants.UPDATE_SESSION_FROM_SERVER:
+    case SessionConstants.SESSION_UPDATE_FROM_SERVER:
       _session = action.data;
       SessionStore.emitChange();
       break;
