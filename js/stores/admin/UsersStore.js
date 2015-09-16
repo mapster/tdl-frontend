@@ -63,6 +63,7 @@ AppDispatcher.register(function(payload) {
       break;
     case UsersConstants.CLOSE_EDIT_USER:
       _editUser = false;
+      _editError = false;
       UsersStore.emitChange();
       break;
     case UsersConstants.SAVE_USER:
@@ -76,7 +77,7 @@ AppDispatcher.register(function(payload) {
             case 400:
               _editError = {
                 type: UsersConstants.INVALID_USER_DATA,
-                messages: response.responseText
+                messages: JSON.parse(response.responseText)
               };
               UsersStore.emitChange();
               break;
