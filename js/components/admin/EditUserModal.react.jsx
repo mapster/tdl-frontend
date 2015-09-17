@@ -39,13 +39,15 @@ var EditUserModal = React.createClass({
     return {user: false};
   },
   componentWillReceiveProps: function(nextProps) {
-    var {name,email} = nextProps.user;
-    this.setState({
-      user: {
-        name: name,
-        email: email
-      }
-    });
+    if(this.props.user != nextProps.user){
+      var {name,email} = nextProps.user;
+      this.setState({
+        user: {
+          name: name,
+          email: email
+        }
+      });
+    }
   },
   render: function() {
     var user = this.state.user;
@@ -58,7 +60,6 @@ var EditUserModal = React.createClass({
       <Modal show={this.props.user && true} onHide={_close.bind(this)}>
         <Modal.Header closeButton>
           <Modal.Title>Edit user</Modal.Title>
-          {this.props.editError && (<div>{this.props.editError}</div>)}
         </Modal.Header>
         <Modal.Body>
           <Input type='text' label='Name' value={user.name}
