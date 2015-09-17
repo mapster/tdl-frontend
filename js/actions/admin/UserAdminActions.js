@@ -21,6 +21,17 @@ var UserAdminActions = {
       data: user,
       id: id
     });
+  },
+  setDeleteUser: function(user) {
+    AppDispatcher.handleViewAction({
+      actionType: UsersConstants.SET_DELETE_USER,
+      data: user
+    });
+  },
+  confirmUserDelete: function() {
+    AppDispatcher.handleViewAction({
+      actionType: UsersConstants.CONFIRM_USER_DELETE
+    });
   }
 };
 

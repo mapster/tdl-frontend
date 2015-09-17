@@ -1,11 +1,15 @@
 'use strict';
 
 var PREFIX = 'ADMIN_USERS_STORE_';
+var constants = [
+  'USERS_UPDATE_FROM_SERVER',
+  'CLOSE_EDIT_USER',
+  'EDIT_USER',
+  'SAVE_USER',
+  'SET_DELETE_USER'
+];
 
-module.exports = {
-  USERS_UPDATE_FROM_SERVER: PREFIX + 'USERS_UPDATE_FROM_SERVER',
-  CLOSE_EDIT_USER: PREFIX + 'CLOSE_EDIT_USER',
-  EDIT_USER: PREFIX + 'EDIT_USER',
-  SAVE_USER: PREFIX + 'SAVE_USER',
-  INVALID_USER_DATA: PREFIX + 'INVALID_USER_DATA'
-};
+var obj = {};
+constants.forEach((c) => obj[c] = PREFIX + c);
+
+module.exports = obj;

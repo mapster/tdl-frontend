@@ -7,6 +7,7 @@ var UserDAO = require('../dao/UserDAO');
 var SessionConstants = require('../constants/SessionConstants');
 var UserConstants = require('../constants/UserConstants');
 var StoreListenBase = require('./StoreListenBase');
+var PromiseHandlers = require('./PromiseHandlers');
 
 var _user = false;
 var _auth = false;
@@ -27,32 +28,16 @@ var UserStore = assign({}, StoreListenBase, {
   refreshUser: function() {
     var actionType = UserConstants.USER_UPDATE_FROM_SERVER;
     UserDAO.getUser()
-      .then(_updateFromServer.bind(null, actionType))
-      .catch(_updateFromServerError.bind(null, actionType));
+      .then(PromiseHandlers.handleSuccess.bind(null, actionType))
+      .catch(PromiseHandlers.handleNotFound.bind(null, {}, actionType));
   },
   refreshAuth: function() {
     var actionType = UserConstants.USER_AUTH_UPDATE_FROM_SERVER;
     UserDAO.getAuth()
-      .then(_updateFromServer.bind(null, actionType))
-      .catch(_updateFromServerError.bind(null, actionType));
+      .then(PromiseHandlers.handleSuccess.bind(null, actionType))
+      .catch(PromiseHandlers.handleNotFound.bind(null, {}, actionType));
   }
 });
-
-function _updateFromServer(actionType, response) {
-  AppDispatcher.handleStoreRefreshAction({
-    actionType: actionType,
-    data: response
-  });
-}
-
-function _updateFromServerError(actionType, response) {
-  if (response.status == 404) {
-    AppDispatcher.handleStoreRefreshAction({
-      actionType: actionType,
-      data: {}
-    });
-  }
-}
 
 AppDispatcher.register(function(payload) {
   var action = payload.action;
