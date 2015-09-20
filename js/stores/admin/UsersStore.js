@@ -77,6 +77,10 @@ AppDispatcher.register(function(payload) {
         UsersDAO.putUser(action.id, action.data)
           .then(function() {
             _userAlerts[action.id] = 'Successfully updated.';
+            AppDispatcher.handleServerAction({
+              actionType: UsersConstants.SAVE_USER,
+              id: action.id
+            });
             _editUser = false;
             UsersStore.refreshUsers();
           })
@@ -121,7 +125,7 @@ AppDispatcher.register(function(payload) {
   //==============
   // STORE_REFRESH
   //
-  else {
+  else if(payload.source == AppDispatcher.STORE_REFRESH){
     switch (action.actionType) {
       case UsersConstants.USERS_UPDATE_FROM_SERVER:
         _users = action.data;
