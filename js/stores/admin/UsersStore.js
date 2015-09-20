@@ -6,7 +6,6 @@ var AppDispatcher = require('../../dispatcher/AppDispatcher');
 var UsersDAO = require('../../dao/admin/UsersDAO');
 var UsersConstants = require('../../constants/admin/UsersConstants');
 var SessionConstants = require('../../constants/SessionConstants');
-var ResponseConstants = require('../../constants/ResponseConstants');
 var StoreListenBase = require('../StoreListenBase');
 var PromiseHandlers = require('../PromiseHandlers');
 
@@ -84,33 +83,7 @@ AppDispatcher.register(function(payload) {
             _editUser = false;
             UsersStore.refreshUsers();
           })
-          //TODO Extract catch function into PromiseHandlers.
-          .catch(function(response) {
-            switch (response.status) {
-              case 400:
-                UsersStore.setEditError({
-                  type: ResponseConstants.INVALID_DATA,
-                  messages: JSON.parse(response.responseText)
-                });
-                break;
-              case 403:
-                UsersStore.setEditError({
-                  type: ResponseConstants.FORBIDDEN
-                });
-                break;
-              case 404:
-                UsersStore.setEditError({
-                  type: ResponseConstants.NOT_FOUND
-                });
-                break;
-              default:
-                UsersStore.setEditError({
-                  type: response.status + ' error',
-                  status: response.status,
-                  messages: response.responseText
-                });
-            }
-          });
+          .catch(PromiseHandlers.handleError.bind(null, (e) => UsersStore.setEditError(e)));
         break;
       case UsersConstants.DISMISS_ERROR:
         UsersStore.setEditError(false);
