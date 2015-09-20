@@ -6,7 +6,9 @@ var constants = [
   'CLOSE_EDIT_USER',
   'EDIT_USER',
   'SAVE_USER',
-  'SET_DELETE_USER'
+  'SET_DELETE_USER',
+  'DISMISS_ERROR',
+  'DISMISS_USER_ALERT'
 ];
 
 var obj = {};

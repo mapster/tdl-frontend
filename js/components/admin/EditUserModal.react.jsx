@@ -1,8 +1,9 @@
 var React = require('react');
 var PropTypes = React.PropTypes;
-var {Modal,Button,Input} = require('react-bootstrap');
+var {Modal,Button,Input,Col,Row,Alert} = require('react-bootstrap');
 
 var UserAdminActions = require('../../actions/admin/UserAdminActions');
+var ResponseConstants = require('../../constants/ResponseConstants');
 
 function _close() {
   UserAdminActions.closeEditUser();
@@ -18,9 +19,18 @@ function _handleChange(field, event) {
   this.setState({user: change});
 }
 
+function _dismissError() {
+  UserAdminActions.dismissError();
+}
+
 function _hasFeedback(field) {
-  var errors = this.props.editError && this.props.editError.messages;
-  return errors[field];
+  var error = this.props.editError;
+  if(!error) {
+    return false;
+  } else if (error.type != ResponseConstants.INVALID_DATA) {
+    return false;
+  }
+  return error.messages[field];
 }
 
 function _getStyle(field) {
@@ -51,15 +61,43 @@ var EditUserModal = React.createClass({
   },
   render: function() {
     var user = this.state.user;
+
+    // help functions for field feedback
     var style = _getStyle.bind(this);
     var msg = _hasFeedback.bind(this);
     var hasErr = function(field){
       return msg(field) && true;
     };
+
+    // generate error message
+    var error = this.props.editError;
+    if(error && error.type != ResponseConstants.INVALID_DATA) {
+      var errorMsg = false;
+      switch (error.type) {
+        case ResponseConstants.FORBIDDEN:
+          errorMsg = 'You are not authorized to change this user. ' + (error.messages || '');
+          break;
+        case ResponseConstants.NOT_FOUND:
+          errorMsg = 'User does not exist. ' +(error.messages || '');
+          break;
+        default:
+          errorMsg = error.type + '. ' + (error.messages || '');
+      }
+    }
     return (
       <Modal show={this.props.user && true} onHide={_close.bind(this)}>
         <Modal.Header closeButton>
           <Modal.Title>Edit user</Modal.Title>
+          {errorMsg && (
+            <Row>
+              <Alert bsStyle="danger" onDismiss={_dismissError.bind(this)}>{errorMsg}</Alert>
+            </Row>
+          )}
+          <Row className='small-text text-muted'>
+            <Col lg={2}>User ID: {this.props.user.id}</Col>
+            <Col lg={4}>Created: {this.props.user.created_at}</Col>
+            <Col lg={4}>Last update: {this.props.user.updated_at}</Col>
+          </Row>
         </Modal.Header>
         <Modal.Body>
           <Input type='text' label='Name' value={user.name}

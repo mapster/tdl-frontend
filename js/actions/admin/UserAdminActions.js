@@ -32,6 +32,17 @@ var UserAdminActions = {
     AppDispatcher.handleViewAction({
       actionType: UsersConstants.CONFIRM_USER_DELETE
     });
+  },
+  dismissError: function() {
+    AppDispatcher.handleViewAction({
+      actionType: UsersConstants.DISMISS_ERROR
+    });
+  },
+  dismissUserAlert: function(userId) {
+    AppDispatcher.handleViewAction({
+      actionType: UsersConstants.DISMISS_USER_ALERT,
+      id: userId
+    });
   }
 };
 

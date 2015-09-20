@@ -14,6 +14,7 @@ var _users = false;
 var _editUser = false;
 var _editError = false;
 var _deleteUser = false;
+var _userAlerts = [];
 
 var UsersStore = assign({}, StoreListenBase, {
   getUsers: function() {
@@ -21,12 +22,6 @@ var UsersStore = assign({}, StoreListenBase, {
       this.refreshUsers();
     }
     return _users;
-  },
-  refreshUsers: function() {
-    var actionType = UsersConstants.USERS_UPDATE_FROM_SERVER;
-    UsersDAO.getUsers()
-      .then(PromiseHandlers.handleSuccess.bind(null, actionType))
-      .catch(PromiseHandlers.handleNotFound.bind(null, [], actionType));
   },
   getEditUser: function() {
     return _editUser;
@@ -36,6 +31,20 @@ var UsersStore = assign({}, StoreListenBase, {
   },
   getEditError: function() {
     return _editError;
+  },
+  getUserAlerts: function() {
+    return _userAlerts;
+  },
+  // state changes (setters)
+  refreshUsers: function() {
+    var actionType = UsersConstants.USERS_UPDATE_FROM_SERVER;
+    UsersDAO.getUsers()
+      .then(PromiseHandlers.handleSuccess.bind(null, actionType))
+      .catch(PromiseHandlers.handleNotFound.bind(null, [], actionType));
+  },
+  setEditError: function(error) {
+    _editError = error;
+    this.emitChange();
   }
 });
 
@@ -67,6 +76,7 @@ AppDispatcher.register(function(payload) {
       case UsersConstants.SAVE_USER:
         UsersDAO.putUser(action.id, action.data)
           .then(function() {
+            _userAlerts[action.id] = 'Successfully updated.';
             _editUser = false;
             UsersStore.refreshUsers();
           })
@@ -74,30 +84,36 @@ AppDispatcher.register(function(payload) {
           .catch(function(response) {
             switch (response.status) {
               case 400:
-                _editError = {
+                UsersStore.setEditError({
                   type: ResponseConstants.INVALID_DATA,
                   messages: JSON.parse(response.responseText)
-                };
-                UsersStore.emitChange();
+                });
                 break;
               case 403:
-                _editError = {
+                UsersStore.setEditError({
                   type: ResponseConstants.FORBIDDEN
-                };
+                });
                 break;
               case 404:
-                _editError = {
+                UsersStore.setEditError({
                   type: ResponseConstants.NOT_FOUND
-                };
+                });
                 break;
               default:
-                _editError = {
-                  type: 'Uhandled error',
+                UsersStore.setEditError({
+                  type: response.status + ' error',
                   status: response.status,
                   messages: response.responseText
-                };
+                });
             }
           });
+        break;
+      case UsersConstants.DISMISS_ERROR:
+        UsersStore.setEditError(false);
+        break;
+      case UsersConstants.DISMISS_USER_ALERT:
+        _userAlerts[action.id] = false;
+        UsersStore.emitChange();
         break;
       default:
     }

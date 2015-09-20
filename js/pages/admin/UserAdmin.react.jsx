@@ -2,7 +2,7 @@
 
 var React = require('react');
 var {PropTypes} = React;
-var {Row,Col,ListGroup,ListGroupItem,Button,ButtonGroup,Glyphicon} = require('react-bootstrap');
+var {Label,Row,Col,ListGroup,ListGroupItem,Button,ButtonGroup,Glyphicon} = require('react-bootstrap');
 
 var UsersStore = require('../../stores/admin/UsersStore');
 var UserAdminActions = require('../../actions/admin/UserAdminActions');
@@ -19,6 +19,10 @@ function _setDeleteUser(user) {
   UserAdminActions.setDeleteUser(user);
 }
 
+function _dismissUserAlert(userId) {
+  UserAdminActions.dismissUserAlert(userId);
+}
+
 var UserAdmin = React.createClass({
   propTypes: {
     user: PropTypes.oneOfType([PropTypes.object, PropTypes.bool])
@@ -29,7 +33,8 @@ var UserAdmin = React.createClass({
         all: store.getUsers(),
         edit: store.getEditUser(),
         confirmUserDelete: store.getDeleteUser(),
-        editError: store.getEditError()
+        editError: store.getEditError(),
+        userAlerts: store.getUserAlerts()
       };
     })
   ],
@@ -39,6 +44,7 @@ var UserAdmin = React.createClass({
       return (<Forbidden />);
     }
     var users = this.state.users && this.state.users.all;
+    var userAlerts = this.state.users && this.state.users.userAlerts || [];
     var confirmUserDelete = (this.state.users && this.state.users.confirmUserDelete || false );
     return (
       <Row>
@@ -53,7 +59,12 @@ var UserAdmin = React.createClass({
             {users && users.map((user) => (
               <ListGroupItem key={user.id}>
                 <Row>
-                  <Col lg={9}><span>{user.name}</span></Col>
+                  <Col lg={7}><span>{user.name}</span></Col>
+                  <Col lg={2}>
+                    {userAlerts[user.id] && (
+                      <Label bsStyle='success' onClick={_dismissUserAlert.bind(this, user.id)}>User successfully saved</Label>
+                    )}
+                  </Col>
                   <Col lg={3}>
                     <ButtonGroup className='pull-right'>
                       <Button bsSize='small' onClick={_onEditUserClick.bind(this, user)}><Glyphicon glyph='pencil'/></Button>
