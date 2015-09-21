@@ -8,7 +8,7 @@ var UsersStore = require('../../stores/admin/UsersStore');
 var UserAdminActions = require('../../actions/admin/UserAdminActions');
 var ConnectToStore = require('../../mixins/ConnectToStore');
 var Forbidden = require('../../components/Forbidden.react');
-var EditUserModal = require('../../components/admin/EditUserModal.react');
+var UserFormModal = require('../../components/UserFormModal.react');
 var ConfirmationModal = require('../../components/ConfirmationModal.react');
 var ResponseConstants = require('../../constants/ResponseConstants');
 
@@ -53,7 +53,7 @@ var UserAdmin = React.createClass({
     var confirmUserDelete = (this.state.users && this.state.users.confirmUserDelete || false );
     return (
       <Row>
-        <EditUserModal
+        <UserFormModal
             doCancel={() => UserAdminActions.showAddUserForm(false)}
             doDismissError={() => UserAdminActions.dismissError()}
             doSave={(userData) => UserAdminActions.addUser(userData)}
@@ -61,7 +61,7 @@ var UserAdmin = React.createClass({
             title='Add user'
             user={this.state.users.showAddUserForm}
         />
-        <EditUserModal
+        <UserFormModal
             doCancel={() => UserAdminActions.closeEditUser()}
             doDismissError={() => UserAdminActions.dismissError()}
             doSave={(userData) => UserAdminActions.saveUser(this.state.users.edit.id, userData)}

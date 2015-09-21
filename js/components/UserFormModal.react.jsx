@@ -2,7 +2,7 @@ var React = require('react');
 var PropTypes = React.PropTypes;
 var {Modal,Button,Input,Col,Row,Alert} = require('react-bootstrap');
 
-var ResponseConstants = require('../../constants/ResponseConstants');
+var ResponseConstants = require('../constants/ResponseConstants');
 
 function _handleChange(field, event) {
   var change = this.state.user;
@@ -27,7 +27,7 @@ function _getStyle(field) {
   return null;
 }
 
-var EditUserModal = React.createClass({
+var UserFormModal = React.createClass({
   propTypes: {
     doCancel: PropTypes.func.isRequired,
     doDismissError: PropTypes.func.isRequired,
@@ -115,4 +115,4 @@ var EditUserModal = React.createClass({
 
 });
 
-module.exports = EditUserModal;
+module.exports = UserFormModal;
