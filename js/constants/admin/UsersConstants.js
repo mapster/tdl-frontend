@@ -8,7 +8,9 @@ var constants = [
   'SAVE_USER',
   'SET_DELETE_USER',
   'DISMISS_ERROR',
-  'DISMISS_USER_ALERT'
+  'DISMISS_USER_ALERT',
+  'ADD_USER',
+  'SHOW_ADD_USER_FORM'
 ];
 
 var obj = {};

@@ -10,17 +10,21 @@ var ConnectToStore = require('../../mixins/ConnectToStore');
 var Forbidden = require('../../components/Forbidden.react');
 var EditUserModal = require('../../components/admin/EditUserModal.react');
 var ConfirmationModal = require('../../components/ConfirmationModal.react');
+var ResponseConstants = require('../../constants/ResponseConstants');
 
-function _onEditUserClick(user) {
-  UserAdminActions.editUser(user);
-}
+function _buildDeleteErrorMessage(error) {
+  if(!error) {
+    return false;
+  }
 
-function _setDeleteUser(user) {
-  UserAdminActions.setDeleteUser(user);
-}
-
-function _dismissUserAlert(userId) {
-  UserAdminActions.dismissUserAlert(userId);
+  switch (error.type) {
+    case ResponseConstants.FORBIDDEN:
+      return 'You are not authorized to delete this user. ' + (error.messages || '');
+    case ResponseConstants.NOT_FOUND:
+      return 'User does not exist. ' +(error.messages || '');
+    default:
+      return error.type + '. ' + (error.messages || '');
+  }
 }
 
 var UserAdmin = React.createClass({
@@ -33,7 +37,8 @@ var UserAdmin = React.createClass({
         all: store.getUsers(),
         edit: store.getEditUser(),
         confirmUserDelete: store.getDeleteUser(),
-        editError: store.getEditError(),
+        showAddUserForm: store.showAddUserForm(),
+        error: store.getError(),
         userAlerts: store.getUserAlerts()
       };
     })
@@ -48,33 +53,60 @@ var UserAdmin = React.createClass({
     var confirmUserDelete = (this.state.users && this.state.users.confirmUserDelete || false );
     return (
       <Row>
+        <EditUserModal
+            doCancel={() => UserAdminActions.showAddUserForm(false)}
+            doDismissError={() => UserAdminActions.dismissError()}
+            doSave={(userData) => UserAdminActions.addUser(userData)}
+            error={this.state.users.error}
+            title='Add user'
+            user={this.state.users.showAddUserForm}
+        />
+        <EditUserModal
+            doCancel={() => UserAdminActions.closeEditUser()}
+            doDismissError={() => UserAdminActions.dismissError()}
+            doSave={(userData) => UserAdminActions.saveUser(this.state.users.edit.id, userData)}
+            error={this.state.users.error}
+            title='Edit user'
+            user={this.state.users.edit}
+        />
+        <ConfirmationModal
+            doCancel={() => UserAdminActions.setDeleteUser(false)}
+            doDismissError={() => UserAdminActions.dismissError()}
+            doOk={UserAdminActions.confirmUserDelete}
+            error={_buildDeleteErrorMessage(this.state.users.error)}
+            okStyle='danger'
+            show={confirmUserDelete && true}
+            text={'Delete user: ' + confirmUserDelete.name}
+        />
         <Col lg={8}>
-          <h1>Users</h1>
-          <EditUserModal user={this.state.users.edit} editError={this.state.users.editError}/>
-          <ConfirmationModal show={confirmUserDelete && true} text={'Delete user: ' + confirmUserDelete.name}
-              doOk={UserAdminActions.confirmUserDelete} okStyle='danger'
-              doCancel={_setDeleteUser.bind(this, false)}
-          />
-          <ListGroup>
-            {users && users.map((user) => (
-              <ListGroupItem key={user.id}>
-                <Row>
-                  <Col lg={7}><span>{user.name}</span></Col>
-                  <Col lg={2}>
-                    {userAlerts[user.id] && (
-                      <Label bsStyle='success' onClick={_dismissUserAlert.bind(this, user.id)}>User successfully saved</Label>
-                    )}
-                  </Col>
-                  <Col lg={3}>
-                    <ButtonGroup className='pull-right'>
-                      <Button bsSize='small' onClick={_onEditUserClick.bind(this, user)}><Glyphicon glyph='pencil'/></Button>
-                      <Button bsSize='small' onClick={_setDeleteUser.bind(this, user)}><Glyphicon glyph='trash' /></Button>
-                    </ButtonGroup>
-                  </Col>
-                </Row>
-              </ListGroupItem>))
-            }
-          </ListGroup>
+          <Row>
+            <Col lg={10}><h1 className='inline'>Users</h1></Col>
+            <Col lg={2} className='right'>
+              <Button bsSize='medium' onClick={() => UserAdminActions.showAddUserForm(true)}><Glyphicon glyph='plus'/></Button>
+            </Col>
+          </Row>
+          <Row><Col lg={12}>
+            <ListGroup>
+              {users && users.map((user) => (
+                <ListGroupItem key={user.id}>
+                  <Row>
+                    <Col lg={7}><span>{user.name}</span></Col>
+                    <Col lg={2}>
+                      {userAlerts[user.id] && (
+                        <Label bsStyle={userAlerts[user.id].type} onClick={() => UserAdminActions.dismissUserAlert(user.id)}>{userAlerts[user.id].text}</Label>
+                      )}
+                    </Col>
+                    <Col lg={3}>
+                      <ButtonGroup className='pull-right'>
+                        <Button bsSize='small' onClick={() => UserAdminActions.editUser(user)}><Glyphicon glyph='pencil'/></Button>
+                        <Button bsSize='small' onClick={() => UserAdminActions.setDeleteUser(user)}><Glyphicon glyph='trash' /></Button>
+                      </ButtonGroup>
+                    </Col>
+                  </Row>
+                </ListGroupItem>))
+              }
+            </ListGroup>
+          </Col></Row>
         </Col>
       </Row>
     );

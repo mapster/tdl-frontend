@@ -11,9 +11,10 @@ var PromiseHandlers = require('../PromiseHandlers');
 
 var _users = false;
 var _editUser = false;
-var _editError = false;
+var _error = false;
 var _deleteUser = false;
 var _userAlerts = [];
+var _showAddUserForm = false;
 
 var UsersStore = assign({}, StoreListenBase, {
   getUsers: function() {
@@ -28,8 +29,11 @@ var UsersStore = assign({}, StoreListenBase, {
   getDeleteUser: function() {
     return _deleteUser;
   },
-  getEditError: function() {
-    return _editError;
+  showAddUserForm: function() {
+    return _showAddUserForm;
+  },
+  getError: function() {
+    return _error;
   },
   getUserAlerts: function() {
     return _userAlerts;
@@ -41,8 +45,8 @@ var UsersStore = assign({}, StoreListenBase, {
       .then(PromiseHandlers.handleSuccess.bind(null, actionType))
       .catch(PromiseHandlers.handleNotFound.bind(null, [], actionType));
   },
-  setEditError: function(error) {
-    _editError = error;
+  setError: function(error) {
+    _error = error;
     this.emitChange();
   }
 });
@@ -60,8 +64,8 @@ AppDispatcher.register(function(payload) {
           .then(function() {
             _deleteUser = false;
             UsersStore.refreshUsers();
-          });
-          //TODO Handle error responses
+          })
+          .catch(PromiseHandlers.handleError.bind(null, (e) => UsersStore.setError(e)));
         break;
       case UsersConstants.EDIT_USER:
         _editUser = action.data;
@@ -69,24 +73,42 @@ AppDispatcher.register(function(payload) {
         break;
       case UsersConstants.CLOSE_EDIT_USER:
         _editUser = false;
-        _editError = false;
+        _error = false;
         UsersStore.emitChange();
         break;
       case UsersConstants.SAVE_USER:
         UsersDAO.putUser(action.id, action.data)
           .then(function() {
-            _userAlerts[action.id] = 'Successfully updated.';
-            AppDispatcher.handleServerAction({
-              actionType: UsersConstants.SAVE_USER,
-              id: action.id
-            });
+            _userAlerts[action.id] = {
+              type: 'success',
+              text: 'Successfully updated.'
+            };
+            PromiseHandlers.handleSuccess(UsersConstants.SAVE_USER, action.id);
             _editUser = false;
             UsersStore.refreshUsers();
           })
-          .catch(PromiseHandlers.handleError.bind(null, (e) => UsersStore.setEditError(e)));
+          .catch(PromiseHandlers.handleError.bind(null, (e) => UsersStore.setError(e)));
+        break;
+      case UsersConstants.SHOW_ADD_USER_FORM:
+        _showAddUserForm = action.data;
+        _error = false;
+        UsersStore.emitChange();
+        break;
+      case UsersConstants.ADD_USER:
+        UsersDAO.postUser(action.data)
+          .then(function(response) {
+            _userAlerts[response.id] = {
+              type: 'success',
+              text: 'Successfully added.'
+            };
+            PromiseHandlers.handleSuccess(UsersConstants.ADD_USER, response);
+            _showAddUserForm = false;
+            UsersStore.refreshUsers();
+          })
+          .catch(PromiseHandlers.handleError.bind(null, (e) => UsersStore.setError(e)));
         break;
       case UsersConstants.DISMISS_ERROR:
-        UsersStore.setEditError(false);
+        UsersStore.setError(false);
         break;
       case UsersConstants.DISMISS_USER_ALERT:
         _userAlerts[action.id] = false;

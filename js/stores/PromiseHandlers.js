@@ -45,6 +45,7 @@ var PromiseHandlers = {
   handleError: function(receiver, response) {
     switch (response.status) {
       case 400:
+      case 409:
         receiver({
           type: ResponseConstants.INVALID_DATA,
           messages: JSON.parse(response.responseText)

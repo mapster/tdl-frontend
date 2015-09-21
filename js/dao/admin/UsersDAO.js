@@ -25,11 +25,20 @@ var UsersDAO = {
     });
   },
 
+  postUser: function(user) {
+    return promiseRequest(PUT_USER, {
+      type: 'POST',
+      url: RESOURCE_URL,
+      data: JSON.stringify(user),
+      contentType: 'application/json'
+    });
+  },
+
   deleteUser: function(id) {
     return promiseRequest(DELETE_USER, {
       type: 'DELETE',
       url: RESOURCE_URL + '/' + id
-    }); 
+    });
   }
 };
 

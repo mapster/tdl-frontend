@@ -22,6 +22,18 @@ var UserAdminActions = {
       id: id
     });
   },
+  addUser: function(user) {
+    AppDispatcher.handleViewAction({
+      actionType: UsersConstants.ADD_USER,
+      data: user
+    });
+  },
+  showAddUserForm: function(doShow) {
+    AppDispatcher.handleViewAction({
+      actionType: UsersConstants.SHOW_ADD_USER_FORM,
+      data: doShow
+    });
+  },
   setDeleteUser: function(user) {
     AppDispatcher.handleViewAction({
       actionType: UsersConstants.SET_DELETE_USER,

@@ -2,16 +2,7 @@ var React = require('react');
 var PropTypes = React.PropTypes;
 var {Modal,Button,Input,Col,Row,Alert} = require('react-bootstrap');
 
-var UserAdminActions = require('../../actions/admin/UserAdminActions');
 var ResponseConstants = require('../../constants/ResponseConstants');
-
-function _close() {
-  UserAdminActions.closeEditUser();
-}
-
-function _save() {
-  UserAdminActions.saveUser(this.props.user.id, this.state.user);
-}
 
 function _handleChange(field, event) {
   var change = this.state.user;
@@ -19,12 +10,8 @@ function _handleChange(field, event) {
   this.setState({user: change});
 }
 
-function _dismissError() {
-  UserAdminActions.dismissError();
-}
-
 function _hasFeedback(field) {
-  var error = this.props.editError;
+  var error = this.props.error;
   if(!error) {
     return false;
   } else if (error.type != ResponseConstants.INVALID_DATA) {
@@ -42,8 +29,12 @@ function _getStyle(field) {
 
 var EditUserModal = React.createClass({
   propTypes: {
-    editError: PropTypes.oneOfType([PropTypes.object, PropTypes.bool]),
-    user: PropTypes.oneOfType([PropTypes.object, PropTypes.bool])
+    doCancel: PropTypes.func.isRequired,
+    doDismissError: PropTypes.func.isRequired,
+    doSave: PropTypes.func.isRequired,
+    error: PropTypes.oneOfType([PropTypes.object, PropTypes.bool]).isRequired,
+    title: PropTypes.string,
+    user: PropTypes.oneOfType([PropTypes.object, PropTypes.bool]).isRequired
   },
   getInitialState: function() {
     return {user: false};
@@ -70,12 +61,12 @@ var EditUserModal = React.createClass({
     };
 
     // generate error message
-    var error = this.props.editError;
+    var error = this.props.error;
     if(error && error.type != ResponseConstants.INVALID_DATA) {
       var errorMsg = false;
       switch (error.type) {
         case ResponseConstants.FORBIDDEN:
-          errorMsg = 'You are not authorized to change this user. ' + (error.messages || '');
+          errorMsg = 'You are not authorized to save this user. ' + (error.messages || '');
           break;
         case ResponseConstants.NOT_FOUND:
           errorMsg = 'User does not exist. ' +(error.messages || '');
@@ -85,18 +76,18 @@ var EditUserModal = React.createClass({
       }
     }
     return (
-      <Modal show={this.props.user && true} onHide={_close.bind(this)}>
+      <Modal show={this.props.user && true} onHide={this.props.doCancel}>
         <Modal.Header closeButton>
-          <Modal.Title>Edit user</Modal.Title>
+          <Modal.Title>{this.props.title}</Modal.Title>
           {errorMsg && (
             <Row>
-              <Alert bsStyle="danger" onDismiss={_dismissError.bind(this)}>{errorMsg}</Alert>
+              <Alert bsStyle="danger" onDismiss={this.props.doDismissError}>{errorMsg}</Alert>
             </Row>
           )}
           <Row className='small-text text-muted'>
-            <Col lg={2}>User ID: {this.props.user.id}</Col>
-            <Col lg={4}>Created: {this.props.user.created_at}</Col>
-            <Col lg={4}>Last update: {this.props.user.updated_at}</Col>
+            {this.props.user.id && (<Col lg={2}>User ID: {this.props.user.id}</Col>)}
+            {this.props.user.created_at && (<Col lg={4}>Created: {this.props.user.created_at}</Col>)}
+            {this.props.user.updated_at && (<Col lg={4}>Last update: {this.props.user.updated_at}</Col>)}
           </Row>
         </Modal.Header>
         <Modal.Body>
@@ -115,8 +106,8 @@ var EditUserModal = React.createClass({
           />
         </Modal.Body>
         <Modal.Footer>
-          <Button onClick={_close.bind(this)}>Cancel</Button>
-          <Button bsStyle='success' onClick={_save.bind(this)}>Save</Button>
+          <Button onClick={this.props.doCancel}>Cancel</Button>
+          <Button bsStyle='success' onClick={() => this.props.doSave(this.state.user)}>Save</Button>
         </Modal.Footer>
       </Modal>
     );
