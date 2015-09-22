@@ -2,15 +2,16 @@
 
 var React = require('react');
 var {PropTypes} = React;
-var {Label,Row,Col,ListGroup,ListGroupItem,Button,ButtonGroup,Glyphicon} = require('react-bootstrap');
+var {OverlayTrigger,Tooltip,Label,Row,Col,ListGroup,ListGroupItem,Button,ButtonGroup,Glyphicon} = require('react-bootstrap');
 
-var UsersStore = require('../../stores/admin/UsersStore');
-var UserAdminActions = require('../../actions/admin/UserAdminActions');
-var ConnectToStore = require('../../mixins/ConnectToStore');
-var Forbidden = require('../../components/Forbidden.react');
-var UserFormModal = require('../../components/UserFormModal.react');
 var ConfirmationModal = require('../../components/ConfirmationModal.react');
+var ConnectToStore = require('../../mixins/ConnectToStore');
+var EditUserAuthsModal = require('../../components/admin/EditUserAuthsModal.react');
+var Forbidden = require('../../components/Forbidden.react');
 var ResponseConstants = require('../../constants/ResponseConstants');
+var UserAdminActions = require('../../actions/admin/UserAdminActions');
+var UserFormModal = require('../../components/UserFormModal.react');
+var UsersStore = require('../../stores/admin/UsersStore');
 
 function _buildDeleteErrorMessage(error) {
   if(!error) {
@@ -36,6 +37,7 @@ var UserAdmin = React.createClass({
       return {
         all: store.getUsers(),
         edit: store.getEditUser(),
+        editAuths: store.getEditUserAuths(),
         confirmUserDelete: store.getDeleteUser(),
         showAddUserForm: store.showAddUserForm(),
         error: store.getError(),
@@ -44,8 +46,8 @@ var UserAdmin = React.createClass({
     })
   ],
   render: function() {
-    var authorized = this.props.user && this.props.user.auth && this.props.user.auth.manage_users;
-    if(!authorized){
+    var authorized = this.props.user && this.props.user.auth && this.props.user.auth;
+    if(!authorized.manage_users){
       return (<Forbidden />);
     }
     var users = this.state.users && this.state.users.all;
@@ -69,6 +71,13 @@ var UserAdmin = React.createClass({
             title='Edit user'
             user={this.state.users.edit}
         />
+        <EditUserAuthsModal
+            auth={this.state.users.editAuths}
+            doCancel={() => UserAdminActions.editUserAuths(false)}
+            doDismissError={() => UserAdminActions.dismissError()}
+            doSave={(auth) => UserAdminActions.saveUserAuths(auth)}
+            error={this.state.users.error}
+        />
         <ConfirmationModal
             doCancel={() => UserAdminActions.setDeleteUser(false)}
             doDismissError={() => UserAdminActions.dismissError()}
@@ -82,7 +91,9 @@ var UserAdmin = React.createClass({
           <Row>
             <Col lg={10}><h1 className='inline'>Users</h1></Col>
             <Col lg={2} className='right'>
-              <Button bsSize='medium' onClick={() => UserAdminActions.showAddUserForm(true)}><Glyphicon glyph='plus'/></Button>
+              <OverlayTrigger placment='right' overlay={(<Tooltip>Add new user</Tooltip>)}>
+                <Button bsSize='medium' onClick={() => UserAdminActions.showAddUserForm(true)}><Glyphicon glyph='plus'/></Button>
+              </OverlayTrigger>
             </Col>
           </Row>
           <Row><Col lg={12}>
@@ -98,8 +109,17 @@ var UserAdmin = React.createClass({
                     </Col>
                     <Col lg={3}>
                       <ButtonGroup className='pull-right'>
-                        <Button bsSize='small' onClick={() => UserAdminActions.editUser(user)}><Glyphicon glyph='pencil'/></Button>
-                        <Button bsSize='small' onClick={() => UserAdminActions.setDeleteUser(user)}><Glyphicon glyph='trash' /></Button>
+                        <OverlayTrigger placement='left' overlay={(<Tooltip>Edit user</Tooltip>)}>
+                          <Button bsSize='small' onClick={() => UserAdminActions.editUser(user)}><Glyphicon glyph='pencil'/></Button>
+                        </OverlayTrigger>
+                        {authorized.manage_authorizations &&
+                          (<OverlayTrigger placement='top' overlay={(<Tooltip>Edit authorizations</Tooltip>)}>
+                            <Button bsSize='small' onClick={() => UserAdminActions.editUserAuths(user.id)}><Glyphicon glyph='lock'/></Button>
+                          </OverlayTrigger>)
+                        }
+                        <OverlayTrigger placement='right' overlay={(<Tooltip>Delete user</Tooltip>)}>
+                          <Button bsSize='small' onClick={() => UserAdminActions.setDeleteUser(user)}><Glyphicon glyph='trash' /></Button>
+                        </OverlayTrigger>
                       </ButtonGroup>
                     </Col>
                   </Row>

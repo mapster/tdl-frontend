@@ -9,8 +9,15 @@ var SessionConstants = require('../../constants/SessionConstants');
 var StoreListenBase = require('../StoreListenBase');
 var PromiseHandlers = require('../PromiseHandlers');
 
+var USER_AUTHORIZATIONS_DEFAULT = {
+  manage_exercises: false,
+  manage_authorizations: false,
+  manage_users: false
+};
+
 var _users = false;
 var _editUser = false;
+var _editUserAuths = false;
 var _error = false;
 var _deleteUser = false;
 var _userAlerts = [];
@@ -25,6 +32,9 @@ var UsersStore = assign({}, StoreListenBase, {
   },
   getEditUser: function() {
     return _editUser;
+  },
+  getEditUserAuths: function() {
+    return _editUserAuths;
   },
   getDeleteUser: function() {
     return _deleteUser;
@@ -107,6 +117,31 @@ AppDispatcher.register(function(payload) {
           })
           .catch(PromiseHandlers.handleError.bind(null, (e) => UsersStore.setError(e)));
         break;
+      case UsersConstants.EDIT_USER_AUTHS:
+        if(!action.data){
+          _editUserAuths = false;
+          UsersStore.emitChange();
+        }
+        else {
+          var actionType = UsersConstants.EDIT_USER_AUTHS;
+          UsersDAO.getAuth(action.data)
+            .then(PromiseHandlers.handleSuccess.bind(null, actionType))
+            .catch(PromiseHandlers.handleNotFound.bind(null, assign({user_id: action.data}, USER_AUTHORIZATIONS_DEFAULT), actionType));
+        }
+        break;
+      case UsersConstants.SAVE_AUTHS:
+        UsersDAO.putAuths(_editUserAuths.user_id, action.data)
+          .then(function(response) {
+            _userAlerts[response.user_id] = {
+              type: 'success',
+              text: 'Saved authorizations'
+            };
+            PromiseHandlers.handleSuccess(UsersConstants.SAVE_AUTHS, response);
+            _editUserAuths = false;
+            UsersStore.emitChange();
+          })
+          .catch(PromiseHandlers.handleError.bind(null, (e) => UsersStore.setError(e)));
+        break;
       case UsersConstants.DISMISS_ERROR:
         UsersStore.setError(false);
         break;
@@ -122,6 +157,10 @@ AppDispatcher.register(function(payload) {
   //
   else if(payload.source == AppDispatcher.STORE_REFRESH){
     switch (action.actionType) {
+      case UsersConstants.EDIT_USER_AUTHS:
+        _editUserAuths = action.data;
+        UsersStore.emitChange();
+        break;
       case UsersConstants.USERS_UPDATE_FROM_SERVER:
         _users = action.data;
         UsersStore.emitChange();
