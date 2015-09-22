@@ -19,7 +19,7 @@ var App = React.createClass({
   render: function() {
     return (
       <div className='container'>
-        {React.cloneElement(this.props.children, {session: this.state.session, user: this.state.user})}
+        {this.props.children && React.cloneElement(this.props.children, {session: this.state.session, user: this.state.user})}
       </div>
     );
   }

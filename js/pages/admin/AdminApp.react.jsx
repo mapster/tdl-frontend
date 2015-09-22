@@ -43,7 +43,7 @@ var AdminApp = React.createClass({
           </Row>
           <Row>
             <Col lg={12}>
-              {React.cloneElement(this.props.children, {user: this.props.user})}
+              {this.props.children && React.cloneElement(this.props.children, {user: this.props.user})}
             </Col>
           </Row>
         </Grid>

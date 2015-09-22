@@ -21,7 +21,7 @@ function buildMixin(name, store, getState) {
       store.addChangeListener(this._listener);
     },
     componentWillUnmount: function() {
-      store.removeChangeListener(this._listeners.session);
+      store.removeChangeListener(this._listener);
     }
   };
 }
