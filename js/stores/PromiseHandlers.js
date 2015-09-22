@@ -31,7 +31,7 @@ var PromiseHandlers = {
     if (response.status == 404) {
       AppDispatcher.handleStoreRefreshAction({
         actionType: actionType,
-        data: []
+        data: targetValue
       });
     }
   },
