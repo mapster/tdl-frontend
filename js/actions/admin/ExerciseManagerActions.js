@@ -10,10 +10,22 @@ var ExerciseManagerActions = {
       data: doShow
     });
   },
+  dismissAlert: function() {
+    AppDispatcher.handleViewAction({
+      actionType: ExercisesConstants.SET_ALERT,
+      data: false
+    });
+  },
   setExerciseEditorState: function(state) {
     AppDispatcher.handleViewAction({
       actionType: ExercisesConstants.SET_EXERCISE_EDITOR_STATE,
-      data: state 
+      data: state
+    });
+  },
+  addExercise: function(exercise) {
+    AppDispatcher.handleViewAction({
+      actionType: ExercisesConstants.ADD_EXERCISE,
+      data: exercise
     });
   }
 };

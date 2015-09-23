@@ -7,7 +7,8 @@ var DELETE_USER = 'deleteUser';
 var GET_AUTH = 'getAuth';
 var GET_USERS = 'getUsers';
 var PUT_AUTHS = 'putAuths';
-var PUT_USER = 'getUser';
+var PUT_USER = 'putUser';
+var POST_USER = 'postUser';
 
 var RESOURCE_URL = AppConfig.Host + '/admin/users';
 var AUTH_SUB_RESOURCE = 'user_authorizations';
@@ -53,7 +54,7 @@ var UsersDAO = {
   },
 
   postUser: function(user) {
-    return promiseRequest(PUT_USER, {
+    return promiseRequest(POST_USER, {
       type: 'POST',
       url: RESOURCE_URL,
       data: JSON.stringify(user),

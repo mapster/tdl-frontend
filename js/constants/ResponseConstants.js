@@ -2,6 +2,7 @@
 
 var PREFIX = 'RESPONSE_';
 var constants = [
+  'OK',
   'INVALID_DATA',
   'NOT_FOUND',
   'FORBIDDEN',

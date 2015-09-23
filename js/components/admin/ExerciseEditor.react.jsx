@@ -8,6 +8,7 @@ var ExercisePropertyEditor = require('./ExercisePropertyEditor.react');
 
 var ExerciseEditor = React.createClass({
   propTypes: {
+    doSaveExercise: PropTypes.func.isRequired,
     doUpdateExercise: PropTypes.func.isRequired,
     properties: PropTypes.object.isRequired,
     show: PropTypes.bool.isRequired
@@ -34,6 +35,7 @@ var ExerciseEditor = React.createClass({
         <Tabs position='left' activeKey={this.state.tab} onSelect={(tab) => this.setState({tab})}>
           <Tab eventKey='properties' title='Properties'>
             <ExercisePropertyEditor
+                doSaveExercise={this.props.doSaveExercise}
                 doUpdateProperties={this._setExerciseProperties}
                 {...this.props.properties}
             />
