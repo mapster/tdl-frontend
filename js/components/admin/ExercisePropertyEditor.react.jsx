@@ -6,7 +6,7 @@ var {Input,Glyphicon,Button} = require('react-bootstrap');
 
 var ExerciseConstants = require('../../constants/ExerciseConstants');
 
-var ExerciseProperties = React.createClass({
+var ExercisePropertyEditor = React.createClass({
   propTypes: {
     description: PropTypes.string,
     difficulty: PropTypes.string,
@@ -46,4 +46,4 @@ var ExerciseProperties = React.createClass({
 
 });
 
-module.exports = ExerciseProperties;
+module.exports = ExercisePropertyEditor;

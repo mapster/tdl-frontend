@@ -4,8 +4,7 @@ var React = require('react');
 var PropTypes = React.PropTypes;
 var {Row,Tabs,Tab} = require('react-bootstrap');
 
-var ExerciseProperties = require('./ExerciseProperties.react');
-
+var ExercisePropertyEditor = require('./ExercisePropertyEditor.react');
 
 var ExerciseEditor = React.createClass({
   propTypes: {
@@ -34,7 +33,7 @@ var ExerciseEditor = React.createClass({
       <Row>
         <Tabs position='left' activeKey={this.state.tab} onSelect={(tab) => this.setState({tab})}>
           <Tab eventKey='properties' title='Properties'>
-            <ExerciseProperties
+            <ExercisePropertyEditor
                 doUpdateProperties={this._setExerciseProperties}
                 {...this.props.properties}
             />
