@@ -10,10 +10,14 @@ var StoreListenBase = require('../StoreListenBase');
 var PromiseHandlers = require('../PromiseHandlers');
 
 var _showAddExercise = false;
+var _exerciseEditorState = {};
 
 var ExerciseManagerStore = assign({}, StoreListenBase, {
   showAddExercise: function() {
     return _showAddExercise;
+  },
+  getExerciseEditorState: function() {
+    return _exerciseEditorState;
   }
 });
 
@@ -23,6 +27,10 @@ AppDispatcher.register(function(payload) {
     switch (action.actionType) {
       case ExercisesConstants.SHOW_ADD_EXERCISE:
         _showAddExercise = action.data;
+        ExerciseManagerStore.emitChange();
+        break;
+      case ExercisesConstants.SET_EXERCISE_EDITOR_STATE:
+        _exerciseEditorState = action.data;
         ExerciseManagerStore.emitChange();
         break;
       default:

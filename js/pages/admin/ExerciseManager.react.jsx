@@ -8,7 +8,12 @@ var Actions = require('../../actions/admin/ExerciseManagerActions');
 var ConnectToStore = require('../../mixins/ConnectToStore');
 var ExerciseManagerStore = require('../../stores/admin/ExerciseManagerStore');
 var Forbidden = require('../../components/Forbidden.react');
-var ManageExercise = require('../../components/admin/ManageExercise.react');
+var ExerciseEditor = require('../../components/admin/ExerciseEditor.react');
+
+function _setEcerciseEditorState(stateChange) {
+  var newState = Object.assign({}, this.state.ex.editorState, stateChange);
+  Actions.setExerciseEditorState(newState);
+}
 
 var ExerciseManager = React.createClass({
   propTypes: {
@@ -17,6 +22,7 @@ var ExerciseManager = React.createClass({
   mixins: [
     ConnectToStore('ex', ExerciseManagerStore, function(store) {
       return {
+        editorState: store.getExerciseEditorState(),
         showAddExercise: store.showAddExercise()
       };
     })
@@ -37,7 +43,11 @@ var ExerciseManager = React.createClass({
             </Col>
           </Row>
           <Row><Col lg={12}>
-            <ManageExercise show={this.state.ex.showAddExercise} />
+            <ExerciseEditor
+                {...this.state.ex.editorState}
+                doUpdateExercise={_setEcerciseEditorState.bind(this)}
+                show={this.state.ex.showAddExercise}
+            />
           </Col></Row>
         </Col>
       </Row>

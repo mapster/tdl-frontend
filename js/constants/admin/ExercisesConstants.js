@@ -2,6 +2,7 @@
 
 var PREFIX = 'ADMIN_EXERCISES_STORE_';
 var constants = [
+  'SET_EXERCISE_EDITOR_STATE',
   'SHOW_ADD_EXERCISE'
 ];
 

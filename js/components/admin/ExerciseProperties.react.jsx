@@ -6,35 +6,40 @@ var {Input,Glyphicon,Button} = require('react-bootstrap');
 
 var ExerciseConstants = require('../../constants/ExerciseConstants');
 
-function _change(field, event) {
-  var change = {};
-  change[field] = event.target.value;
-  this.setState(change);
-}
-
 var ExerciseProperties = React.createClass({
-  getInitialState: function() {
-    return {};
+  propTypes: {
+    description: PropTypes.string,
+    difficulty: PropTypes.string,
+    doUpdateProperties: PropTypes.func.isRequired,
+    kind: PropTypes.string,
+    name: PropTypes.string,
+    title: PropTypes.string
+  },
+  _change: function (field, event) {
+    var change = {};
+    change[field] = event.target.value;
+    this.props.doUpdateProperties(change);
   },
 
   render: function() {
     return (
       <form>
-        <Input type='text' label='Name' onChange={_change.bind(this, 'name')}/>
-        <Input type='text' label='Title' onChange={_change.bind(this, 'title')} />
+        <Input type='text' label='Name' value={this.props.name} onChange={this._change.bind(this, 'name')}/>
+        <Input type='text' label='Title' value={this.props.title} onChange={this._change.bind(this, 'title')} />
         <Input
             type='select'
-            label={<span>Kind <Glyphicon glyph={ExerciseConstants.symbols[this.state.kind]}/></span>}
-            onChange={_change.bind(this, 'kind')}
+            label={<span>Kind <Glyphicon glyph={ExerciseConstants.symbols[this.props.kind]}/></span>}
+            value={this.props.kind}
+            onChange={this._change.bind(this, 'kind')}
         >
-          {!this.state.kind && <option value=''>Select kind...</option>}
+          {!this.props.kind && <option value=''>Select kind...</option>}
           <option value='expectation'>Expectation</option>
           <option value='error'>Error</option>
           <option value='implementation'>Implementation</option>
         </Input>
-        <Input type='text' label='Difficulty' onChange={_change.bind(this, 'difficulty')} />
-        <Input type='textarea' label='Description' onChange={_change.bind(this, 'description')} />
-        <Button bsStyle='success' onClick={() => console.log(this.state)}>Save</Button>
+        <Input type='number' label='Difficulty' value={this.props.difficulty} onChange={this._change.bind(this, 'difficulty')} />
+        <Input type='textarea' label='Description' value={this.props.description} Change={this._change.bind(this, 'description')} />
+        <Button bsStyle='success' onClick={() => console.log(this.props)}>Save</Button>
       </form>
     );
   }

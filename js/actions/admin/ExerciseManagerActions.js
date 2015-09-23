@@ -9,6 +9,12 @@ var ExerciseManagerActions = {
       actionType: ExercisesConstants.SHOW_ADD_EXERCISE,
       data: doShow
     });
+  },
+  setExerciseEditorState: function(state) {
+    AppDispatcher.handleViewAction({
+      actionType: ExercisesConstants.SET_EXERCISE_EDITOR_STATE,
+      data: state 
+    });
   }
 };
 
