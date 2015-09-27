@@ -16,17 +16,22 @@ var ExercisePropertyEditor = React.createClass({
   _change: function (field, event) {
     var change = {};
     change[field] = event.target.value;
+    change._unsaved = true;
     this.props.doChange(change);
+  },
+  _doClearChanges: function() {
+    //TODO implement
   },
   _doSaveExercise: function() {
     var {id,name,kind,difficulty,description} = this.props.properties;
     this.props.doSaveExercise(id, {name,kind,difficulty,description});
+    this.props.doChange({_unsaved: false});
   },
   _feedback: function(field) {
     return this._help(field) && true;
   },
   _help: function(field) {
-    var e = this.props.errors;
+    var e = this.props.properties._errors;
     return (e && e[field]) || false;
   },
   _style: function(field) {
@@ -35,7 +40,7 @@ var ExercisePropertyEditor = React.createClass({
 
   render: function() {
         // <Input type='text' label='Title' value={this.props.title} onChange={this._change.bind(this, 'title')} />
-    var {name,kind,difficulty,description} = this.props.properties;
+    var {name,kind,difficulty,description,_unsaved} = this.props.properties;
     return (
       <form>
         <Input type='text' label='Name' value={name}
@@ -70,7 +75,8 @@ var ExercisePropertyEditor = React.createClass({
             feedback={this._feedback('description')}
             onChange={this._change.bind(this, 'description')}
         />
-        <Button bsStyle='success' onClick={this._doSaveExercise}>Save</Button>
+        <Button onClick={this._doClearChanges}>Clear</Button>
+        <Button bsStyle='success' disabled={!_unsaved} onClick={this._doSaveExercise}>Save</Button>
       </form>
     );
   }

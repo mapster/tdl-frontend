@@ -6,6 +6,7 @@ var promiseRequest = require('../PromiseRequest');
 var GET_EXERCISES = 'getExercises';
 var GET_EXERCISE_SOURCES = 'getExerciseSoures';
 var POST_EXERCISE = 'postExercise';
+var PUT_EXERCISE = 'putExercise';
 
 var RESOURCE_URL = AppConfig.Host + '/exercises';
 var SOURCES_SUB_RESOURCES = 'source_files';
@@ -27,6 +28,14 @@ var ExerciseManagerDAO = {
     return promiseRequest(POST_EXERCISE, {
       type: 'POST',
       url: RESOURCE_URL,
+      data: JSON.stringify(exercise),
+      contentType: 'application/json'
+    });
+  },
+  putExercise: function(id, exercise) {
+    return promiseRequest(PUT_EXERCISE, {
+      type: 'PUT',
+      url: RESOURCE_URL + '/' + id,
       data: JSON.stringify(exercise),
       contentType: 'application/json'
     });

@@ -21,7 +21,6 @@ var _editUserAuths = false;
 var _error = false;
 var _deleteUser = false;
 var _userAlerts = {};
-var _showAddUserForm = false;
 
 var UsersStore = assign({}, StoreListenBase, {
   getUsers: function() {

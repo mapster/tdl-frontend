@@ -12,7 +12,6 @@ var PromiseHandlers = require('../PromiseHandlers');
 var _alert = false;
 var _exercises = false;
 var _exerciseEditorState = false;
-var _showAddExercise = false;
 
 var ExerciseManagerStore = assign({}, StoreListenBase, {
   getAlert: function() {
@@ -40,9 +39,6 @@ var ExerciseManagerStore = assign({}, StoreListenBase, {
   setExerciseEditorState: function(state) {
     _exerciseEditorState = state;
     this.emitChange();
-  },
-  showAddExercise: function() {
-    return _showAddExercise;
   }
 });
 
@@ -51,44 +47,43 @@ AppDispatcher.register(function(payload) {
   var resultAction;
   if(payload.source == AppDispatcher.VIEW_ACTION) {
     switch (action.actionType) {
-      case ExerciseManagerConstants.ADD_EXERCISE:
-        resultAction = ExerciseManagerConstants.ADD_EXERCISE;
-        ExerciseManagerDAO.postExercise(action.data)
-          .then(function(response) {
-            PromiseHandlers.handleSuccess(resultAction, response);
-            ExerciseManagerStore.setAlert({text: 'Exercise properties saved', type: 'success'});
-          })
-          .catch(PromiseHandlers.handleError.bind(null, function(e) {
-            var alert = {type: 'danger'};
-            switch (e.type) {
-              case ResponseConstants.INVALID_DATA:
-                alert.text = 'Could not save the exercise properties';
-                //set field alerts
-                var state = ExerciseManagerStore.getExerciseEditorState();
-                state.properties.errors = e.messages;
-                ExerciseManagerStore.setExerciseEditorState(state);
-                break;
-              default:
-            }
-            ExerciseManagerStore.setAlert(alert);
-          }));
-        break;
       case ExerciseManagerConstants.SAVE_EXERCISE:
-        console.log('doSave id: ' + action.id + " - " + JSON.stringify(action.data));
+        resultAction = ExerciseManagerConstants.SAVE_EXERCISE;
+        var responseThen = function(response) {
+          PromiseHandlers.handleSuccess(resultAction, response);
+          ExerciseManagerStore.setAlert({text: 'Exercise properties saved', type: 'success'});
+        };
+        var responseCatch = PromiseHandlers.handleError.bind(null, function(e) {
+          var alert = {type: 'danger'};
+          switch (e.type) {
+            case ResponseConstants.INVALID_DATA:
+              alert.text = 'Could not save the exercise properties';
+              //set field alerts
+              var state = ExerciseManagerStore.getExerciseEditorState();
+              state.properties._errors = e.messages;
+              ExerciseManagerStore.setExerciseEditorState(state);
+              break;
+            default:
+          }
+          ExerciseManagerStore.setAlert(alert);
+        });
+        if(action.id === undefined) {
+          ExerciseManagerDAO.postExercise(action.data).then(responseThen).catch(responseCatch);
+        } else {
+          ExerciseManagerDAO.putExercise(action.id, action.data).then(responseThen).catch(responseCatch);
+        }
         break;
       case ExerciseManagerConstants.EDIT_EXERCISE:
         ExerciseManagerStore.setExerciseEditorState({properties: action.data});
-        resultAction = ExerciseManagerConstants.EDIT_EXERCISE_SOURCES_UPDATE_FROM_SERVER;
-        ExerciseManagerDAO.getExerciseSources(action.data.id)
-          .then(PromiseHandlers.handleSuccess.bind(null, resultAction))
-          .catch(PromiseHandlers.handleNotFound.bind(null, {}, resultAction));
+        if(action.data.id){
+          resultAction = ExerciseManagerConstants.EDIT_EXERCISE_SOURCES_UPDATE_FROM_SERVER;
+          ExerciseManagerDAO.getExerciseSources(action.data.id)
+            .then(PromiseHandlers.handleSuccess.bind(null, resultAction))
+            .catch(PromiseHandlers.handleNotFound.bind(null, {}, resultAction));
+        }
         break;
       case ExerciseManagerConstants.SET_ALERT:
         ExerciseManagerStore.setAlert(action.data);
-        break;
-      case ExerciseManagerConstants.SHOW_ADD_EXERCISE:
-        _showAddExercise = action.data;
-        ExerciseManagerStore.emitChange();
         break;
       case ExerciseManagerConstants.SET_EXERCISE_EDITOR_STATE:
         ExerciseManagerStore.setExerciseEditorState(action.data);

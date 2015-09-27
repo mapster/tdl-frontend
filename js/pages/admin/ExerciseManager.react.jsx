@@ -20,8 +20,7 @@ var ExerciseManager = React.createClass({
       return {
         alert: store.getAlert(),
         editorState: store.getExerciseEditorState(),
-        exercises: store.getExercises(),
-        showAddExercise: store.showAddExercise()
+        exercises: store.getExercises()
       };
     })
   ],
@@ -38,14 +37,31 @@ var ExerciseManager = React.createClass({
     var alert = this.state.ex.alert;
     var exercises = this.state.ex.exercises;
 
+    var view;
     if(this.state.ex.editorState) {
-      return (
+      view = (
         <ExerciseEditor
             {...this.state.ex.editorState}
             doSaveExercise={(id, exercise) => Actions.saveExercise(id, exercise)}
             doUpdateExercise={this._setExerciseEditorState}
+            doClose={() => ExerciseManagerActions.setExerciseEditorState(false)}
             show
         />
+      );
+    } else {
+      view = (
+        <ListGroup>
+          {exercises && exercises.map((ex) => (
+            <ListGroupItem key={ex.id}>
+              <Row>
+                <Col lg={9}>{ex.name}</Col>
+                <Col lg={3}>
+                  <Button bsSize='small' onClick={() => ExerciseManagerActions.editExercise(ex)}><Glyphicon glyph='pencil'/></Button>
+                </Col>
+              </Row>
+            </ListGroupItem>
+          ))}
+        </ListGroup>
       );
     }
     return (
@@ -54,7 +70,7 @@ var ExerciseManager = React.createClass({
           <Row>
             <Col lg={10}><h1 className='inline'>Exercises</h1></Col>
             <Col lg={2} className='right'>
-                <Button bsSize='medium' onClick={() => Actions.showAddExercise(!this.state.ex.showAddExercise)}><Glyphicon glyph='plus'/></Button>
+                <Button bsSize='medium' onClick={() => ExerciseManagerActions.editExercise({})}><Glyphicon glyph='plus'/></Button>
             </Col>
           </Row>
           <Row>
@@ -62,20 +78,7 @@ var ExerciseManager = React.createClass({
               {alert && (<Alert bsStyle={alert.type} onDismiss={Actions.dismissAlert}>{alert.text}</Alert>)}
             </Col>
           </Row>
-          <Row><Col lg={12}>
-            <ListGroup>
-              {exercises && exercises.map((ex) => (
-                <ListGroupItem key={ex.id}>
-                  <Row>
-                    <Col lg={9}>{ex.name}</Col>
-                    <Col lg={3}>
-                      <Button bsSize='small' onClick={() => ExerciseManagerActions.editExercise(ex)}><Glyphicon glyph='pencil'/></Button>
-                    </Col>
-                  </Row>
-                </ListGroupItem>
-              ))}
-            </ListGroup>
-          </Col></Row>
+          <Row><Col lg={12}>{view}</Col></Row>
         </Col>
       </Row>
     );

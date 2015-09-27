@@ -2,15 +2,17 @@
 
 var React = require('react');
 var PropTypes = React.PropTypes;
-var {Row,Tabs,Tab} = require('react-bootstrap');
+var {Button,Glyphicon,Row,Col,Tabs,Tab} = require('react-bootstrap');
 
 var ExercisePropertyEditor = require('./ExercisePropertyEditor.react');
 var SourcesManager = require('./SourcesManager.react');
 
 var ExerciseEditor = React.createClass({
   propTypes: {
+    doClose: PropTypes.func.isRequired,
     doSaveExercise: PropTypes.func.isRequired,
     doUpdateExercise: PropTypes.func.isRequired,
+    errors: PropTypes.oneOfType([PropTypes.object, PropTypes.bool]),
     newFilesCounter: PropTypes.number.isRequired,
     properties: PropTypes.object.isRequired,
     show: PropTypes.bool.isRequired,
@@ -34,6 +36,12 @@ var ExerciseEditor = React.createClass({
     var newSources = Object.assign({}, this.props.sourceFiles, sourceChange);
     this.props.doUpdateExercise(newSources);
   },
+  _tabTitle: function(text, isUnSaved) {
+    if(isUnSaved) {
+      text += '*';
+    }
+    return text;
+  },
 
   render: function() {
     if(!this.props.show) {
@@ -41,22 +49,29 @@ var ExerciseEditor = React.createClass({
     }
     return (
       <Row>
-        <Tabs position='left' activeKey={this.props.tab} onSelect={(tab) => this.props.doUpdateExercise({tab})}>
-          <Tab eventKey='properties' title='Properties'>
-            <ExercisePropertyEditor
-                doSaveExercise={this.props.doSaveExercise}
-                doChange={this._setExerciseProperties}
-                properties={this.props.properties}
-            />
-          </Tab>
-          <Tab eventKey='sources' title='Sources'>
-            <SourcesManager
-                doChange={this._setSourceFiles}
-                sourceFiles={this.props.sourceFiles}
-                newFilesCounter={this.props.newFilesCounter}
-            />
-          </Tab>
-        </Tabs>
+        <Row>
+          <Col lg={3}><Button onClick={this.props.doClose}><Glyphicon glyph='arrow-left'/> Back</Button></Col>
+        </Row>
+        <Row>
+          <Tabs position='left' activeKey={this.props.tab} onSelect={(tab) => this.props.doUpdateExercise({tab})}>
+            <Tab eventKey='properties' title={this._tabTitle('Properties', this.props.properties._unsaved)}>
+              <ExercisePropertyEditor
+                  doSaveExercise={this.props.doSaveExercise}
+                  doChange={this._setExerciseProperties}
+                  properties={this.props.properties}
+              />
+            </Tab>
+            {this.props.properties.id && (
+              <Tab eventKey='sources' title='Sources'>
+                <SourcesManager
+                    doChange={this._setSourceFiles}
+                    sourceFiles={this.props.sourceFiles}
+                    newFilesCounter={this.props.newFilesCounter}
+                />
+              </Tab>
+            )}
+          </Tabs>
+        </Row>
       </Row>
     );
   }
