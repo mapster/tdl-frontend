@@ -1,30 +1,36 @@
 'use strict';
 
 var AppDispatcher = require('../../dispatcher/AppDispatcher');
-var ExercisesConstants = require('../../constants/admin/ExercisesConstants');
+var ExerciseManagerConstants = require('../../constants/admin/ExercisesManagerConstants');
 
 var ExerciseManagerActions = {
+  editExercise: function(exercise) {
+    AppDispatcher.handleViewAction({
+      actionType: ExerciseManagerConstants.EDIT_EXERCISE,
+      data: exercise
+    });
+  },
   showAddExercise: function(doShow) {
     AppDispatcher.handleViewAction({
-      actionType: ExercisesConstants.SHOW_ADD_EXERCISE,
+      actionType: ExerciseManagerConstants.SHOW_ADD_EXERCISE,
       data: doShow
     });
   },
   dismissAlert: function() {
     AppDispatcher.handleViewAction({
-      actionType: ExercisesConstants.SET_ALERT,
+      actionType: ExerciseManagerConstants.SET_ALERT,
       data: false
     });
   },
   setExerciseEditorState: function(state) {
     AppDispatcher.handleViewAction({
-      actionType: ExercisesConstants.SET_EXERCISE_EDITOR_STATE,
+      actionType: ExerciseManagerConstants.SET_EXERCISE_EDITOR_STATE,
       data: state
     });
   },
   addExercise: function(exercise) {
     AppDispatcher.handleViewAction({
-      actionType: ExercisesConstants.ADD_EXERCISE,
+      actionType: ExerciseManagerConstants.ADD_EXERCISE,
       data: exercise
     });
   }

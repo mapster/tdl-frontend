@@ -12,6 +12,7 @@ var ExercisePropertyEditor = React.createClass({
     difficulty: PropTypes.string,
     doSaveExercise: PropTypes.func.isRequired,
     doUpdateProperties: PropTypes.func.isRequired,
+    errors: PropTypes.oneOfType([PropTypes.object, PropTypes.bool]),
     kind: PropTypes.string,
     name: PropTypes.string,
     title: PropTypes.string
@@ -51,7 +52,7 @@ var ExercisePropertyEditor = React.createClass({
             help={this._help('kind')}
             feedback={this._feedback('kind')}
             type='select'
-            label={<span>Kind <Glyphicon glyph={ExerciseConstants.symbols[this.props.kind]}/></span>}
+            label={<span>Kind {this.props.kind && (<Glyphicon glyph={ExerciseConstants.symbols[this.props.kind]}/>)}</span>}
             value={this.props.kind}
             onChange={this._change.bind(this, 'kind')}
         >

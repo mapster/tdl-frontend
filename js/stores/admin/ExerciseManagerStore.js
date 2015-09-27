@@ -4,21 +4,34 @@ var assign = require('object-assign');
 
 var AppDispatcher = require('../../dispatcher/AppDispatcher');
 var ExerciseManagerDAO = require('../../dao/admin/ExerciseManagerDAO');
-var ExercisesConstants = require('../../constants/admin/ExercisesConstants');
+var ExerciseManagerConstants = require('../../constants/admin/ExerciseManagerConstants');
 var ResponseConstants = require('../../constants/ResponseConstants');
 var StoreListenBase = require('../StoreListenBase');
 var PromiseHandlers = require('../PromiseHandlers');
 
-var _showAddExercise = false;
-var _exerciseEditorState = {};
 var _alert = false;
+var _exercises = false;
+var _exerciseEditorState = false;
+var _showAddExercise = false;
 
 var ExerciseManagerStore = assign({}, StoreListenBase, {
   getAlert: function() {
     return _alert;
   },
+  getExercises: function() {
+    if(!_exercises) {
+      this.refreshExercises();
+    }
+    return _exercises;
+  },
   getExerciseEditorState: function() {
     return _exerciseEditorState;
+  },
+  refreshExercises: function() {
+    var actionType = ExerciseManagerConstants.EXERCISES_UPDATE_FROM_SERVER;
+    ExerciseManagerDAO.getExercises()
+      .then(PromiseHandlers.handleSuccess.bind(null, actionType))
+      .catch(PromiseHandlers.handleNotFound.bind(null, [], actionType));
   },
   setAlert: function(alert) {
     _alert = alert;
@@ -35,10 +48,11 @@ var ExerciseManagerStore = assign({}, StoreListenBase, {
 
 AppDispatcher.register(function(payload) {
   var action = payload.action;
+  var resultAction;
   if(payload.source == AppDispatcher.VIEW_ACTION) {
     switch (action.actionType) {
-      case ExercisesConstants.ADD_EXERCISE:
-        var resultAction = ExercisesConstants.ADD_USER;
+      case ExerciseManagerConstants.ADD_EXERCISE:
+        resultAction = ExerciseManagerConstants.ADD_EXERCISE;
         ExerciseManagerDAO.postExercise(action.data)
           .then(function(response) {
             PromiseHandlers.handleSuccess(resultAction, response);
@@ -49,7 +63,7 @@ AppDispatcher.register(function(payload) {
             switch (e.type) {
               case ResponseConstants.INVALID_DATA:
                 alert.text = 'Could not save the exercise properties';
-                //also set field alerts
+                //set field alerts
                 var state = ExerciseManagerStore.getExerciseEditorState();
                 state.properties.errors = e.messages;
                 ExerciseManagerStore.setExerciseEditorState(state);
@@ -59,14 +73,21 @@ AppDispatcher.register(function(payload) {
             ExerciseManagerStore.setAlert(alert);
           }));
         break;
-      case ExercisesConstants.SET_ALERT:
+      case ExerciseManagerConstants.EDIT_EXERCISE:
+        ExerciseManagerStore.setExerciseEditorState({properties: action.data});
+        resultAction = ExerciseManagerConstants.EDIT_EXERCISE_SOURCES_UPDATE_FROM_SERVER;
+        ExerciseManagerDAO.getExerciseSources(action.data.id)
+          .then(PromiseHandlers.handleSuccess.bind(null, resultAction))
+          .catch(PromiseHandlers.handleNotFound.bind(null, {}, resultAction));
+        break;
+      case ExerciseManagerConstants.SET_ALERT:
         ExerciseManagerStore.setAlert(action.data);
         break;
-      case ExercisesConstants.SHOW_ADD_EXERCISE:
+      case ExerciseManagerConstants.SHOW_ADD_EXERCISE:
         _showAddExercise = action.data;
         ExerciseManagerStore.emitChange();
         break;
-      case ExercisesConstants.SET_EXERCISE_EDITOR_STATE:
+      case ExerciseManagerConstants.SET_EXERCISE_EDITOR_STATE:
         ExerciseManagerStore.setExerciseEditorState(action.data);
         break;
       default:
@@ -77,6 +98,13 @@ AppDispatcher.register(function(payload) {
   //
   else if(payload.source == AppDispatcher.STORE_REFRESH){
     switch (action.actionType) {
+      case ExerciseManagerConstants.EDIT_EXERCISE_SOURCES_UPDATE_FROM_SERVER:
+        ExerciseManagerStore.setExerciseEditorState(Object.assign(_exerciseEditorState, {sourceFiles: action.data}));
+        break;
+      case ExerciseManagerConstants.EXERCISES_UPDATE_FROM_SERVER:
+        _exercises = action.data;
+        ExerciseManagerStore.emitChange();
+        break;
       default:
     }
   }

@@ -2,15 +2,14 @@
 
 var React = require('react');
 var PropTypes = React.PropTypes;
-var {Row,Col,ListGroup,Button,Glyphicon,Alert} = require('react-bootstrap');
+var {Row,Col,ListGroup,ListGroupItem,Button,Glyphicon,Alert} = require('react-bootstrap');
 
 var Actions = require('../../actions/admin/ExerciseManagerActions');
 var ConnectToStore = require('../../mixins/ConnectToStore');
-var ExerciseManagerStore = require('../../stores/admin/ExerciseManagerStore');
-var Forbidden = require('../../components/Forbidden.react');
 var ExerciseEditor = require('../../components/admin/ExerciseEditor.react');
-var ResponseConstants = require('../../constants/ResponseConstants');
-var ExercisesConstants = require('../../constants/admin/ExercisesConstants');
+var ExerciseManagerStore = require('../../stores/admin/ExerciseManagerStore');
+var ExerciseManagerActions = require('../../actions/admin/ExerciseManagerActions');
+var Forbidden = require('../../components/Forbidden.react');
 
 var ExerciseManager = React.createClass({
   propTypes: {
@@ -21,6 +20,7 @@ var ExerciseManager = React.createClass({
       return {
         alert: store.getAlert(),
         editorState: store.getExerciseEditorState(),
+        exercises: store.getExercises(),
         showAddExercise: store.showAddExercise()
       };
     })
@@ -36,7 +36,18 @@ var ExerciseManager = React.createClass({
       return (<Forbidden />);
     }
     var alert = this.state.ex.alert;
+    var exercises = this.state.ex.exercises;
 
+    if(this.state.ex.editorState) {
+      return (
+        <ExerciseEditor
+            {...this.state.ex.editorState}
+            doSaveExercise={(exercise) => Actions.addExercise(exercise)}
+            doUpdateExercise={this._setExerciseEditorState}
+            show
+        />
+      );
+    }
     return (
       <Row>
         <Col lg={8}>
@@ -52,12 +63,18 @@ var ExerciseManager = React.createClass({
             </Col>
           </Row>
           <Row><Col lg={12}>
-            <ExerciseEditor
-                {...this.state.ex.editorState}
-                doSaveExercise={(exercise) => Actions.addExercise(exercise)}
-                doUpdateExercise={this._setExerciseEditorState}
-                show={this.state.ex.showAddExercise}
-            />
+            <ListGroup>
+              {exercises && exercises.map((ex) => (
+                <ListGroupItem key={ex.id}>
+                  <Row>
+                    <Col lg={9}>{ex.name}</Col>
+                    <Col lg={3}>
+                      <Button bsSize='small' onClick={() => ExerciseManagerActions.editExercise(ex)}><Glyphicon glyph='pencil'/></Button>
+                    </Col>
+                  </Row>
+                </ListGroupItem>
+              ))}
+            </ListGroup>
           </Col></Row>
         </Col>
       </Row>
