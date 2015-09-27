@@ -42,7 +42,7 @@ var ExerciseManager = React.createClass({
       return (
         <ExerciseEditor
             {...this.state.ex.editorState}
-            doSaveExercise={(exercise) => Actions.addExercise(exercise)}
+            doSaveExercise={(id, exercise) => Actions.saveExercise(id, exercise)}
             doUpdateExercise={this._setExerciseEditorState}
             show
         />

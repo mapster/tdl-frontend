@@ -45,8 +45,8 @@ var ExerciseEditor = React.createClass({
           <Tab eventKey='properties' title='Properties'>
             <ExercisePropertyEditor
                 doSaveExercise={this.props.doSaveExercise}
-                doUpdateProperties={this._setExerciseProperties}
-                {...this.props.properties}
+                doChange={this._setExerciseProperties}
+                properties={this.props.properties}
             />
           </Tab>
           <Tab eventKey='sources' title='Sources'>

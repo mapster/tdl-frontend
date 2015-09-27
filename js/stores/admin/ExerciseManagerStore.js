@@ -73,6 +73,9 @@ AppDispatcher.register(function(payload) {
             ExerciseManagerStore.setAlert(alert);
           }));
         break;
+      case ExerciseManagerConstants.SAVE_EXERCISE:
+        console.log('doSave id: ' + action.id + " - " + JSON.stringify(action.data));
+        break;
       case ExerciseManagerConstants.EDIT_EXERCISE:
         ExerciseManagerStore.setExerciseEditorState({properties: action.data});
         resultAction = ExerciseManagerConstants.EDIT_EXERCISE_SOURCES_UPDATE_FROM_SERVER;
