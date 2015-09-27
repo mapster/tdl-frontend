@@ -12,7 +12,6 @@ var constants = [
   'SAVE_USER',
   'SAVE_AUTHS',
   'SET_DELETE_USER',
-  'SHOW_ADD_USER_FORM',
   'USERS_UPDATE_FROM_SERVER'
 ];
 

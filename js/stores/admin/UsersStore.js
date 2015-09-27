@@ -16,31 +16,29 @@ var USER_AUTHORIZATIONS_DEFAULT = {
 };
 
 var _users = false;
-var _editUser = false;
+var _editUserState = false;
 var _editUserAuths = false;
 var _error = false;
 var _deleteUser = false;
-var _userAlerts = [];
+var _userAlerts = {};
 var _showAddUserForm = false;
 
 var UsersStore = assign({}, StoreListenBase, {
   getUsers: function() {
     if (!_users) {
+      _users = [];
       this.refreshUsers();
     }
     return _users;
   },
-  getEditUser: function() {
-    return _editUser;
+  getEditUserState: function() {
+    return _editUserState;
   },
   getEditUserAuths: function() {
     return _editUserAuths;
   },
   getDeleteUser: function() {
     return _deleteUser;
-  },
-  showAddUserForm: function() {
-    return _showAddUserForm;
   },
   getError: function() {
     return _error;
@@ -69,7 +67,7 @@ AppDispatcher.register(function(payload) {
         _deleteUser = action.data;
         UsersStore.emitChange();
         break;
-      case UsersConstants.CONFIRM_USER_DELETE:
+      case UsersConstants.CONFIRM_DELETE_USER:
         UsersDAO.deleteUser(_deleteUser.id)
           .then(function() {
             _deleteUser = false;
@@ -78,11 +76,11 @@ AppDispatcher.register(function(payload) {
           .catch(PromiseHandlers.handleError.bind(null, (e) => UsersStore.setError(e)));
         break;
       case UsersConstants.EDIT_USER:
-        _editUser = action.data;
+        _editUserState = action.data;
         UsersStore.emitChange();
         break;
       case UsersConstants.CLOSE_EDIT_USER:
-        _editUser = false;
+        _editUserState = false;
         _error = false;
         UsersStore.emitChange();
         break;
@@ -94,15 +92,9 @@ AppDispatcher.register(function(payload) {
               text: 'Successfully updated.'
             };
             PromiseHandlers.handleSuccess(UsersConstants.SAVE_USER, action.id);
-            _editUser = false;
             UsersStore.refreshUsers();
           })
           .catch(PromiseHandlers.handleError.bind(null, (e) => UsersStore.setError(e)));
-        break;
-      case UsersConstants.SHOW_ADD_USER_FORM:
-        _showAddUserForm = action.data;
-        _error = false;
-        UsersStore.emitChange();
         break;
       case UsersConstants.ADD_USER:
         UsersDAO.postUser(action.data)
@@ -112,7 +104,6 @@ AppDispatcher.register(function(payload) {
               text: 'Successfully added.'
             };
             PromiseHandlers.handleSuccess(UsersConstants.ADD_USER, response);
-            _showAddUserForm = false;
             UsersStore.refreshUsers();
           })
           .catch(PromiseHandlers.handleError.bind(null, (e) => UsersStore.setError(e)));
@@ -146,7 +137,9 @@ AppDispatcher.register(function(payload) {
         UsersStore.setError(false);
         break;
       case UsersConstants.DISMISS_USER_ALERT:
-        _userAlerts[action.id] = false;
+        var change = Object.assign({}, _userAlerts);
+        change[action.id] = false;
+        _userAlerts = change;
         UsersStore.emitChange();
         break;
       default:

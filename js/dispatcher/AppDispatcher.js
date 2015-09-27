@@ -26,7 +26,7 @@ dispatcher.safeDispatch = function(source, action) {
 };
 
 dispatcher.handleViewAction = function(action) {
-  this.safeDispatch(this.VIEW_ACTION,action);
+  this.safeDispatch(this.VIEW_ACTION, action);
 };
 
 dispatcher.handleStoreRefreshAction = function(action) {

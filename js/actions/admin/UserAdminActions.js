@@ -17,8 +17,7 @@ var UserAdminActions = {
   },
   confirmUserDelete: function() {
     AppDispatcher.handleViewAction({
-      actionType: UsersConstants.CONFIRM_USER_DELETE
-    });
+      actionType: UsersConstants.CONFIRM_DELETE_USER});
   },
   dismissError: function() {
     AppDispatcher.handleViewAction({
@@ -31,7 +30,7 @@ var UserAdminActions = {
       id: userId
     });
   },
-  editUser: function(user) {
+  setEditUserState: function(user) {
     AppDispatcher.handleViewAction({
       actionType: UsersConstants.EDIT_USER,
       data: user
@@ -62,12 +61,6 @@ var UserAdminActions = {
       data: user
     });
   },
-  showAddUserForm: function(doShow) {
-    AppDispatcher.handleViewAction({
-      actionType: UsersConstants.SHOW_ADD_USER_FORM,
-      data: doShow
-    });
-  }
 };
 
 module.exports = UserAdminActions;

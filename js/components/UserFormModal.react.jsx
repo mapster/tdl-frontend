@@ -1,14 +1,8 @@
-var React = require('react');
+var React = require('react/addons');
 var PropTypes = React.PropTypes;
 var {Modal,Button,Input,Col,Row,Alert} = require('react-bootstrap');
 
 var ResponseConstants = require('../constants/ResponseConstants');
-
-function _handleChange(field, event) {
-  var change = this.state.user;
-  change[field] = event.target.value;
-  this.setState({user: change});
-}
 
 function _hasFeedback(field) {
   var error = this.props.error;
@@ -30,28 +24,28 @@ function _getStyle(field) {
 var UserFormModal = React.createClass({
   propTypes: {
     doCancel: PropTypes.func.isRequired,
+    doChange: PropTypes.func.isRequired,
     doDismissError: PropTypes.func.isRequired,
     doSave: PropTypes.func.isRequired,
     error: PropTypes.oneOfType([PropTypes.object, PropTypes.bool]).isRequired,
-    title: PropTypes.string,
-    user: PropTypes.oneOfType([PropTypes.object, PropTypes.bool]).isRequired
+    title: PropTypes.string.isRequired,
+    user: PropTypes.object.isRequired
   },
-  getInitialState: function() {
-    return {user: false};
+  shouldComponentUpdate: function(nextProps) {
+    var {title, user} = this.props;
+    return title !== nextProps.title || user !== nextProps;
   },
-  componentWillReceiveProps: function(nextProps) {
-    if(this.props.user != nextProps.user){
-      var {name,email} = nextProps.user;
-      this.setState({
-        user: {
-          name: name,
-          email: email
-        }
-      });
-    }
+  _change: function(field, event) {
+    var user = Object.assign({}, this.props.user);
+    user[field] = event.target.value;
+    this.props.doChange({user});
+  },
+  _save: function() {
+    var {id,name,email,password,password_confirmation} = this.props.user;
+    this.props.doSave(id, {name,email,password,password_confirmation});
   },
   render: function() {
-    var user = this.state.user;
+    var user = this.props.user;
 
     // help functions for field feedback
     var style = _getStyle.bind(this);
@@ -76,7 +70,7 @@ var UserFormModal = React.createClass({
       }
     }
     return (
-      <Modal show={this.props.user && true} onHide={this.props.doCancel}>
+      <Modal show={user && true} onHide={this.props.doCancel}>
         <Modal.Header closeButton>
           <Modal.Title>{this.props.title}</Modal.Title>
           {errorMsg && (
@@ -85,34 +79,37 @@ var UserFormModal = React.createClass({
             </Row>
           )}
           <Row className='small-text text-muted'>
-            {this.props.user.id && (<Col lg={2}>User ID: {this.props.user.id}</Col>)}
-            {this.props.user.created_at && (<Col lg={4}>Created: {this.props.user.created_at}</Col>)}
-            {this.props.user.updated_at && (<Col lg={4}>Last update: {this.props.user.updated_at}</Col>)}
+            {user.id && (<Col lg={2}>User ID: {user.id}</Col>)}
+            {user.created_at && (<Col lg={4}>Created: {user.created_at}</Col>)}
+            {user.updated_at && (<Col lg={4}>Last update: {user.updated_at}</Col>)}
           </Row>
         </Modal.Header>
         <Modal.Body>
           <Input type='text' label='Name' value={user.name}
-              bsStyle={style('name')} help={msg('name')} hasFeedback={hasErr('name')} onChange={_handleChange.bind(this, 'name')}
+              bsStyle={style('name')} help={msg('name')} hasFeedback={hasErr('name')} onChange={this._change.bind(this, 'name')}
           />
           <Input type='email' label='Email' value={user.email}
-              bsStyle={style('email')} help={msg('email')} hasFeedback={hasErr('email')} onChange={_handleChange.bind(this, 'email')}
+              bsStyle={style('email')} help={msg('email')} hasFeedback={hasErr('email')} onChange={this._change.bind(this, 'email')}
           />
           <Input type='password' label='Password'
-              bsStyle={style('password')} help={msg('password')} hasFeedback={hasErr('password')} onChange={_handleChange.bind(this, 'password')}
+              bsStyle={style('password')} help={msg('password')} hasFeedback={hasErr('password')} onChange={this._change.bind(this, 'password')}
           />
           <Input type='password' label='Confirm'
               bsStyle={style('password_confirmation')} help={msg('password_confirmation')} hasFeedback={hasErr('password_confirmation')}
-              onChange={_handleChange.bind(this, 'password_confirmation')}
+              onChange={this._change.bind(this, 'password_confirmation')}
           />
         </Modal.Body>
         <Modal.Footer>
           <Button onClick={this.props.doCancel}>Cancel</Button>
-          <Button bsStyle='success' onClick={() => this.props.doSave(this.state.user)}>Save</Button>
+          <Button bsStyle='success' onClick={this._save}>Save</Button>
         </Modal.Footer>
       </Modal>
     );
   }
 
 });
+UserFormModal.buildState = function(title, user) {
+  return Object.assign({}, {title, user});
+};
 
 module.exports = UserFormModal;
