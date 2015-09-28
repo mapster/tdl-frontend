@@ -17,6 +17,7 @@ var PromiseHandlers = {
       actionType: actionType,
       data: response
     });
+    return response;
   },
 
   /**
@@ -68,6 +69,14 @@ var PromiseHandlers = {
           messages: response.responseText
         });
     }
+  }
+};
+PromiseHandlers.factory = {
+  handleSuccess: function(actionType) {
+    return PromiseHandlers.handleSuccess.bind(null, actionType);
+  },
+  handleError: function(actionType, receiver) {
+    return PromiseHandlers.handleError.bind(null, receiver);
   }
 };
 
