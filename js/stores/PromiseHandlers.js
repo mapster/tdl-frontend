@@ -15,6 +15,7 @@ var PromiseHandlers = {
   handleSuccess: function(actionType, response) {
     AppDispatcher.handleStoreRefreshAction({
       actionType: actionType,
+      type: ResponseConstants.OK,
       data: response
     });
     return response;
@@ -49,22 +50,25 @@ var PromiseHandlers = {
       case 409:
         receiver({
           type: ResponseConstants.INVALID_DATA,
-          messages: JSON.parse(response.responseText)
+          messages: JSON.parse(response.responseText),
+          status: response.status
         });
         break;
       case 403:
         receiver({
-          type: ResponseConstants.FORBIDDEN
+          type: ResponseConstants.FORBIDDEN,
+          status: 403
         });
         break;
       case 404:
         receiver({
-          type: ResponseConstants.NOT_FOUND
+          type: ResponseConstants.NOT_FOUND,
+          status: 404
         });
         break;
       default:
         receiver({
-          type: response.status + ' error',
+          type: ResponseConstants.ERROR,
           status: response.status,
           messages: response.responseText
         });
@@ -75,8 +79,11 @@ PromiseHandlers.factory = {
   handleSuccess: function(actionType) {
     return PromiseHandlers.handleSuccess.bind(null, actionType);
   },
-  handleError: function(actionType, receiver) {
+  handleError: function(receiver) {
     return PromiseHandlers.handleError.bind(null, receiver);
+  },
+  handleErrorResponse: function(actionType) {
+    return PromiseHandlers.handleError.bind(null, (e) => AppDispatcher.handleErrorResponse(Object.assign({}, {actionType}, e)));
   }
 };
 

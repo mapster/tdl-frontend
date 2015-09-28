@@ -8,8 +8,8 @@ var Actions = require('../../actions/admin/ExerciseManagerActions');
 var ConnectToStore = require('../../mixins/ConnectToStore');
 var ExerciseEditor = require('../../components/admin/ExerciseEditor.react');
 var ExerciseManagerStore = require('../../stores/admin/ExerciseManagerStore');
-var ExerciseManagerActions = require('../../actions/admin/ExerciseManagerActions');
 var Forbidden = require('../../components/Forbidden.react');
+var ResponseConstants = require('../../constants/ResponseConstants');
 
 var ExerciseManager = React.createClass({
   propTypes: {
@@ -24,9 +24,25 @@ var ExerciseManager = React.createClass({
       };
     })
   ],
+  _editNewExercise: function() {
+    Actions.setExerciseEditorState({properties: {}});
+  },
   _setExerciseEditorState: function (stateChange) {
     var newState = Object.assign({}, this.state.ex.editorState, stateChange);
     Actions.setExerciseEditorState(newState);
+  },
+  _renderAlert: function() {
+    var alert = this.state.ex.alert;
+    if(alert){
+      switch(alert.type) {
+        case ResponseConstants.OK:
+          return (<Alert bsStyle='success' onDismiss={Actions.dismissAlert}>{alert.userMsg}</Alert>);
+        case ResponseConstants.FORBIDDEN:
+        case ResponseConstants.ERROR:
+          return (<Alert bsStyle='danger' onDismiss={Actions.dismissAlert}>{alert.userMsg}</Alert>);
+      }
+    }
+    return false;
   },
 
   render: function() {
@@ -34,7 +50,6 @@ var ExerciseManager = React.createClass({
     if(!authorized.manage_exercises){
       return (<Forbidden />);
     }
-    var alert = this.state.ex.alert;
     var exercises = this.state.ex.exercises;
 
     var view;
@@ -42,9 +57,10 @@ var ExerciseManager = React.createClass({
       view = (
         <ExerciseEditor
             {...this.state.ex.editorState}
+            alert={this.state.ex.alert}
             doSaveExercise={(id, exercise) => Actions.saveExercise(id, exercise)}
             doUpdateExercise={this._setExerciseEditorState}
-            doClose={() => ExerciseManagerActions.setExerciseEditorState(false)}
+            doClose={() => {Actions.setExerciseEditorState(false); Actions.dismissAlert();}}
             show
         />
       );
@@ -56,7 +72,7 @@ var ExerciseManager = React.createClass({
               <Row>
                 <Col lg={9}>{ex.name}</Col>
                 <Col lg={3}>
-                  <Button bsSize='small' onClick={() => ExerciseManagerActions.editExercise(ex)}><Glyphicon glyph='pencil'/></Button>
+                  <Button bsSize='small' onClick={() => Actions.editExercise(ex)}><Glyphicon glyph='pencil'/></Button>
                 </Col>
               </Row>
             </ListGroupItem>
@@ -70,12 +86,12 @@ var ExerciseManager = React.createClass({
           <Row>
             <Col lg={10}><h1 className='inline'>Exercises</h1></Col>
             <Col lg={2} className='right'>
-                <Button bsSize='medium' onClick={() => ExerciseManagerActions.editExercise({})}><Glyphicon glyph='plus'/></Button>
+                <Button bsSize='medium' onClick={this._editNewExercise}><Glyphicon glyph='plus'/></Button>
             </Col>
           </Row>
           <Row>
             <Col lg={8}>
-              {alert && (<Alert bsStyle={alert.type} onDismiss={Actions.dismissAlert}>{alert.text}</Alert>)}
+              {this._renderAlert()}
             </Col>
           </Row>
           <Row><Col lg={12}>{view}</Col></Row>

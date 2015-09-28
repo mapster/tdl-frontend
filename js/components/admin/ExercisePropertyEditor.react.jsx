@@ -8,9 +8,9 @@ var ExerciseConstants = require('../../constants/ExerciseConstants');
 
 var ExercisePropertyEditor = React.createClass({
   propTypes: {
+    alert: PropTypes.oneOfType([PropTypes.object, PropTypes.bool]),
     doChange: PropTypes.func.isRequired,
     doSaveExercise: PropTypes.func.isRequired,
-    errors: PropTypes.oneOfType([PropTypes.object, PropTypes.bool]),
     properties: PropTypes.object.isRequired
   },
   _change: function (field, event) {
@@ -18,9 +18,6 @@ var ExercisePropertyEditor = React.createClass({
     change[field] = event.target.value;
     change._unsaved = true;
     this.props.doChange(change);
-  },
-  _doClearChanges: function() {
-    //TODO implement
   },
   _doSaveExercise: function() {
     var {id,name,kind,difficulty,description} = this.props.properties;
@@ -31,7 +28,7 @@ var ExercisePropertyEditor = React.createClass({
     return this._help(field) && true;
   },
   _help: function(field) {
-    var e = this.props.properties._errors;
+    var e = this.props.alert;
     return (e && e[field]) || false;
   },
   _style: function(field) {
@@ -58,7 +55,7 @@ var ExercisePropertyEditor = React.createClass({
             value={kind}
             onChange={this._change.bind(this, 'kind')}
         >
-          {!kind && <option value=''>Select kind...</option>}
+          {!kind && <option selected value=''>Select kind...</option>}
           <option value='expectation'>Expectation</option>
           <option value='error'>Error</option>
           <option value='implementation'>Implementation</option>
@@ -75,7 +72,7 @@ var ExercisePropertyEditor = React.createClass({
             feedback={this._feedback('description')}
             onChange={this._change.bind(this, 'description')}
         />
-        <Button onClick={this._doClearChanges}>Clear</Button>
+        <Button type='reset'>Clear</Button>
         <Button bsStyle='success' disabled={!_unsaved} onClick={this._doSaveExercise}>Save</Button>
       </form>
     );

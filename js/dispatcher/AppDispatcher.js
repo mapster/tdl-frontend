@@ -6,6 +6,7 @@ var dispatcher = new Dispatcher();
 dispatcher.VIEW_ACTION = 'VIEW_ACTION';
 dispatcher.STORE_REFRESH = 'STORE_REFRESH';
 dispatcher.SERVER_ACTION = 'SERVER_ACTION';
+dispatcher.ERROR_RESPONSE = 'ERROR_RESPONSE';
 
 function error(msg) {
   console.error('AppDispatcher - ' + msg);
@@ -35,6 +36,10 @@ dispatcher.handleStoreRefreshAction = function(action) {
 
 dispatcher.handleServerAction = function(action) {
   this.safeDispatch(this.SERVER_ACTION, action);
+};
+
+dispatcher.handleErrorResponse = function(action) {
+  this.safeDispatch(this.ERROR_RESPONSE, action);
 };
 
 module.exports = dispatcher;

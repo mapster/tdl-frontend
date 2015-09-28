@@ -7,7 +7,6 @@ require('brace/theme/github');
 
 var {Tabs,Tab,Row,Col,Button,ButtonGroup} = require('react-bootstrap');
 
-
 var SourcesManager = React.createClass({
   propTypes: {
     doChange: PropTypes.func.isRequired,
@@ -30,8 +29,10 @@ var SourcesManager = React.createClass({
   },
   _onFileChange: function(name, contents) {
     var change = this.props.sourceFiles;
-    change[name].contents = contents;
-    this.props.doChange({sourceFiles: change});
+    if(contents !== change[name].contents){
+      change[name].contents = contents;
+      this.props.doChange(change);
+    }
   },
 
   render: function() {

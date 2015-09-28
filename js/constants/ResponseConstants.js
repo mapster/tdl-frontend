@@ -7,7 +7,7 @@ var constants = [
   'NOT_FOUND',
   'FORBIDDEN',
   'INTERNAL_ERROR',
-  'UNHANDLED_ERROR'
+  'ERROR'
 ];
 
 var obj = {};
