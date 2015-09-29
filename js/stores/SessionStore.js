@@ -33,22 +33,6 @@ AppDispatcher.register(function(payload) {
   // View action
   //
   if(payload.source == AppDispatcher.VIEW_ACTION) {
-    var actionType;
-    switch (action.actionType) {
-      case SessionConstants.LOGIN:
-        actionType = SessionConstants.SESSION_UPDATE_FROM_SERVER;
-        SessionDAO.login(action.credentials)
-          .then(PromiseHandlers.handleSuccess.bind(null, actionType))
-          .catch(PromiseHandlers.handleNotFound.bind(null, {}, actionType));
-        break;
-      case SessionConstants.LOGOUT:
-        actionType = SessionConstants.SESSION_UPDATE_FROM_SERVER;
-        SessionDAO.logout()
-          .then(PromiseHandlers.handleSuccess.bind(null, actionType))
-          .catch(PromiseHandlers.handleNotFound.bind(null, {}, actionType));
-        break;
-      default:
-    }
   }
   //==========
   // Store refresh
