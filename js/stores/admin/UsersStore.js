@@ -83,18 +83,6 @@ AppDispatcher.register(function(payload) {
         _error = false;
         UsersStore.emitChange();
         break;
-      case UsersConstants.ADD_USER:
-        UsersDAO.postUser(action.data)
-          .then(function(response) {
-            _userAlerts[response.id] = {
-              type: 'success',
-              text: 'Successfully added.'
-            };
-            PromiseHandlers.handleSuccess(UsersConstants.ADD_USER, response);
-            UsersStore.refreshUsers();
-          })
-          .catch(PromiseHandlers.handleError.bind(null, (e) => UsersStore.setError(e)));
-        break;
       case UsersConstants.EDIT_USER_AUTHS:
         if(!action.data){
           _editUserAuths = false;
@@ -148,7 +136,7 @@ AppDispatcher.register(function(payload) {
       case UsersConstants.SAVE_USER:
         _userAlerts[action.data.id] = {
           type: 'success',
-          text: 'Successfully updated.'
+          text: 'Successfully saved'
         };
         _error = false;
         _editUserState = false;

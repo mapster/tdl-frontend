@@ -6,12 +6,6 @@ var UsersConstants = require('../../constants/admin/UsersConstants');
 var UsersDAO = require('../../dao/admin/UsersDAO');
 
 var UserAdminActions = {
-  addUser: function(user) {
-    AppDispatcher.handleViewAction({
-      actionType: UsersConstants.ADD_USER,
-      data: user
-    });
-  },
   closeEditUser: function() {
     AppDispatcher.handleViewAction({
       actionType: UsersConstants.CLOSE_EDIT_USER

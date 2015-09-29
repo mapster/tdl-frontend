@@ -2,7 +2,6 @@
 
 var PREFIX = 'ADMIN_USERS_STORE_';
 var constants = [
-  'ADD_USER',
   'CLOSE_EDIT_USER',
   'CONFIRM_DELETE_USER',
   'DISMISS_ALERT',
