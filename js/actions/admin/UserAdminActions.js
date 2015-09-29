@@ -1,7 +1,9 @@
 'use strict';
 
 var AppDispatcher = require('../../dispatcher/AppDispatcher');
+var PromiseHandlers = require('../../stores/PromiseHandlers').factory;
 var UsersConstants = require('../../constants/admin/UsersConstants');
+var UsersDAO = require('../../dao/admin/UsersDAO');
 
 var UserAdminActions = {
   addUser: function(user) {
@@ -43,11 +45,13 @@ var UserAdminActions = {
     });
   },
   saveUser: function(id, user) {
-    AppDispatcher.handleViewAction({
-      actionType: UsersConstants.SAVE_USER,
-      data: user,
-      id: id
-    });
+    var doThen = PromiseHandlers.handleSuccess(UsersConstants.SAVE_USER);
+    var doCatch = PromiseHandlers.handleErrorResponse(UsersConstants.SAVE_USER);
+    if(id === undefined){
+      UsersDAO.postUser(user).then(doThen).catch(doCatch);
+    } else {
+      UsersDAO.putUser(id, user).then(doThen).catch(doCatch);
+    }
   },
   saveUserAuths: function(auth) {
     AppDispatcher.handleViewAction({
@@ -60,7 +64,7 @@ var UserAdminActions = {
       actionType: UsersConstants.SET_DELETE_USER,
       data: user
     });
-  },
+  }
 };
 
 module.exports = UserAdminActions;

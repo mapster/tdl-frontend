@@ -83,18 +83,6 @@ AppDispatcher.register(function(payload) {
         _error = false;
         UsersStore.emitChange();
         break;
-      case UsersConstants.SAVE_USER:
-        UsersDAO.putUser(action.id, action.data)
-          .then(function() {
-            _userAlerts[action.id] = {
-              type: 'success',
-              text: 'Successfully updated.'
-            };
-            PromiseHandlers.handleSuccess(UsersConstants.SAVE_USER, action.id);
-            UsersStore.refreshUsers();
-          })
-          .catch(PromiseHandlers.handleError.bind(null, (e) => UsersStore.setError(e)));
-        break;
       case UsersConstants.ADD_USER:
         UsersDAO.postUser(action.data)
           .then(function(response) {
@@ -157,10 +145,31 @@ AppDispatcher.register(function(payload) {
         _users = action.data;
         UsersStore.emitChange();
         break;
+      case UsersConstants.SAVE_USER:
+        _userAlerts[action.data.id] = {
+          type: 'success',
+          text: 'Successfully updated.'
+        };
+        _error = false;
+        _editUserState = false;
+        UsersStore.refreshUsers();
+        break;
       case SessionConstants.SESSION_UPDATE_FROM_SERVER:
         UsersStore.refreshUsers();
         break;
       default:
+    }
+  }
+  //==============
+  // ERROR_RESPONSE
+  //
+  else if(payload.source === AppDispatcher.ERROR_RESPONSE) {
+    switch (action.actionType) {
+      case UsersConstants.SAVE_USER:
+        var error = Object.assign({}, action);
+        error.userMsg = 'Could not save user: ' + error.status;
+        UsersStore.setError(error);
+        break;
     }
   }
 });

@@ -48,14 +48,6 @@ var UserAdmin = React.createClass({
   _changeEditUserState: function(change) {
     UserAdminActions.setEditUserState(Object.assign(this.state.users.editUserState, change));
   },
-  _saveUser: function(id, user) {
-    if(id === undefined){
-      UserAdminActions.addUser(user);
-    } else {
-      UserAdminActions.saveUser(id, user);
-    }
-    UserAdminActions.setEditUserState(false);
-  },
 
   render: function() {
     var authorized = this.props.user && this.props.user.auth && this.props.user.auth;
@@ -70,9 +62,9 @@ var UserAdmin = React.createClass({
         {this.state.users.editUserState && (
           <UserFormModal
               doCancel={() => UserAdminActions.setEditUserState(false)}
-              doDismissError={() => UserAdminActions.dismissError()}
-              doSave={this._saveUser}
-              error={this.state.users.error}
+              doDismissAlert={() => UserAdminActions.dismissError()}
+              doSave={UserAdminActions.saveUser}
+              alert={this.state.users.error}
               doChange={this._changeEditUserState}
               {...this.state.users.editUserState}
           />
