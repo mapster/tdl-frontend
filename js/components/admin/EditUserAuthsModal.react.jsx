@@ -30,7 +30,7 @@ var EditUserAuthsModal = React.createClass({
     if(this.props.auth != nextProps.auth){
       var auth = {};
       Object.keys(AUTH_FIELDS).forEach((f) => auth[f] = nextProps.auth[f]);
-      this.setState({auth: auth});
+      this.setState({user_id: nextProps.auth.user_id, auth: auth});
     }
   },
   render: function() {
@@ -53,7 +53,7 @@ var EditUserAuthsModal = React.createClass({
         </Modal.Body>
         <Modal.Footer>
           <Button onClick={this.props.doCancel}>Cancel</Button>
-          <Button bsStyle='success' onClick={() => this.props.doSave(this.state.auth)}>Save</Button>
+          <Button bsStyle='success' onClick={() => this.props.doSave(this.state.user_id, this.state.auth)}>Save</Button>
         </Modal.Footer>
       </Modal>
     );

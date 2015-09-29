@@ -32,10 +32,21 @@ var UserAdminActions = {
     });
   },
   editUserAuths: function(userId) {
-    AppDispatcher.handleViewAction({
-      actionType: UsersConstants.EDIT_USER_AUTHS,
-      data: userId
-    });
+    var actionType = UsersConstants.EDIT_USER_AUTHS;
+    if(!userId){
+      AppDispatcher.handleStoreRefreshAction({actionType, data: false});
+    }
+    else {
+      UsersDAO.getAuth(userId)
+        .then(PromiseHandlers.handleSuccess(actionType))
+        .catch((response) => {
+          if(response.status === 404) {
+            AppDispatcher.handleStoreRefreshAction({actionType, data: {user_id: userId}});
+          } else {
+            PromiseHandlers.handleErrorResponse(actionType)(response);
+          }
+        });
+    }
   },
   saveUser: function(id, user) {
     var doThen = PromiseHandlers.handleSuccess(UsersConstants.SAVE_USER);
@@ -46,11 +57,11 @@ var UserAdminActions = {
       UsersDAO.putUser(id, user).then(doThen).catch(doCatch);
     }
   },
-  saveUserAuths: function(auth) {
-    AppDispatcher.handleViewAction({
-      actionType: UsersConstants.SAVE_AUTHS,
-      data: auth
-    });
+  saveUserAuths: function(userId, auth) {
+    var actionType = UsersConstants.SAVE_AUTHS;
+    UsersDAO.putAuths(userId, auth)
+      .then(PromiseHandlers.handleSuccess(actionType))
+      .catch(PromiseHandlers.handleErrorResponse(actionType));
   },
   setDeleteUser: function(user) {
     AppDispatcher.handleViewAction({
