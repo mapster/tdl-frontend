@@ -120,7 +120,7 @@ AppDispatcher.register(function(payload) {
           })
           .catch(PromiseHandlers.handleError.bind(null, (e) => UsersStore.setError(e)));
         break;
-      case UsersConstants.DISMISS_ERROR:
+      case UsersConstants.DISMISS_ALERT:
         UsersStore.setError(false);
         break;
       case UsersConstants.DISMISS_USER_ALERT:

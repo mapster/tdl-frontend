@@ -62,7 +62,7 @@ var UserAdmin = React.createClass({
         {this.state.users.editUserState && (
           <UserFormModal
               doCancel={() => UserAdminActions.setEditUserState(false)}
-              doDismissAlert={() => UserAdminActions.dismissError()}
+              doDismissAlert={UserAdminActions.dismissAlert}
               doSave={UserAdminActions.saveUser}
               alert={this.state.users.error}
               doChange={this._changeEditUserState}
@@ -72,13 +72,13 @@ var UserAdmin = React.createClass({
         <EditUserAuthsModal
             auth={this.state.users.editAuths}
             doCancel={() => UserAdminActions.editUserAuths(false)}
-            doDismissError={() => UserAdminActions.dismissError()}
+            doDismissError={UserAdminActions.dismissAlert}
             doSave={(auth) => UserAdminActions.saveUserAuths(auth)}
             error={this.state.users.error}
         />
         <ConfirmationModal
             doCancel={() => UserAdminActions.setDeleteUser(false)}
-            doDismissError={() => UserAdminActions.dismissError()}
+            doDismissError={UserAdminActions.dismissAlert}
             doOk={UserAdminActions.confirmUserDelete}
             error={_buildDeleteErrorMessage(this.state.users.error)}
             okStyle='danger'
