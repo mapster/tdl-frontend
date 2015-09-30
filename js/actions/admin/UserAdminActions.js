@@ -11,9 +11,11 @@ var UserAdminActions = {
       actionType: UsersConstants.CLOSE_EDIT_USER
     });
   },
-  confirmUserDelete: function() {
-    AppDispatcher.handleViewAction({
-      actionType: UsersConstants.CONFIRM_DELETE_USER});
+  confirmUserDelete: function(user) {
+    var actionType = UsersConstants.DELETE_USER;
+    UsersDAO.deleteUser(user.id)
+      .then(PromiseHandlers.handleSuccess(actionType))
+      .catch(PromiseHandlers.handleErrorResponse(actionType));
   },
   dismissAlert: function() {
     AppDispatcher.handleViewAction({

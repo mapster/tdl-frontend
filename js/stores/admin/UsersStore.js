@@ -61,14 +61,6 @@ AppDispatcher.register(function(payload) {
         _deleteUser = action.data;
         UsersStore.emitChange();
         break;
-      case UsersConstants.CONFIRM_DELETE_USER:
-        UsersDAO.deleteUser(_deleteUser.id)
-          .then(function() {
-            _deleteUser = false;
-            UsersStore.refreshUsers();
-          })
-          .catch(PromiseHandlers.handleError.bind(null, (e) => UsersStore.setError(e)));
-        break;
       case UsersConstants.EDIT_USER:
         _editUserState = action.data;
         UsersStore.emitChange();
@@ -95,14 +87,23 @@ AppDispatcher.register(function(payload) {
   //
   else if(payload.source == AppDispatcher.STORE_REFRESH){
     switch (action.actionType) {
+
       case UsersConstants.EDIT_USER_AUTHS:
         _editUserAuths = action.data;
         UsersStore.emitChange();
         break;
+
+      case UsersConstants.DELETE_USER:
+        _error = {userMsg: 'Successfully deleted: ' + _deleteUser.name};
+        _deleteUser = false;
+        UsersStore.refreshUsers();
+        break;
+
       case UsersConstants.USERS_UPDATE_FROM_SERVER:
         _users = action.data;
         UsersStore.emitChange();
         break;
+
       case UsersConstants.SAVE_AUTHS:
         var alert = {};
         alert[action.data.user_id] = {
@@ -113,6 +114,7 @@ AppDispatcher.register(function(payload) {
         _editUserAuths = false;
         UsersStore.emitChange();
         break;
+
       case UsersConstants.SAVE_USER:
         _userAlerts[action.data.id] = {
           type: 'success',
@@ -122,6 +124,7 @@ AppDispatcher.register(function(payload) {
         _editUserState = false;
         UsersStore.refreshUsers();
         break;
+
       case SessionConstants.SESSION_UPDATE_FROM_SERVER:
         UsersStore.refreshUsers();
         break;

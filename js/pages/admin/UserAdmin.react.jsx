@@ -79,7 +79,7 @@ var UserAdmin = React.createClass({
         <ConfirmationModal
             doCancel={() => UserAdminActions.setDeleteUser(false)}
             doDismissError={UserAdminActions.dismissAlert}
-            doOk={UserAdminActions.confirmUserDelete}
+            doOk={() => UserAdminActions.confirmUserDelete(confirmUserDelete)}
             error={_buildDeleteErrorMessage(this.state.users.error)}
             okStyle='danger'
             show={confirmUserDelete && true}
