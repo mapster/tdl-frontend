@@ -64,11 +64,6 @@ AppDispatcher.register(function(payload) {
         _editUserState = action.data;
         UsersStore.emitChange();
         break;
-      case UsersConstants.CLOSE_EDIT_USER:
-        _editUserState = false;
-        _error = false;
-        UsersStore.emitChange();
-        break;
       case UsersConstants.DISMISS_ALERT:
         UsersStore.setError(false);
         break;

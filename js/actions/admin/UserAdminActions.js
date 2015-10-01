@@ -7,11 +7,6 @@ var UsersConstants = require('../../constants/admin/UsersConstants');
 var UsersDAO = require('../../dao/admin/UsersDAO');
 
 var UserAdminActions = {
-  closeEditUser: function() {
-    AppDispatcher.handleViewAction({
-      actionType: UsersConstants.CLOSE_EDIT_USER
-    });
-  },
   confirmUserDelete: function(user) {
     var callbacks = [this.setDeleteUser.bind(null, false)];
     handlePromise(
@@ -20,7 +15,7 @@ var UserAdminActions = {
         actionType: UsersConstants.DELETE_USER,
         callbacks
       },{
-        403: 'Not authroized to delete user: '+user.name,
+        403: 'Not authorized to delete user: '+user.name,
         404: 'Could not delete non-existing user',
         default: 'Something went wrong while deleting user.',
         callbacks
@@ -48,15 +43,11 @@ var UserAdminActions = {
       AppDispatcher.handleStoreRefreshAction({actionType, data: false});
     }
     else {
-      UsersDAO.getAuth(userId)
-        .then(PromiseHandlers.handleSuccess(actionType))
-        .catch((response) => {
-          if(response.status === 404) {
-            AppDispatcher.handleStoreRefreshAction({actionType, data: {user_id: userId}});
-          } else {
-            PromiseHandlers.handleErrorResponse(actionType)(response);
-          }
-        });
+      handlePromise(UsersDAO.getAuth(userId), {actionType},{
+        403: 'Not authorized to fetch user authorizations',
+        404: AppDispatcher.handleStoreRefreshAction.bind(null, {actionType, data: {user_id: userId}}),
+        default: 'Something went wrong when fetching user authorizations'
+      });
     }
   },
   saveUser: function(id, user) {
@@ -70,9 +61,11 @@ var UserAdminActions = {
   },
   saveUserAuths: function(userId, auth) {
     var actionType = UsersConstants.SAVE_AUTHS;
-    UsersDAO.putAuths(userId, auth)
-      .then(PromiseHandlers.handleSuccess(actionType))
-      .catch(PromiseHandlers.handleErrorResponse(actionType));
+    handlePromise(UsersDAO.putAuths(userId, auth), {actionType}, {
+      400: ['Invalid data in the payload to save authorizations'],
+      403: 'Not authorized to save user authorizations',
+      default: 'Something went wrong when saving the user authorizations'
+    });
   },
   setDeleteUser: function(user) {
     AppDispatcher.handleViewAction({
