@@ -2,6 +2,7 @@
 
 var AppDispatcher = require('../../dispatcher/AppDispatcher');
 var PromiseHandlers = require('../../stores/PromiseHandlers').factory;
+var handlePromise = require('../../stores/PromiseHandlers').handlePromise;
 var UsersConstants = require('../../constants/admin/UsersConstants');
 var UsersDAO = require('../../dao/admin/UsersDAO');
 
@@ -12,10 +13,17 @@ var UserAdminActions = {
     });
   },
   confirmUserDelete: function(user) {
-    var actionType = UsersConstants.DELETE_USER;
-    UsersDAO.deleteUser(user.id)
-      .then(PromiseHandlers.handleSuccess(actionType))
-      .catch(PromiseHandlers.handleErrorResponse(actionType));
+    handlePromise(
+      UsersDAO.deleteUser(user.id), {
+        default: 'Successfully deleted user: '+user.name,
+        actionType: UsersConstants.DELETE_USER
+      },{
+        403: 'Not authroized to delete user: '+user.name,
+        404: 'Could not delete non-existing user',
+        default: 'Something went wrong while deleting user.'
+      });
+      // .then(PromiseHandlers.handleSuccess(actionType))
+      // .catch(PromiseHandlers.handleErrorResponse(actionType));
   },
   dismissAlert: function() {
     AppDispatcher.handleViewAction({
