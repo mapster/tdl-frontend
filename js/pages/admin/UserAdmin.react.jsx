@@ -83,7 +83,7 @@ var UserAdmin = React.createClass({
             error={_buildDeleteErrorMessage(this.state.users.error)}
             okStyle='danger'
             show={confirmUserDelete && true}
-            text={'Delete user: ' + confirmUserDelete.name}
+            text={confirmUserDelete.name && 'Delete user: ' + confirmUserDelete.name}
         />
         <Col lg={8}>
           <Row>

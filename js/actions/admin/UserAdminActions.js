@@ -13,17 +13,18 @@ var UserAdminActions = {
     });
   },
   confirmUserDelete: function(user) {
+    var callbacks = [this.setDeleteUser.bind(null, false)];
     handlePromise(
       UsersDAO.deleteUser(user.id), {
         default: 'Successfully deleted user: '+user.name,
-        actionType: UsersConstants.DELETE_USER
+        actionType: UsersConstants.DELETE_USER,
+        callbacks
       },{
         403: 'Not authroized to delete user: '+user.name,
         404: 'Could not delete non-existing user',
-        default: 'Something went wrong while deleting user.'
+        default: 'Something went wrong while deleting user.',
+        callbacks
       });
-      // .then(PromiseHandlers.handleSuccess(actionType))
-      // .catch(PromiseHandlers.handleErrorResponse(actionType));
   },
   dismissAlert: function() {
     AppDispatcher.handleViewAction({

@@ -111,6 +111,10 @@ function _doThen(thenProps, resolveValue) {
     if(actionType) {
       AppDispatcher.handleStoreRefreshAction({actionType, data: response});
     }
+    if(thenProps.callbacks) {
+      thenProps.callbacks.forEach((cb) => cb());
+    }
+    //assign default values before notification dispatch.
     thenProps = Object.assign({notificationType: 'success'}, thenProps);
     _dispatchNotification(thenProps, jqXHR.status);
   }
@@ -122,6 +126,9 @@ function _doCatch(catchProps, rejectValue) {
     var actionType = catchProps.actionType;
     if(actionType) {
       AppDispatcher.handleErrorResponse({actionType, data: jqXHR.responseText});
+    }
+    if(catchProps.callbacks) {
+      catchProps.callbacks.forEach((cb) => cb());
     }
     //assign default values before notification dispatch.
     catchProps = Object.assign({notificationType: 'danger'}, catchProps);

@@ -9,7 +9,6 @@ var SessionConstants = require('../../constants/SessionConstants');
 var StoreListenBase = require('../StoreListenBase');
 var PromiseHandlers = require('../PromiseHandlers');
 
-
 var _users = false;
 var _editUserState = false;
 var _editUserAuths = false;
@@ -94,8 +93,6 @@ AppDispatcher.register(function(payload) {
         break;
 
       case UsersConstants.DELETE_USER:
-        _error = {userMsg: 'Successfully deleted: ' + _deleteUser.name};
-        _deleteUser = false;
         UsersStore.refreshUsers();
         break;
 
