@@ -7,7 +7,7 @@ module.exports = (function() {
   function _promiseFulfilled(promiseID, callback) {
     return function(arg1, arg2, arg3) {
       delete _promises[promiseID];
-      callback(arg1, arg2, arg3);
+      callback([arg1, arg2, arg3]);
     };
   }
 
