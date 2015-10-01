@@ -1,6 +1,7 @@
 'use strict';
 
 var React = require('react');
+var NotificationView = require('../../components/NotificationView.react');
 var {PropTypes} = React;
 var {Grid,Row,Col} = require('react-bootstrap');
 
@@ -9,6 +10,7 @@ var Header = require('../../components/Header.react');
 var AdminApp = React.createClass({
   propTypes: {
     children: PropTypes.node,
+    notification: PropTypes.oneOfType([PropTypes.object, PropTypes.bool]),
     session: PropTypes.oneOfType([PropTypes.object, PropTypes.bool]),
     user: PropTypes.oneOfType([PropTypes.object, PropTypes.bool])
   },
@@ -40,6 +42,9 @@ var AdminApp = React.createClass({
             <Col lg={12}>
               <Header title='JavaTDL Admin' menu={menu} auth={auth} session={this.props.session} />
             </Col>
+          </Row>
+          <Row>
+            <Col lg={12}><NotificationView notification={this.props.notification} /></Col>
           </Row>
           <Row>
             <Col lg={12}>

@@ -29,15 +29,10 @@ var SessionStore = assign({}, StoreListenBase, {
 AppDispatcher.register(function(payload) {
   var action = payload.action;
 
-  //============
-  // View action
-  //
-  if(payload.source == AppDispatcher.VIEW_ACTION) {
-  }
   //==========
   // Store refresh
   //
-  else if(payload.source == AppDispatcher.STORE_REFRESH) {
+  if(payload.source == AppDispatcher.STORE_REFRESH) {
     switch (action.actionType) {
       case SessionConstants.SESSION_UPDATE_FROM_SERVER:
         _session = action.data;
