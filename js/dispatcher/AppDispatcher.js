@@ -23,23 +23,23 @@ dispatcher.safeDispatch = function(source, action) {
   else if(action.actionType === undefined) {
     error('Undefined actionType from source ' + source + ' for dispatched action: ' + JSON.stringify(action));
   }
-  this.dispatch({source, action});
+  dispatcher.dispatch({source, action});
 };
 
 dispatcher.handleViewAction = function(action) {
-  this.safeDispatch(this.VIEW_ACTION, action);
+  dispatcher.safeDispatch(dispatcher.VIEW_ACTION, action);
 };
 
 dispatcher.handleStoreRefreshAction = function(action) {
-  this.safeDispatch(this.STORE_REFRESH, action);
+  dispatcher.safeDispatch(dispatcher.STORE_REFRESH, action);
 };
 
 dispatcher.handleServerAction = function(action) {
-  this.safeDispatch(this.SERVER_ACTION, action);
+  dispatcher.safeDispatch(dispatcher.SERVER_ACTION, action);
 };
 
 dispatcher.handleErrorResponse = function(action) {
-  this.safeDispatch(this.ERROR_RESPONSE, action);
+  dispatcher.safeDispatch(dispatcher.ERROR_RESPONSE, action);
 };
 
 module.exports = dispatcher;

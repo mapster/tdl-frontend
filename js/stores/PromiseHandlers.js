@@ -89,55 +89,82 @@ PromiseHandlers.factory = {
   }
 };
 
-function _dispatchNotification(props, status) {
-  var text = props.default;
-  if(props.hasOwnProperty(status)){
-    text = props[status];
-  }
-  if(text){
-    var type = props.notificationType || 'default';
+function isFunction(functionToCheck) {
+  var getType = {};
+  return functionToCheck && getType.toString.call(functionToCheck) === '[object Function]';
+}
+
+function _doStatusHandler(notificationType, response, status, statusHandler) {
+  if(isFunction(statusHandler)) {
+    statusHandler(response, status);
+  } else if(typeof statusHandler === 'string') {
     AppDispatcher.handleStoreRefreshAction({
       actionType: Constants.NOTIFICATION,
-      data: {text, type}
+      data: {text: statusHandler, type: notificationType}
     });
+  } else {
+    throw new Error('promiseHandler: Invalid value in status-case');
   }
 }
 
-function _doThen(thenProps, resolveValue) {
-  var response = resolveValue[0];
-  var jqXHR = resolveValue[2];
-  if(thenProps) {
-    var actionType = thenProps.actionType;
+function _doPromise(props, doDispatch, response, status) {
+  if(props) {
+    var actionType = props.actionType;
     if(actionType) {
-      AppDispatcher.handleStoreRefreshAction({actionType, data: response});
+      doDispatch({actionType, data: response});
     }
-    if(thenProps.callbacks) {
-      thenProps.callbacks.forEach((cb) => cb());
+    if(props.callbacks) {
+      props.callbacks.forEach((cb) => cb(response, status));
     }
-    //assign default values before notification dispatch.
-    thenProps = Object.assign({notificationType: 'success'}, thenProps);
-    _dispatchNotification(thenProps, jqXHR.status);
+
+    var statusHandler = props.default;
+    if(props.hasOwnProperty(status)){
+      statusHandler = props[status];
+    }
+    if(statusHandler){
+      var _handler = _doStatusHandler.bind(null, props.notificationType, response, status);
+      if(Array.isArray(statusHandler)) {
+        statusHandler.forEach((h) => _handler(h));
+      } else {
+        _handler(statusHandler);
+      }
+    }
   }
 }
 
-function _doCatch(catchProps, rejectValue) {
-  var jqXHR = rejectValue[0];
-  if(catchProps) {
-    var actionType = catchProps.actionType;
-    if(actionType) {
-      AppDispatcher.handleErrorResponse({actionType, data: jqXHR.responseText});
-    }
-    if(catchProps.callbacks) {
-      catchProps.callbacks.forEach((cb) => cb());
-    }
-    //assign default values before notification dispatch.
-    catchProps = Object.assign({notificationType: 'danger'}, catchProps);
-    _dispatchNotification(catchProps, jqXHR.status);
-  }
-}
-
+/**
+ * Generic promise handler.
+ * Declare actions for success and error in thenProps and catchProps.
+ *
+ * The props objects can have the following properties:
+ * actionType, switch-cases for responseStatus, notificationType, and callbacks.
+ *
+ * The actionType causes a handleStoreRefreshAction dispatch for success,
+ * and a handleErrorResponse dispatch for error.
+ *
+ * The switch-cases may be a single value, or an array of values. The value
+ * types allowed are string and function. If the value is a string, it will
+ * be dispatched as a notification with the notificationType given in the props.
+ * If it is a function it will be invoked with response and responseStatus as
+ * arguments.
+ *
+ * The notificationType is the type associated with notification dispatches.
+ * The default values for success and error are 'success' and 'danger.
+ *
+ * The functions in callbacks will be invoked with response and responseStatus as
+ * arguments.
+ *
+ * @param  {Promise} promise    Promised ajax request (produced by dao/promiseRequest).
+ * @param  {Object} thenProps  Properties for success scenario.
+ * @param  {Object} catchProps Properties for error scenario.
+ */
 PromiseHandlers.handlePromise = function(promise, thenProps, catchProps) {
-  promise.then(_doThen.bind(null, thenProps)).catch(_doCatch.bind(null, catchProps));
+  //assign default values before notification dispatch.
+  thenProps = Object.assign({notificationType: 'success'}, thenProps);
+  catchProps = Object.assign({notificationType: 'danger'}, catchProps);
+  promise
+    .then((v) => _doPromise(thenProps, AppDispatcher.handleStoreRefreshAction, v[0], v[2].status))
+    .catch((v) => _doPromise(catchProps, AppDispatcher.handleErrorResponse, v[0].responseText, v[0].status));
 };
 
 module.exports = PromiseHandlers;
