@@ -11,26 +11,26 @@ var ResponseConstants = require('../../constants/ResponseConstants');
 
 var ExerciseEditor = React.createClass({
   propTypes: {
-    alert: PropTypes.oneOfType([PropTypes.object, PropTypes.bool]),
     doClose: PropTypes.func.isRequired,
+    doCreateNewFile: PropTypes.func.isRequired,
     doResetExerciseProperties: PropTypes.func.isRequired,
-    doSaveExercise: PropTypes.func.isRequired,
-    doUpdateExercise: PropTypes.func.isRequired,
+    doSaveExerciseProperties: PropTypes.func.isRequired,
+    doSetEditorTab: PropTypes.func.isRequired,
+    doUpdateExerciseProperties: PropTypes.func.isRequired,
+    doUpdateSourceFile: PropTypes.func.isRequired,
     feedback: PropTypes.object.isRequired,
-    newFilesCounter: PropTypes.number.isRequired,
+    newFileId: PropTypes.number.isRequired,
     origProperties: PropTypes.object.isRequired,
     properties: PropTypes.object.isRequired,
     show: PropTypes.bool.isRequired,
     sourceFiles: PropTypes.object.isRequired,
-    sourceTab: PropTypes.string,
-    tab: PropTypes.string
+    tab: PropTypes.string,
+
+    alert: PropTypes.oneOfType([PropTypes.object, PropTypes.bool]),
+    sourceTab: PropTypes.string
   },
   getDefaultProps: function() {
-    return {
-      sourceFiles: {},
-      newFilesCounter: 0,
-      tab: 'properties'
-    };
+    return {tab: 'properties'};
   },
   _passPropertiesAlerts: function() {
     var alert = this.props.alert;
@@ -60,13 +60,13 @@ var ExerciseEditor = React.createClass({
           <Col lg={3}><Button onClick={this.props.doClose}><Glyphicon glyph='arrow-left'/> Back</Button></Col>
         </Row>
         <Row>
-          <Tabs position='left' activeKey={this.props.tab} onSelect={(tab) => this.props.doUpdateExercise({tab})}>
+          <Tabs position='left' activeKey={this.props.tab} onSelect={this.props.doSetEditorTab}>
             <Tab eventKey='properties' title={this._tabTitle('Properties', this.props.properties['@saved'])}>
               <ExercisePropertyEditor
                   alert={this._passPropertiesAlerts()}
-                  doChange={this.props.doUpdateExercise}
+                  doChange={this.props.doUpdateExerciseProperties}
                   doReset={() => this.props.doResetExerciseProperties(this.props.origProperties)}
-                  doSaveExercise={this.props.doSaveExercise}
+                  doSaveExercise={this.props.doSaveExerciseProperties}
                   properties={this.props.properties}
                   feedback={this.props.feedback}
               />
@@ -74,9 +74,9 @@ var ExerciseEditor = React.createClass({
             {this.props.properties.id && (
               <Tab eventKey='sources' title='Sources'>
                 <SourcesManager
-                    doChange={this._setSourceFiles}
+                    doUpdateSourceFile={this.props.doUpdateSourceFile}
+                    doCreateNewFile={() => this.props.doCreateNewFile(this.props.newFileId)}
                     sourceFiles={this.props.sourceFiles}
-                    newFilesCounter={this.props.newFilesCounter}
                 />
               </Tab>
             )}

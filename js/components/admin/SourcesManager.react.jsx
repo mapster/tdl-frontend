@@ -9,29 +9,17 @@ var {Tabs,Tab,Row,Col,Button,ButtonGroup} = require('react-bootstrap');
 
 var SourcesManager = React.createClass({
   propTypes: {
-    doChange: PropTypes.func.isRequired,
+    doCreateNewFile: PropTypes.func.isRequired,
     doSaveFile: PropTypes.func.isRequired,
-    newFilesCounter: PropTypes.number.isRequired,
+    doUpdateSourceFile: PropTypes.func.isRequired,
     sourceFiles: PropTypes.object.isRequired
   },
   _aceId: function(name) {
     return 'ace-editor-'+name+'-'+this.props.sourceFiles[name].id;
   },
-  _doCreateNewFile: function() {
-    var count = this.props.newFilesCounter + 1;
-    var name = 'unsaved-file-' + count;
-    var newFile = {};
-    newFile[name] = {name, contents: ''};
-    this.props.doChange({
-      sourceFiles: Object.assign({}, this.props.sourceFiles, newFile),
-      newFilesCounter: count
-    });
-  },
   _onFileChange: function(name, contents) {
-    var change = this.props.sourceFiles;
-    if(contents !== change[name].contents){
-      change[name].contents = contents;
-      this.props.doChange(change);
+    if(contents !== this.props.sourceFiles[name].contents){
+      this.props.doUpdateSourceFile(name, contents);
     }
   },
 
@@ -50,7 +38,7 @@ var SourcesManager = React.createClass({
         </Col>
         <Col lg={2}>
           <ButtonGroup vertical>
-            <Button onClick={this._doCreateNewFile}>New file</Button>
+            <Button onClick={this.props.doCreateNewFile}>New file</Button>
             <Button onClick={this.props.doSaveFile}>Save</Button>
           </ButtonGroup>
         </Col>

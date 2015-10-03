@@ -1,7 +1,6 @@
 'use strict';
 
-var assign = require('object-assign');
-
+var React = require('react/addons');
 var AppDispatcher = require('../../dispatcher/AppDispatcher');
 var ExerciseManagerDAO = require('../../dao/admin/ExerciseManagerDAO');
 var Constants = require('../../constants/admin/ExerciseManagerConstants');
@@ -12,7 +11,7 @@ var _alert = false;
 var _exercises = false;
 var _exerciseEditorState = {};
 
-var ExerciseManagerStore = assign({}, StoreListenBase, {
+var ExerciseManagerStore = Object.assign({}, StoreListenBase, {
   getAlert: function() {
     return _alert;
   },
@@ -40,7 +39,7 @@ var ExerciseManagerStore = assign({}, StoreListenBase, {
   },
   updateExerciseEditorState: function(state) {
     _exerciseEditorState = _exerciseEditorState || {};
-    _exerciseEditorState = Object.assign(_exerciseEditorState, state);
+    _exerciseEditorState = React.addons.update(_exerciseEditorState, state);
     this.emitChange();
   }
 });

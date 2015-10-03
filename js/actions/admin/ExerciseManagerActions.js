@@ -14,18 +14,27 @@ function _updateExerciseEditorState(state) {
 
 var ExerciseManagerActions = {
   closeEditExercise: function() {
-    _updateExerciseEditorState({show: false});
+    _updateExerciseEditorState({show: {$set: false}});
   },
   createNewExercise: function() {
-    _updateExerciseEditorState({show: true, properties: {}, sourceFiles: {}, feedback: {}});
+    _updateExerciseEditorState({$merge: {show: true, properties: {}, sourceFiles: {}, newFileId: 1, feedback: {}}});
+  },
+  createNewFile: function(id) {
+    var name = 'unsaved-file-' + id;
+    var sourceUpdate = {};
+    sourceUpdate[name] = {$set: {name, contents: ''}};
+    _updateExerciseEditorState({
+      sourceFiles: sourceUpdate,
+      newFileId: {$set: id+1}
+    });
   },
   editExercise: function(exercise) {
-    _updateExerciseEditorState({
-      show: true, origProperties: exercise, properties: Object.assign({}, exercise, {'@saved': true}), sourceFiles: {}, feedback: {}
-    });
+    _updateExerciseEditorState({$merge: {
+      show: true, origProperties: exercise, properties: Object.assign({}, exercise, {'@saved': true}), sourceFiles: {}, newFileId: 1, feedback: {}
+    }});
     if(exercise.id){
       handlePromise(ExerciseManagerDAO.getExerciseSources(exercise.id), {
-        callbacks: [(r) => _updateExerciseEditorState({sourceFiles: r})]
+        callbacks: [(r) => _updateExerciseEditorState({sourceFiles: {$set: r}}) ]
       }, {
         403: 'Not authorized to fetch exercise source files',
         default: (r,s) => 'Could not fetch exercise source files: '+s
@@ -39,25 +48,36 @@ var ExerciseManagerActions = {
     });
   },
   resetExerciseProperties: function(resetTo) {
-    _updateExerciseEditorState({properties: Object.assign({}, resetTo, {'@saved': true})});
+    _updateExerciseEditorState({properties: {$set: Object.assign({}, resetTo, {'@saved': true})}});
   },
-  saveExercise: function(id, exercise) {
+  saveExerciseProperties: function(id, exercise) {
     var promise = (id === undefined) ? ExerciseManagerDAO.postExercise(exercise) : ExerciseManagerDAO.putExercise(id, exercise);
 
     handlePromise(promise, {
       actionType: Constants.SAVE_EXERCISE,
       default: 'Exercise properties saved',
-      callbacks: [(r) => _updateExerciseEditorState( {origProperties: r, properties: Object.assign({}, r, {'@saved': true})} )]
+      callbacks: [(r) => _updateExerciseEditorState({
+        origProperties: {$set: r},
+        properties: {$set: Object.assign({}, r, {'@saved': true}) }
+      })]
     }, {
-      400: (r) => _updateExerciseEditorState({feedback: JSON.parse(r)}),
+      400: (r) => _updateExerciseEditorState({feedback: {$set: JSON.parse(r)}}),
       403: 'Not authorized to save exercise properties',
       404: 'Exercise does not exist: ' + JSON.stringify({id: id, name: exercise.name}),
       default: 'Something went wrong when saving exercise'
     });
   },
+  setEditorTab: function(tab) {
+    _updateExerciseEditorState({tab: {$set: tab}});
+  },
   updateExerciseProperties: function(properties) {
     properties['@saved'] = false;
-    _updateExerciseEditorState({properties});
+    _updateExerciseEditorState({properties: {$set: properties}});
+  },
+  updateSourceFile: function(name, contents) {
+    var sourceUpdate = {};
+    sourceUpdate[name] = {contents: {$set: contents}};
+    _updateExerciseEditorState({sourceFiles: sourceUpdate});
   }
 };
 
