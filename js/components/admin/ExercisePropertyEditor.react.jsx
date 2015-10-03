@@ -8,36 +8,34 @@ var ExerciseConstants = require('../../constants/ExerciseConstants');
 
 var ExercisePropertyEditor = React.createClass({
   propTypes: {
-    alert: PropTypes.oneOfType([PropTypes.object, PropTypes.bool]),
     doChange: PropTypes.func.isRequired,
+    doReset: PropTypes.func.isRequired,
     doSaveExercise: PropTypes.func.isRequired,
+    feedback: PropTypes.object,
     properties: PropTypes.object.isRequired
   },
   _change: function (field, event) {
     var change = {};
     change[field] = event.target.value;
-    change._unsaved = true;
-    this.props.doChange(change);
+    this.props.doChange(Object.assign({}, this.props.properties, change));
   },
   _doSaveExercise: function() {
     var {id,name,kind,difficulty,description} = this.props.properties;
     this.props.doSaveExercise(id, {name,kind,difficulty,description});
-    this.props.doChange({_unsaved: false});
   },
   _feedback: function(field) {
     return this._help(field) && true;
   },
   _help: function(field) {
-    var e = this.props.alert;
-    return (e && e[field]) || false;
+    return this.props.feedback[field] || false;
   },
   _style: function(field) {
     return (this._feedback(field) && 'error') || null;
   },
 
   render: function() {
-        // <Input type='text' label='Title' value={this.props.title} onChange={this._change.bind(this, 'title')} />
-    var {name,kind,difficulty,description,_unsaved} = this.props.properties;
+    var {name,kind,difficulty,description} = this.props.properties;
+    var _saved = this.props.properties['@saved'] || false;
     return (
       <form>
         <Input type='text' label='Name' value={name}
@@ -52,10 +50,10 @@ var ExercisePropertyEditor = React.createClass({
             feedback={this._feedback('kind')}
             type='select'
             label={<span>Kind {kind && (<Glyphicon glyph={ExerciseConstants.symbols[kind]}/>)}</span>}
-            value={kind}
+            value={kind || ''}
             onChange={this._change.bind(this, 'kind')}
         >
-          {!kind && <option selected value=''>Select kind...</option>}
+          {!kind && <option value=''>Select kind...</option>}
           <option value='expectation'>Expectation</option>
           <option value='error'>Error</option>
           <option value='implementation'>Implementation</option>
@@ -72,8 +70,8 @@ var ExercisePropertyEditor = React.createClass({
             feedback={this._feedback('description')}
             onChange={this._change.bind(this, 'description')}
         />
-        <Button type='reset'>Clear</Button>
-        <Button bsStyle='success' disabled={!_unsaved} onClick={this._doSaveExercise}>Save</Button>
+        <Button onClick={this.props.doReset}>Reset</Button>
+        <Button bsStyle='success' disabled={_saved} onClick={this._doSaveExercise}>Save</Button>
       </form>
     );
   }

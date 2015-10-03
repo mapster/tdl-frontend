@@ -6,11 +6,11 @@ var AppDispatcher = require('../../dispatcher/AppDispatcher');
 var ExerciseManagerDAO = require('../../dao/admin/ExerciseManagerDAO');
 var Constants = require('../../constants/admin/ExerciseManagerConstants');
 var StoreListenBase = require('../StoreListenBase');
-var PromiseHandlers = require('../PromiseHandlers');
+var {handlePromise} = require('../PromiseHandlers');
 
 var _alert = false;
 var _exercises = false;
-var _exerciseEditorState = false;
+var _exerciseEditorState = {};
 
 var ExerciseManagerStore = assign({}, StoreListenBase, {
   getAlert: function() {
@@ -27,16 +27,20 @@ var ExerciseManagerStore = assign({}, StoreListenBase, {
   },
   refreshExercises: function() {
     var actionType = Constants.EXERCISES_UPDATE_FROM_SERVER;
-    ExerciseManagerDAO.getExercises()
-      .then(PromiseHandlers.handleSuccess.bind(null, actionType))
-      .catch(PromiseHandlers.handleNotFound.bind(null, [], actionType));
+    handlePromise(ExerciseManagerDAO.getExercises(), {
+      actionType
+    }, {
+      403: 'Not authorized to fetch exercises.',
+      default: (r,s) => 'Could not fetch exercises: '+s
+    });
   },
   setAlert: function(alert) {
     _alert = alert;
     this.emitChange();
   },
-  setExerciseEditorState: function(state) {
-    _exerciseEditorState = state;
+  updateExerciseEditorState: function(state) {
+    _exerciseEditorState = _exerciseEditorState || {};
+    _exerciseEditorState = Object.assign(_exerciseEditorState, state);
     this.emitChange();
   }
 });
@@ -49,8 +53,8 @@ AppDispatcher.register(function(payload) {
       case Constants.SET_ALERT:
         ExerciseManagerStore.setAlert(action.data);
         break;
-      case Constants.SET_EXERCISE_EDITOR_STATE:
-        ExerciseManagerStore.setExerciseEditorState(action.data);
+      case Constants.UPDATE_EDIT_EXERCISE_STATE:
+        ExerciseManagerStore.updateExerciseEditorState(action.data);
         break;
       default:
     }
@@ -65,10 +69,7 @@ AppDispatcher.register(function(payload) {
         ExerciseManagerStore.emitChange();
         break;
       case Constants.SAVE_EXERCISE:
-        alert = Object.assign({}, action);
-        alert.userMsg = 'Successfully saved';
-        ExerciseManagerStore.setAlert(alert);
-        ExerciseManagerStore.setExerciseEditorState(Object.assign({}, _exerciseEditorState, {properties: action.data}));
+        ExerciseManagerStore.refreshExercises();
         break;
       default:
     }

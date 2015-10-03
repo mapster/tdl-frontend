@@ -24,13 +24,6 @@ var ExerciseManager = React.createClass({
       };
     })
   ],
-  _editNewExercise: function() {
-    Actions.setExerciseEditorState({properties: {}});
-  },
-  _setExerciseEditorState: function (stateChange) {
-    var newState = Object.assign({}, this.state.ex.editorState, stateChange);
-    Actions.setExerciseEditorState(newState);
-  },
   _renderAlert: function() {
     var alert = this.state.ex.alert;
     if(alert){
@@ -53,15 +46,15 @@ var ExerciseManager = React.createClass({
     var exercises = this.state.ex.exercises;
 
     var view;
-    if(this.state.ex.editorState) {
+    if(this.state.ex.editorState.show) {
       view = (
         <ExerciseEditor
             {...this.state.ex.editorState}
             alert={this.state.ex.alert}
-            doSaveExercise={(id, exercise) => Actions.saveExercise(id, exercise)}
-            doUpdateExercise={this._setExerciseEditorState}
-            doClose={() => {Actions.setExerciseEditorState(false); Actions.dismissAlert();}}
-            show
+            doResetExerciseProperties={Actions.resetExerciseProperties}
+            doSaveExercise={Actions.saveExercise}
+            doUpdateExercise={Actions.updateExerciseProperties}
+            doClose={Actions.closeEditExercise}
         />
       );
     } else {
@@ -86,7 +79,7 @@ var ExerciseManager = React.createClass({
           <Row>
             <Col lg={10}><h1 className='inline'>Exercises</h1></Col>
             <Col lg={2} className='right'>
-                <Button bsSize='medium' onClick={this._editNewExercise}><Glyphicon glyph='plus'/></Button>
+                <Button bsSize='medium' onClick={Actions.createNewExercise}><Glyphicon glyph='plus'/></Button>
             </Col>
           </Row>
           <Row>

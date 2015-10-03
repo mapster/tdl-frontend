@@ -4,12 +4,14 @@ var AppDispatcher = require('../dispatcher/AppDispatcher');
 var ResponseConstants = require('../constants/ResponseConstants');
 var Constants = require('../constants/Constants');
 
+//TODO Remove the deprecated functions handleSuccess, handleNotFound, handleError, factory.
 var PromiseHandlers = {
   /**
+   * @deprecated true
    * (Simple) Function to handle success response from server.
    * Does not distinguish between different kinds of 20x responses.
    * Should be pre-bound with actionType.
-   *
+   *   *
    * @param  {string} actionType The action type to dispatch.
    * @param  {any} response The data value from ajax success, will be dispatched as data in action.
    */
@@ -40,8 +42,9 @@ var PromiseHandlers = {
   },
 
   /**
+   * @deprecated true
    * Function to build error message object from server error response.
-
+   *
    * @param  {callback} receiver Called with the generated error object.
    * @param  {jqXHR} response The error response to handle.
    */
@@ -77,6 +80,11 @@ var PromiseHandlers = {
     }
   }
 };
+/**
+* @deprecated true
+ * [factory description]
+ * @type {Object}
+ */
 PromiseHandlers.factory = {
   handleSuccess: function(actionType) {
     return PromiseHandlers.handleSuccess.bind(null, actionType);

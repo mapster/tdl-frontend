@@ -13,9 +13,12 @@ var ExerciseEditor = React.createClass({
   propTypes: {
     alert: PropTypes.oneOfType([PropTypes.object, PropTypes.bool]),
     doClose: PropTypes.func.isRequired,
+    doResetExerciseProperties: PropTypes.func.isRequired,
     doSaveExercise: PropTypes.func.isRequired,
     doUpdateExercise: PropTypes.func.isRequired,
+    feedback: PropTypes.object.isRequired,
     newFilesCounter: PropTypes.number.isRequired,
+    origProperties: PropTypes.object.isRequired,
     properties: PropTypes.object.isRequired,
     show: PropTypes.bool.isRequired,
     sourceFiles: PropTypes.object.isRequired,
@@ -36,16 +39,12 @@ var ExerciseEditor = React.createClass({
     }
     return false;
   },
-  _setExerciseProperties: function(propsChange) {
-    var newProps = {properties: Object.assign({}, this.props.properties, propsChange)};
-    this.props.doUpdateExercise(newProps);
-  },
   _setSourceFiles: function(sourceChange) {
     var newSources = Object.assign({}, this.props.sourceFiles, sourceChange);
     this.props.doUpdateExercise(newSources);
   },
-  _tabTitle: function(text, isUnSaved) {
-    if(isUnSaved) {
+  _tabTitle: function(text, isSaved) {
+    if(!isSaved) {
       text += '*';
     }
     return text;
@@ -53,7 +52,7 @@ var ExerciseEditor = React.createClass({
 
   render: function() {
     if(!this.props.show) {
-      return null;
+      return false;
     }
     return (
       <Row>
@@ -62,12 +61,14 @@ var ExerciseEditor = React.createClass({
         </Row>
         <Row>
           <Tabs position='left' activeKey={this.props.tab} onSelect={(tab) => this.props.doUpdateExercise({tab})}>
-            <Tab eventKey='properties' title={this._tabTitle('Properties', this.props.properties._unsaved)}>
+            <Tab eventKey='properties' title={this._tabTitle('Properties', this.props.properties['@saved'])}>
               <ExercisePropertyEditor
                   alert={this._passPropertiesAlerts()}
+                  doChange={this.props.doUpdateExercise}
+                  doReset={() => this.props.doResetExerciseProperties(this.props.origProperties)}
                   doSaveExercise={this.props.doSaveExercise}
-                  doChange={this._setExerciseProperties}
                   properties={this.props.properties}
+                  feedback={this.props.feedback}
               />
             </Tab>
             {this.props.properties.id && (

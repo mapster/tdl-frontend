@@ -3,16 +3,33 @@
 var AppDispatcher = require('../../dispatcher/AppDispatcher');
 var Constants = require('../../constants/admin/ExerciseManagerConstants');
 var ExerciseManagerDAO = require('../../dao/admin/ExerciseManagerDAO');
-var PromiseHandlers = require('../../stores/PromiseHandlers').factory;
+var {handlePromise} = require('../../stores/PromiseHandlers');
+
+function _updateExerciseEditorState(state) {
+  AppDispatcher.handleViewAction({
+    actionType: Constants.UPDATE_EDIT_EXERCISE_STATE,
+    data: state
+  });
+}
 
 var ExerciseManagerActions = {
+  closeEditExercise: function() {
+    _updateExerciseEditorState({show: false});
+  },
+  createNewExercise: function() {
+    _updateExerciseEditorState({show: true, properties: {}, sourceFiles: {}, feedback: {}});
+  },
   editExercise: function(exercise) {
-    var state = {properties: exercise};
-    this.setExerciseEditorState(state);
+    _updateExerciseEditorState({
+      show: true, origProperties: exercise, properties: Object.assign({}, exercise, {'@saved': true}), sourceFiles: {}, feedback: {}
+    });
     if(exercise.id){
-      ExerciseManagerDAO.getExerciseSources(exercise.id)
-        .then((response) => this.setExerciseEditorState(Object.assign(state, {sourceFiles: response})))
-        .catch(PromiseHandlers.handleErrorResponse(Constants.EXERCISE_SOURCES_UPDATE_FROM_SERVER));
+      handlePromise(ExerciseManagerDAO.getExerciseSources(exercise.id), {
+        callbacks: [(r) => _updateExerciseEditorState({sourceFiles: r})]
+      }, {
+        403: 'Not authorized to fetch exercise source files',
+        default: (r,s) => 'Could not fetch exercise source files: '+s
+      });
     }
   },
   dismissAlert: function() {
@@ -21,21 +38,26 @@ var ExerciseManagerActions = {
       data: false
     });
   },
-  saveExercise: function(id, exercise) {
-    var doThen = PromiseHandlers.handleSuccess(Constants.SAVE_EXERCISE);
-    var doCatch = PromiseHandlers.handleErrorResponse(Constants.SAVE_EXERCISE);
-
-    if(id === undefined) {
-      ExerciseManagerDAO.postExercise(exercise).then(doThen).catch(doCatch);
-    } else {
-      ExerciseManagerDAO.putExercise(id, exercise).then(doThen).catch(doCatch);
-    }
+  resetExerciseProperties: function(resetTo) {
+    _updateExerciseEditorState({properties: Object.assign({}, resetTo, {'@saved': true})});
   },
-  setExerciseEditorState: function(state) {
-    AppDispatcher.handleViewAction({
-      actionType: Constants.SET_EXERCISE_EDITOR_STATE,
-      data: state
+  saveExercise: function(id, exercise) {
+    var promise = (id === undefined) ? ExerciseManagerDAO.postExercise(exercise) : ExerciseManagerDAO.putExercise(id, exercise);
+
+    handlePromise(promise, {
+      actionType: Constants.SAVE_EXERCISE,
+      default: 'Exercise properties saved',
+      callbacks: [(r) => _updateExerciseEditorState( {origProperties: r, properties: Object.assign({}, r, {'@saved': true})} )]
+    }, {
+      400: (r) => _updateExerciseEditorState({feedback: JSON.parse(r)}),
+      403: 'Not authorized to save exercise properties',
+      404: 'Exercise does not exist: ' + JSON.stringify({id: id, name: exercise.name}),
+      default: 'Something went wrong when saving exercise'
     });
+  },
+  updateExerciseProperties: function(properties) {
+    properties['@saved'] = false;
+    _updateExerciseEditorState({properties});
   }
 };
 

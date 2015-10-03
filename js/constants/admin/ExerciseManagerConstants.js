@@ -8,7 +8,7 @@ var constants = [
   'EXERCISES_UPDATE_FROM_SERVER',
   'SAVE_EXERCISE',
   'SET_ALERT',
-  'SET_EXERCISE_EDITOR_STATE'
+  'UPDATE_EDIT_EXERCISE_STATE'
 ];
 
 var obj = {};
