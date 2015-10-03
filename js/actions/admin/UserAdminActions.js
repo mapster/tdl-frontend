@@ -1,14 +1,23 @@
 'use strict';
 
 var AppDispatcher = require('../../dispatcher/AppDispatcher');
-var PromiseHandlers = require('../../stores/PromiseHandlers').factory;
 var handlePromise = require('../../stores/PromiseHandlers').handlePromise;
 var UsersConstants = require('../../constants/admin/UsersConstants');
 var UsersDAO = require('../../dao/admin/UsersDAO');
 
+function _updateEditUserState(state) {
+  AppDispatcher.handleViewAction({
+    actionType: UsersConstants.UPDATE_EDIT_USER_STATE,
+    data: state
+  });
+}
+
 var UserAdminActions = {
+  closeUserForm: function() {
+    _updateEditUserState({user: false});
+  },
   confirmUserDelete: function(user) {
-    var callbacks = [this.setDeleteUser.bind(null, false)];
+    var callbacks = [UserAdminActions.setDeleteUser.bind(null, false)];
     handlePromise(
       UsersDAO.deleteUser(user.id), {
         default: 'Successfully deleted user: '+user.name,
@@ -31,11 +40,8 @@ var UserAdminActions = {
       id: userId
     });
   },
-  setEditUserState: function(user) {
-    AppDispatcher.handleViewAction({
-      actionType: UsersConstants.EDIT_USER,
-      data: user
-    });
+  editUser: function(user) {
+    _updateEditUserState({title: 'Edit user', user, feedback: {}});
   },
   editUserAuths: function(userId) {
     var actionType = UsersConstants.EDIT_USER_AUTHS;
@@ -50,19 +56,27 @@ var UserAdminActions = {
       });
     }
   },
+  newUser: function() {
+    _updateEditUserState({title: 'New user', user: {}, feedback: {}});
+  },
   saveUser: function(id, user) {
-    var doThen = PromiseHandlers.handleSuccess(UsersConstants.SAVE_USER);
-    var doCatch = PromiseHandlers.handleErrorResponse(UsersConstants.SAVE_USER);
-    if(id === undefined){
-      UsersDAO.postUser(user).then(doThen).catch(doCatch);
-    } else {
-      UsersDAO.putUser(id, user).then(doThen).catch(doCatch);
-    }
+    var actionType = UsersConstants.SAVE_USER;
+    var promise = (id === undefined) ? promise = UsersDAO.postUser(user) : UsersDAO.putUser(id, user);
+
+    handlePromise(promise, {
+      actionType,
+      default: UserAdminActions.closeUserForm.bind(null, false)
+    }, {
+      400: (r) => _updateEditUserState({feedback: JSON.parse(r)}),
+      403: 'Not authorized to update user: '+user.name,
+      404: 'The user does not exist: '+user.name,
+      default: 'Something went wrong when saving user: '+user.name
+    });
   },
   saveUserAuths: function(userId, auth) {
     var actionType = UsersConstants.SAVE_AUTHS;
     handlePromise(UsersDAO.putAuths(userId, auth), {actionType}, {
-      400: ['Invalid data in the payload to save authorizations'],
+      400: 'Invalid data in the payload to save authorizations',
       403: 'Not authorized to save user authorizations',
       default: 'Something went wrong when saving the user authorizations'
     });
@@ -72,6 +86,9 @@ var UserAdminActions = {
       actionType: UsersConstants.SET_DELETE_USER,
       data: user
     });
+  },
+  updateUserForm: function(user) {
+    _updateEditUserState({user});
   }
 };
 

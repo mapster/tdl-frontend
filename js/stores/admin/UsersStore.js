@@ -60,8 +60,8 @@ AppDispatcher.register(function(payload) {
         _deleteUser = action.data;
         UsersStore.emitChange();
         break;
-      case UsersConstants.EDIT_USER:
-        _editUserState = action.data;
+      case UsersConstants.UPDATE_EDIT_USER_STATE:
+        _editUserState = Object.assign(_editUserState, action.data);
         UsersStore.emitChange();
         break;
       case UsersConstants.DISMISS_ALERT:
@@ -108,12 +108,6 @@ AppDispatcher.register(function(payload) {
         break;
 
       case UsersConstants.SAVE_USER:
-        _userAlerts[action.data.id] = {
-          type: 'success',
-          text: 'Successfully saved'
-        };
-        _error = false;
-        _editUserState = false;
         UsersStore.refreshUsers();
         break;
 

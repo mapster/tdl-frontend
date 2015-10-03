@@ -40,14 +40,10 @@ var UserAdmin = React.createClass({
         editUserState: store.getEditUserState(),
         editAuths: store.getEditUserAuths(),
         confirmUserDelete: store.getDeleteUser(),
-        error: store.getError(),
         userAlerts: store.getUserAlerts()
       };
     })
   ],
-  _changeEditUserState: function(change) {
-    UserAdminActions.setEditUserState(Object.assign(this.state.users.editUserState, change));
-  },
 
   render: function() {
     var authorized = this.props.user && this.props.user.auth && this.props.user.auth;
@@ -61,11 +57,10 @@ var UserAdmin = React.createClass({
       <Row>
         {this.state.users.editUserState && (
           <UserFormModal
-              doCancel={() => UserAdminActions.setEditUserState(false)}
+              doCancel={UserAdminActions.closeUserForm}
               doDismissAlert={UserAdminActions.dismissAlert}
               doSave={UserAdminActions.saveUser}
-              alert={this.state.users.error}
-              doChange={this._changeEditUserState}
+              doChange={UserAdminActions.updateUserForm}
               {...this.state.users.editUserState}
           />
         )}
@@ -90,7 +85,7 @@ var UserAdmin = React.createClass({
             <Col lg={10}><h1 className='inline'>Users</h1></Col>
             <Col lg={2} className='right'>
               <OverlayTrigger placment='right' overlay={(<Tooltip>Add new user</Tooltip>)}>
-                <Button bsSize='medium' onClick={() => UserAdminActions.setEditUserState(UserFormModal.buildState('New user', {}))}>
+                <Button bsSize='medium' onClick={UserAdminActions.newUser}>
                   <Glyphicon glyph='plus'/>
                 </Button>
               </OverlayTrigger>
@@ -100,7 +95,7 @@ var UserAdmin = React.createClass({
             <UserList
                 doDeleteUser={UserAdminActions.setDeleteUser}
                 doDismissUserAlert={UserAdminActions.dismissUserAlert}
-                doEditUser={(user) => UserAdminActions.setEditUserState(UserFormModal.buildState('Edit user', user))}
+                doEditUser={UserAdminActions.editUser}
                 doEditUserAuths={UserAdminActions.editUserAuths}
                 showAuthsButton={authorized.manage_exercises}
                 users={users}

@@ -6,13 +6,13 @@ var ResponseConstants = require('../constants/ResponseConstants');
 
 var UserFormModal = React.createClass({
   propTypes: {
-    alert: PropTypes.oneOfType([PropTypes.object, PropTypes.bool]).isRequired,
     doCancel: PropTypes.func.isRequired,
     doChange: PropTypes.func.isRequired,
     doDismissAlert: PropTypes.func.isRequired,
     doSave: PropTypes.func.isRequired,
+    feedback: PropTypes.object.isRequired,
     title: PropTypes.string.isRequired,
-    user: PropTypes.object.isRequired
+    user: PropTypes.oneOfType([PropTypes.object, PropTypes.bool]).isRequired
   },
   shouldComponentUpdate: function(nextProps) {
     var {title, user} = this.props;
@@ -21,7 +21,7 @@ var UserFormModal = React.createClass({
   _change: function(field, event) {
     var user = Object.assign({}, this.props.user);
     user[field] = event.target.value;
-    this.props.doChange({user});
+    this.props.doChange(user);
   },
   _save: function() {
     var {id,name,email,password,password_confirmation} = this.props.user;
@@ -31,8 +31,7 @@ var UserFormModal = React.createClass({
     return this._help(field) && true;
   },
   _help: function(field) {
-    var e = this.props.alert && this.props.alert.messages;
-    return (e && e[field]) || false;
+    return this.props.feedback[field] || false;
   },
   _style: function(field) {
     return (this._feedback(field) && 'error') || null;
@@ -100,8 +99,5 @@ var UserFormModal = React.createClass({
   }
 
 });
-UserFormModal.buildState = function(title, user) {
-  return Object.assign({}, {title, user});
-};
 
 module.exports = UserFormModal;
