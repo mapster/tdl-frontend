@@ -21,12 +21,30 @@ function _setUserFormAlert(msg, type) {
   _updateEditUserState({alert});
 }
 
+function _setUserAlert(userId, msg) {
+  var change = {};
+  change[userId] = false;
+  if(msg) {
+    change[userId] = {text: msg, type: 'success'};
+  }
+  AppDispatcher.handleStoreRefreshAction({
+    actionType: UsersConstants.UPDATE_USER_ALERTS,
+    data: change
+  });
+}
+
 var UserAdminActions = {
+  closeAuthsForm: function() {
+    AppDispatcher.handleStoreRefreshAction({
+      actionType: UsersConstants.EDIT_USER_AUTHS,
+      data: false
+    });
+  },
   closeUserForm: function() {
-    _updateEditUserState({user: false});
+    _updateEditUserState({user: false, alert: false});
   },
   confirmUserDelete: function(user) {
-    var callbacks = [UserAdminActions.setDeleteUser.bind(null, false)];
+    var callbacks = [() => UserAdminActions.setDeleteUser(false)];
     handlePromise(
       UsersDAO.deleteUser(user.id), {
         default: 'Successfully deleted user: '+user.name,
@@ -43,26 +61,21 @@ var UserAdminActions = {
     _setUserFormAlert(false);
   },
   dismissUserAlert: function(userId) {
-    AppDispatcher.handleViewAction({
-      actionType: UsersConstants.DISMISS_USER_ALERT,
-      id: userId
-    });
+    _setUserAlert(userId, false);
   },
   editUser: function(user) {
-    _updateEditUserState({title: 'Edit user', user, feedback: {}});
+    _updateEditUserState({title: 'Edit user', user, feedback: {}, alert: false});
   },
   editUserAuths: function(userId) {
     var actionType = UsersConstants.EDIT_USER_AUTHS;
-    if(!userId){
-      AppDispatcher.handleStoreRefreshAction({actionType, data: false});
-    }
-    else {
-      handlePromise(UsersDAO.getAuth(userId), {actionType},{
-        403: 'Not authorized to fetch user authorizations',
-        404: () => AppDispatcher.handleStoreRefreshAction({actionType, data: {user_id: userId}}),
-        default: 'Something went wrong when fetching user authorizations'
-      });
-    }
+
+    handlePromise(UsersDAO.getAuth(userId), {
+      actionType
+    },{
+      403: 'Not authorized to fetch user authorizations',
+      404: () => AppDispatcher.handleStoreRefreshAction({actionType, data: {user_id: userId}}),
+      default: 'Something went wrong when fetching user authorizations'
+    });
   },
   newUser: function() {
     _updateEditUserState({title: 'New user', user: {}, feedback: {}});
@@ -73,7 +86,7 @@ var UserAdminActions = {
 
     handlePromise(promise, {
       actionType,
-      default: () => UserAdminActions.closeUserForm(false)
+      callbacks: [UserAdminActions.closeUserForm, () => _setUserAlert(id, 'Successfully saved')]
     }, {
       400: (r) => _updateEditUserState({feedback: JSON.parse(r)}),
       403: () => _setUserFormAlert('Not authorized to update user: '+user.name, 'danger'),
@@ -83,10 +96,14 @@ var UserAdminActions = {
   },
   saveUserAuths: function(userId, auth) {
     var actionType = UsersConstants.SAVE_AUTHS;
-    handlePromise(UsersDAO.putAuths(userId, auth), {actionType}, {
+    handlePromise(UsersDAO.putAuths(userId, auth), {
+      actionType,
+      callbacks: [UserAdminActions.closeAuthsForm, () => _setUserAlert(userId, 'Saved authorizations')]
+    }, {
       400: 'Invalid data in the payload to save authorizations',
       403: 'Not authorized to save user authorizations',
-      default: 'Something went wrong when saving the user authorizations'
+      default: 'Something went wrong when saving the user authorizations',
+      callbacks: [UserAdminActions.closeAuthsForm]
     });
   },
   setDeleteUser: function(user) {

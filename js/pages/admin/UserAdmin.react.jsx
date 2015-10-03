@@ -66,10 +66,9 @@ var UserAdmin = React.createClass({
         )}
         <EditUserAuthsModal
             auth={this.state.users.editAuths}
-            doCancel={() => UserAdminActions.editUserAuths(false)}
+            doCancel={UserAdminActions.closeAuthsForm}
             doDismissError={UserAdminActions.dismissAlert}
             doSave={UserAdminActions.saveUserAuths}
-            error={this.state.users.error}
         />
         <ConfirmationModal
             doCancel={() => UserAdminActions.setDeleteUser(false)}

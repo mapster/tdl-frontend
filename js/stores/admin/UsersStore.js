@@ -12,7 +12,6 @@ var PromiseHandlers = require('../PromiseHandlers');
 var _users = false;
 var _editUserState = false;
 var _editUserAuths = false;
-var _error = false;
 var _deleteUser = false;
 var _userAlerts = {};
 
@@ -33,9 +32,6 @@ var UsersStore = assign({}, StoreListenBase, {
   getDeleteUser: function() {
     return _deleteUser;
   },
-  getError: function() {
-    return _error;
-  },
   getUserAlerts: function() {
     return _userAlerts;
   },
@@ -45,10 +41,6 @@ var UsersStore = assign({}, StoreListenBase, {
     UsersDAO.getUsers()
       .then(PromiseHandlers.handleSuccess.bind(null, actionType))
       .catch(PromiseHandlers.handleNotFound.bind(null, [], actionType));
-  },
-  setError: function(error) {
-    _error = error;
-    this.emitChange();
   }
 });
 
@@ -64,15 +56,6 @@ AppDispatcher.register(function(payload) {
         _editUserState = Object.assign(_editUserState, action.data);
         UsersStore.emitChange();
         break;
-      case UsersConstants.DISMISS_ALERT:
-        UsersStore.setError(false);
-        break;
-      case UsersConstants.DISMISS_USER_ALERT:
-        var change = Object.assign({}, _userAlerts);
-        change[action.id] = false;
-        _userAlerts = change;
-        UsersStore.emitChange();
-        break;
       default:
     }
   }
@@ -82,28 +65,12 @@ AppDispatcher.register(function(payload) {
   else if(payload.source == AppDispatcher.STORE_REFRESH){
     switch (action.actionType) {
 
-      case UsersConstants.EDIT_USER_AUTHS:
-        _editUserAuths = action.data;
-        UsersStore.emitChange();
-        break;
-
       case UsersConstants.DELETE_USER:
         UsersStore.refreshUsers();
         break;
 
-      case UsersConstants.USERS_UPDATE_FROM_SERVER:
-        _users = action.data;
-        UsersStore.emitChange();
-        break;
-
-      case UsersConstants.SAVE_AUTHS:
-        var alert = {};
-        alert[action.data.user_id] = {
-          type: 'success',
-          text: 'Saved authorizations'
-        };
-        _userAlerts = Object.assign({}, _userAlerts, alert);
-        _editUserAuths = false;
+      case UsersConstants.EDIT_USER_AUTHS:
+        _editUserAuths = action.data;
         UsersStore.emitChange();
         break;
 
@@ -113,6 +80,16 @@ AppDispatcher.register(function(payload) {
 
       case SessionConstants.SESSION_UPDATE_FROM_SERVER:
         UsersStore.refreshUsers();
+        break;
+
+      case UsersConstants.UPDATE_USER_ALERTS:
+        _userAlerts = Object.assign({}, _userAlerts, action.data);
+        UsersStore.emitChange();
+        break;
+
+      case UsersConstants.USERS_UPDATE_FROM_SERVER:
+        _users = action.data;
+        UsersStore.emitChange();
         break;
       default:
     }

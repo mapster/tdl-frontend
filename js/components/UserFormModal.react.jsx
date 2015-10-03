@@ -6,7 +6,7 @@ var AlertView = require('./AlertView.react');
 
 var UserFormModal = React.createClass({
   propTypes: {
-    alert: PropTypes.object.isRequired,
+    alert: PropTypes.oneOfType([PropTypes.object, PropTypes.bool]).isRequired,
     doCancel: PropTypes.func.isRequired,
     doChange: PropTypes.func.isRequired,
     doDismissAlert: PropTypes.func.isRequired,
