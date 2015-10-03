@@ -1,10 +1,10 @@
 var React = require('react');
 // var PropTypes = React.PropTypes;
-var {Alert} = require('react-bootstrap');
 
 var ConnectToStore = require('../mixins/ConnectToStore');
 var NotificationActions = require('../actions/NotificationActions');
 var NotificationStore = require('../stores/NotificationStore');
+var AlertView = require('./AlertView.react');
 
 var NotificationView = React.createClass({
   mixins: [
@@ -17,7 +17,7 @@ var NotificationView = React.createClass({
       return false;
     }
     return (
-      <Alert bsStyle={notification.type} onDismiss={NotificationActions.dismissNotification}>{notification.text}</Alert>
+      <AlertView alert={notification} dismiss={NotificationActions.dismissNotification} />
     );
   }
 

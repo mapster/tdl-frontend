@@ -117,18 +117,6 @@ AppDispatcher.register(function(payload) {
       default:
     }
   }
-  //==============
-  // ERROR_RESPONSE
-  //
-  else if(payload.source === AppDispatcher.ERROR_RESPONSE) {
-    switch (action.actionType) {
-      case UsersConstants.SAVE_USER:
-        var error = Object.assign({}, action);
-        error.userMsg = 'Could not save user: ' + error.status;
-        UsersStore.setError(error);
-        break;
-    }
-  }
 });
 
 module.exports = UsersStore;

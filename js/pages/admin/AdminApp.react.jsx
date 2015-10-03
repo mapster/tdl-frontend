@@ -10,7 +10,6 @@ var Header = require('../../components/Header.react');
 var AdminApp = React.createClass({
   propTypes: {
     children: PropTypes.node,
-    notification: PropTypes.oneOfType([PropTypes.object, PropTypes.bool]),
     session: PropTypes.oneOfType([PropTypes.object, PropTypes.bool]),
     user: PropTypes.oneOfType([PropTypes.object, PropTypes.bool])
   },
@@ -44,7 +43,7 @@ var AdminApp = React.createClass({
             </Col>
           </Row>
           <Row>
-            <Col lg={12}><NotificationView notification={this.props.notification} /></Col>
+            <Col lg={12}><NotificationView /></Col>
           </Row>
           <Row>
             <Col lg={12}>

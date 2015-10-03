@@ -1,11 +1,12 @@
 var React = require('react/addons');
 var PropTypes = React.PropTypes;
-var {Modal,Button,Input,Col,Row,Alert} = require('react-bootstrap');
+var {Modal,Button,Input,Col,Row} = require('react-bootstrap');
 
-var ResponseConstants = require('../constants/ResponseConstants');
+var AlertView = require('./AlertView.react');
 
 var UserFormModal = React.createClass({
   propTypes: {
+    alert: PropTypes.object.isRequired,
     doCancel: PropTypes.func.isRequired,
     doChange: PropTypes.func.isRequired,
     doDismissAlert: PropTypes.func.isRequired,
@@ -36,19 +37,6 @@ var UserFormModal = React.createClass({
   _style: function(field) {
     return (this._feedback(field) && 'error') || null;
   },
-  _renderAlert: function() {
-    var alert = this.props.alert;
-    if(alert){
-      switch(alert.type) {
-        case ResponseConstants.OK:
-          return (<Alert bsStyle='success' onDismiss={this.props.doDismissAlert}>{alert.userMsg}</Alert>);
-        case ResponseConstants.FORBIDDEN:
-        case ResponseConstants.ERROR:
-          return (<Alert bsStyle='danger' onDismiss={this.props.doDismissAlert}>{alert.userMsg}</Alert>);
-      }
-    }
-    return false;
-  },
 
   render: function() {
     var user = this.props.user;
@@ -57,7 +45,7 @@ var UserFormModal = React.createClass({
       <Modal show={user && true} onHide={this.props.doCancel}>
         <Modal.Header closeButton>
           <Modal.Title>{this.props.title}</Modal.Title>
-            <Row>{this._renderAlert()}</Row>
+            <Row><AlertView alert={this.props.alert} dismiss={this.props.doDismissAlert} /></Row>
           <Row className='small-text text-muted'>
             {user.id && (<Col lg={2}>User ID: {user.id}</Col>)}
             {user.created_at && (<Col lg={4}>Created: {user.created_at}</Col>)}
