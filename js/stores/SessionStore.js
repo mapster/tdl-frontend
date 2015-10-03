@@ -38,6 +38,11 @@ AppDispatcher.register(function(payload) {
         _session = action.data;
         SessionStore.emitChange();
         break;
+      case UsersConstants.SAVE_USER:
+        if(action.data.id == _session.id) {
+          SessionStore.refreshSession();
+        }
+        break;
       default:
     }
   }
@@ -46,11 +51,6 @@ AppDispatcher.register(function(payload) {
   //
   else if(payload.source == AppDispatcher.SERVER_ACTION) {
     switch (action.actionType) {
-      case UsersConstants.SAVE_USER:
-        if(action.id == _session.id) {
-          SessionStore.refreshSession();
-        }
-        break;
       default:
     }
   }
