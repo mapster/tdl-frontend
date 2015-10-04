@@ -55,6 +55,7 @@ var ExerciseManager = React.createClass({
             doResetExerciseProperties={Actions.resetExerciseProperties}
             doSaveExerciseProperties={Actions.saveExerciseProperties}
             doSaveSourceFile={Actions.saveSourceFile}
+            doSelectSourceFile={Actions.selectSourceFile}
             doSetEditorTab={Actions.setEditorTab}
             doUpdateExerciseProperties={Actions.updateExerciseProperties}
             doUpdateSourceFile={Actions.updateSourceFile}

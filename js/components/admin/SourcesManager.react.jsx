@@ -11,6 +11,7 @@ var SourcesManager = React.createClass({
   propTypes: {
     doCreateNewFile: PropTypes.func.isRequired,
     doSaveSourceFile: PropTypes.func.isRequired,
+    doSelectSourceFile: PropTypes.func.isRequired,
     doUpdateSourceFile: PropTypes.func.isRequired,
     selectedSourceFile: PropTypes.string.isRequired,
     sourceFiles: PropTypes.object.isRequired
@@ -25,7 +26,7 @@ var SourcesManager = React.createClass({
   },
   _tabTitle: function(name) {
     var unsaved = this.props.sourceFiles[name]['@unsaved'];
-    if(unsaved !== undefined && unsaved) {
+    if(unsaved) {
       name += '*';
     }
     return name;
@@ -36,7 +37,7 @@ var SourcesManager = React.createClass({
     return (
       <Row>
         <Col lg={10}>
-          <Tabs activeKey={this.props.selectedSourceFile}>
+          <Tabs activeKey={this.props.selectedSourceFile} onSelect={this.props.doSelectSourceFile}>
             {files && Object.keys(files).map((name) => (
               <Tab key={name} eventKey={name} title={this._tabTitle(name)}>
                 <AceEditor name={this._aceId(name)} value={files[name].contents} onChange={files[name] && this._onFileChange.bind(null, name)} mode='java' theme="github"/>

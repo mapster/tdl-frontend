@@ -22,7 +22,7 @@ var ExerciseManagerActions = {
   createNewFile: function(id) {
     var name = 'unsaved-file-' + id;
     var sourceUpdate = {};
-    sourceUpdate[name] = {$set: {name, contents: ''}};
+    sourceUpdate[name] = {$set: {name, contents: '', '@unsaved': true}};
     _updateExerciseEditorState({
       newFileId: {$set: id+1},
       selectedSourceFile: {$set: name},
@@ -36,6 +36,7 @@ var ExerciseManagerActions = {
       origProperties: exercise,
       properties: Object.assign({}, exercise, {'@saved': true}),
       show: true,
+      selectedSourceFile: '',
       sourceFiles: {},
       tab: 'properties'
     }});
@@ -90,6 +91,9 @@ var ExerciseManagerActions = {
       403: 'Not authorized to save source file to exercise',
       default: 'Something went wrong when saving source file'
     });
+  },
+  selectSourceFile: function(name) {
+    _updateExerciseEditorState({selectedSourceFile: {$set: name}});
   },
   setEditorTab: function(tab) {
     _updateExerciseEditorState({tab: {$set: tab}});
