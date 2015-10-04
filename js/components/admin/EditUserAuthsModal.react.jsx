@@ -1,7 +1,7 @@
 var React = require('react');
 var PropTypes = React.PropTypes;
 
-var {Input,Modal,Row,Alert,Button} = require('react-bootstrap');
+var {Input,Modal,Button} = require('react-bootstrap');
 
 var AUTH_FIELDS = {
   manage_exercises: 'Manage exercises',
@@ -20,8 +20,7 @@ var EditUserAuthsModal = React.createClass({
     auth: PropTypes.oneOfType([PropTypes.object, PropTypes.bool]).isRequired,
     doCancel: PropTypes.func.isRequired,
     doDismissError: PropTypes.func.isRequired,
-    doSave: PropTypes.func.isRequired,
-    error: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]).isRequired
+    doSave: PropTypes.func.isRequired
   },
   getInitialState: function() {
     return {auth: false};
@@ -38,11 +37,6 @@ var EditUserAuthsModal = React.createClass({
       <Modal show={this.props.auth && true} onHide={this.props.doCancel}>
         <Modal.Header closeButton>
           <Modal.Title>Edit user authorizations</Modal.Title>
-          {this.props.error && (
-            <Row>
-              <Alert bsStyle="danger" onDismiss={this.props.doDismissError}>{this.props.error}</Alert>
-            </Row>
-          )}
         </Modal.Header>
         <Modal.Body>
           <form>
