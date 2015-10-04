@@ -11,14 +11,23 @@ function _updateConfirmationState(state) {
 }
 
 var ConfirmationActions = {
-  requestConfirmation: function(text, todoAction) {
-    _updateConfirmationState({show: true, text: text, todoAction});
+  confirmAndDispatch: function(text, todoAction) {
+    _updateConfirmationState({show: true, text, todoAction});
+  },
+  confirmAndInvoke: function(text, todoCallback) {
+    _updateConfirmationState({show: true, text, todoCallback});
   },
   cancel: function() {
     _updateConfirmationState({show: false, text: ''});
   },
-  confirm: function(todoAction) {
-    AppDispatcher.handleViewAction(todoAction);
+  confirm: function(confirmationState) {
+    var {todoAction, todoCallback} = confirmationState;
+    if(todoAction) {
+      AppDispatcher.handleViewAction(todoAction);
+    }
+    if(todoCallback) {
+      todoCallback();
+    }
     _updateConfirmationState({show: false, text: ''});
   }
 };

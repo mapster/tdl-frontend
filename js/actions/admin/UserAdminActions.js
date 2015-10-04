@@ -1,6 +1,7 @@
 'use strict';
 
 var AppDispatcher = require('../../dispatcher/AppDispatcher');
+var ConfirmationActions = require('../ConfirmationActions');
 var handlePromise = require('../../stores/PromiseHandlers').handlePromise;
 var UsersConstants = require('../../constants/admin/UsersConstants');
 var UsersDAO = require('../../dao/admin/UsersDAO');
@@ -43,19 +44,20 @@ var UserAdminActions = {
   closeUserForm: function() {
     _updateEditUserState({user: false, alert: false});
   },
-  confirmUserDelete: function(user) {
-    var callbacks = [() => UserAdminActions.setDeleteUser(false)];
-    handlePromise(
-      UsersDAO.deleteUser(user.id), {
-        default: 'Successfully deleted user: '+user.name,
-        actionType: UsersConstants.DELETE_USER,
-        callbacks
-      },{
-        403: 'Not authorized to delete user: '+user.name,
-        404: 'Could not delete non-existing user',
-        default: 'Something went wrong while deleting user.',
-        callbacks
-      });
+  deleteUser: function(user) {
+    var todoConfirm = function() {
+      handlePromise(
+        UsersDAO.deleteUser(user.id), {
+          default: 'Successfully deleted user: '+user.name,
+          actionType: UsersConstants.DELETE_USER
+        },{
+          403: 'Not authorized to delete user: '+user.name,
+          404: 'Could not delete non-existing user',
+          default: 'Something went wrong while deleting user.'
+        }
+      );
+    };
+    ConfirmationActions.confirmAndInvoke('Are you sure you wish to delete this user?', todoConfirm);
   },
   dismissAlert: function() {
     _setUserFormAlert(false);
@@ -104,12 +106,6 @@ var UserAdminActions = {
       403: 'Not authorized to save user authorizations',
       default: 'Something went wrong when saving the user authorizations',
       callbacks: [UserAdminActions.closeAuthsForm]
-    });
-  },
-  setDeleteUser: function(user) {
-    AppDispatcher.handleViewAction({
-      actionType: UsersConstants.SET_DELETE_USER,
-      data: user
     });
   },
   updateUserForm: function(user) {

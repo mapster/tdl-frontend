@@ -27,7 +27,7 @@ var App = React.createClass({
         <ConfirmationModal
             {...this.state.confirmation}
             doCancel={ConfirmationActions.cancel}
-            doOk={() => ConfirmationActions.confirm(this.state.confirmation.todoAction)}
+            doOk={() => ConfirmationActions.confirm(this.state.confirmation)}
         />
       </div>
     );

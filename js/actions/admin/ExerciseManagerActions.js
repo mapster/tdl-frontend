@@ -16,7 +16,7 @@ function _updateExerciseEditorState(state) {
 var ExerciseManagerActions = {
   closeEditExercise: function(properties, sourceFiles) {
     if(properties['@unsaved'] || Object.keys(sourceFiles).some((f) => sourceFiles[f]['@unsaved'])){
-      ConfirmationActions.requestConfirmation('You will lose all unsaved changes. Are you sure you wish to leave?',{
+      ConfirmationActions.confirmAndDispatch('You will lose all unsaved changes. Are you sure you wish to leave?',{
         actionType: Constants.UPDATE_EDIT_EXERCISE_STATE,
         data: {show: {$set: false}}
       });

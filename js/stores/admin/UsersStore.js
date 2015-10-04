@@ -12,7 +12,6 @@ var PromiseHandlers = require('../PromiseHandlers');
 var _users = false;
 var _editUserState = false;
 var _editUserAuths = false;
-var _deleteUser = false;
 var _userAlerts = {};
 
 var UsersStore = assign({}, StoreListenBase, {
@@ -28,9 +27,6 @@ var UsersStore = assign({}, StoreListenBase, {
   },
   getEditUserAuths: function() {
     return _editUserAuths;
-  },
-  getDeleteUser: function() {
-    return _deleteUser;
   },
   getUserAlerts: function() {
     return _userAlerts;
@@ -48,10 +44,6 @@ AppDispatcher.register(function(payload) {
   var action = payload.action;
   if(payload.source == AppDispatcher.VIEW_ACTION) {
     switch (action.actionType) {
-      case UsersConstants.SET_DELETE_USER:
-        _deleteUser = action.data;
-        UsersStore.emitChange();
-        break;
       case UsersConstants.UPDATE_EDIT_USER_STATE:
         _editUserState = Object.assign(_editUserState, action.data);
         UsersStore.emitChange();
