@@ -10,8 +10,9 @@ var {Tabs,Tab,Row,Col,Button,ButtonGroup} = require('react-bootstrap');
 var SourcesManager = React.createClass({
   propTypes: {
     doCreateNewFile: PropTypes.func.isRequired,
-    doSaveFile: PropTypes.func.isRequired,
+    doSaveSourceFile: PropTypes.func.isRequired,
     doUpdateSourceFile: PropTypes.func.isRequired,
+    selectedSourceFile: PropTypes.string.isRequired,
     sourceFiles: PropTypes.object.isRequired
   },
   _aceId: function(name) {
@@ -22,16 +23,23 @@ var SourcesManager = React.createClass({
       this.props.doUpdateSourceFile(name, contents);
     }
   },
+  _tabTitle: function(name) {
+    var unsaved = this.props.sourceFiles[name]['@unsaved'];
+    if(unsaved !== undefined && unsaved) {
+      name += '*';
+    }
+    return name;
+  },
 
   render: function() {
     var files = this.props.sourceFiles;
     return (
       <Row>
         <Col lg={10}>
-          <Tabs>
+          <Tabs activeKey={this.props.selectedSourceFile}>
             {files && Object.keys(files).map((name) => (
-              <Tab key={name} eventKey={name+'-'+files[name].id} title={name}>
-                <AceEditor name={this._aceId(name)} value={files[name].contents} onChange={this._onFileChange.bind(null, name)} mode='java' theme="github"/>
+              <Tab key={name} eventKey={name} title={this._tabTitle(name)}>
+                <AceEditor name={this._aceId(name)} value={files[name].contents} onChange={files[name] && this._onFileChange.bind(null, name)} mode='java' theme="github"/>
               </Tab>
             ))}
           </Tabs>
@@ -39,7 +47,7 @@ var SourcesManager = React.createClass({
         <Col lg={2}>
           <ButtonGroup vertical>
             <Button onClick={this.props.doCreateNewFile}>New file</Button>
-            <Button onClick={this.props.doSaveFile}>Save</Button>
+            <Button onClick={() => this.props.doSaveSourceFile(files[this.props.selectedSourceFile])}>Save</Button>
           </ButtonGroup>
         </Col>
       </Row>

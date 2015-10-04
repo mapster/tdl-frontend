@@ -15,6 +15,7 @@ var ExerciseEditor = React.createClass({
     doCreateNewFile: PropTypes.func.isRequired,
     doResetExerciseProperties: PropTypes.func.isRequired,
     doSaveExerciseProperties: PropTypes.func.isRequired,
+    doSaveSourceFile: PropTypes.func.isRequired,
     doSetEditorTab: PropTypes.func.isRequired,
     doUpdateExerciseProperties: PropTypes.func.isRequired,
     doUpdateSourceFile: PropTypes.func.isRequired,
@@ -22,15 +23,12 @@ var ExerciseEditor = React.createClass({
     newFileId: PropTypes.number.isRequired,
     origProperties: PropTypes.object.isRequired,
     properties: PropTypes.object.isRequired,
+    selectedSourceFile: PropTypes.string.isRequired,
     show: PropTypes.bool.isRequired,
     sourceFiles: PropTypes.object.isRequired,
     tab: PropTypes.string,
 
-    alert: PropTypes.oneOfType([PropTypes.object, PropTypes.bool]),
-    sourceTab: PropTypes.string
-  },
-  getDefaultProps: function() {
-    return {tab: 'properties'};
+    alert: PropTypes.oneOfType([PropTypes.object, PropTypes.bool])
   },
   _passPropertiesAlerts: function() {
     var alert = this.props.alert;
@@ -38,10 +36,6 @@ var ExerciseEditor = React.createClass({
       return alert.messages;
     }
     return false;
-  },
-  _setSourceFiles: function(sourceChange) {
-    var newSources = Object.assign({}, this.props.sourceFiles, sourceChange);
-    this.props.doUpdateExercise(newSources);
   },
   _tabTitle: function(text, isSaved) {
     if(!isSaved) {
@@ -74,8 +68,10 @@ var ExerciseEditor = React.createClass({
             {this.props.properties.id && (
               <Tab eventKey='sources' title='Sources'>
                 <SourcesManager
-                    doUpdateSourceFile={this.props.doUpdateSourceFile}
                     doCreateNewFile={() => this.props.doCreateNewFile(this.props.newFileId)}
+                    doSaveSourceFile={this.props.doSaveSourceFile}
+                    doUpdateSourceFile={this.props.doUpdateSourceFile}
+                    selectedSourceFile={this.props.selectedSourceFile}
                     sourceFiles={this.props.sourceFiles}
                 />
               </Tab>
