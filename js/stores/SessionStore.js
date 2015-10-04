@@ -14,15 +14,14 @@ var _session = false;
 var SessionStore = assign({}, StoreListenBase, {
   getSession: function() {
     if (!_session) {
+      _session = {};
       this.refreshSession();
     }
     return _session;
   },
   refreshSession: function() {
     var actionType = SessionConstants.SESSION_UPDATE_FROM_SERVER;
-    SessionDAO.getSession()
-      .then(PromiseHandlers.handleSuccess.bind(null, actionType))
-      .catch(PromiseHandlers.handleNotFound.bind(null, {}, actionType));
+    PromiseHandlers.handlePromise(SessionDAO.getSession(), {actionType}, {});
   }
 });
 

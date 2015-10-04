@@ -34,9 +34,7 @@ var UsersStore = assign({}, StoreListenBase, {
   // state changes (setters)
   refreshUsers: function() {
     var actionType = UsersConstants.USERS_UPDATE_FROM_SERVER;
-    UsersDAO.getUsers()
-      .then(PromiseHandlers.handleSuccess.bind(null, actionType))
-      .catch(PromiseHandlers.handleNotFound.bind(null, [], actionType));
+    PromiseHandlers.handlePromise(UsersDAO.getUsers(), {actionType}, {actionType});
   }
 });
 
