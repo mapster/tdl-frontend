@@ -6,8 +6,6 @@ var {Button,Glyphicon,Row,Col,Tabs,Tab} = require('react-bootstrap');
 
 var ExercisePropertyEditor = require('./ExercisePropertyEditor.react');
 var SourcesManager = require('./SourcesManager.react');
-var ExerciseManagerConstants = require('../../constants/admin/ExerciseManagerConstants');
-var ResponseConstants = require('../../constants/ResponseConstants');
 
 var ExerciseEditor = React.createClass({
   propTypes: {
@@ -27,16 +25,7 @@ var ExerciseEditor = React.createClass({
     selectedSourceFile: PropTypes.string.isRequired,
     show: PropTypes.bool.isRequired,
     sourceFiles: PropTypes.object.isRequired,
-    tab: PropTypes.string,
-
-    alert: PropTypes.oneOfType([PropTypes.object, PropTypes.bool])
-  },
-  _passPropertiesAlerts: function() {
-    var alert = this.props.alert;
-    if(alert && alert.actionType === ExerciseManagerConstants.SAVE_EXERCISE && alert.type === ResponseConstants.INVALID_DATA) {
-      return alert.messages;
-    }
-    return false;
+    tab: PropTypes.string
   },
   _tabTitle: function(text, unsaved) {
     if(unsaved) {
@@ -61,7 +50,6 @@ var ExerciseEditor = React.createClass({
           <Tabs position='left' activeKey={this.props.tab} onSelect={this.props.doSetEditorTab}>
             <Tab eventKey='properties' title={this._tabTitle('Properties', this.props.properties['@unsaved'])}>
               <ExercisePropertyEditor
-                  alert={this._passPropertiesAlerts()}
                   doChange={this.props.doUpdateExerciseProperties}
                   doReset={() => this.props.doResetExerciseProperties(this.props.origProperties)}
                   doSaveExercise={this.props.doSaveExerciseProperties}

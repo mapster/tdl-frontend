@@ -2,14 +2,13 @@
 
 var React = require('react');
 var PropTypes = React.PropTypes;
-var {Row,Col,ListGroup,ListGroupItem,Button,Glyphicon,Alert} = require('react-bootstrap');
+var {Row,Col,ListGroup,ListGroupItem,Button,Glyphicon} = require('react-bootstrap');
 
 var Actions = require('../../actions/admin/ExerciseManagerActions');
 var ConnectToStore = require('../../mixins/ConnectToStore');
 var ExerciseEditor = require('../../components/admin/ExerciseEditor.react');
 var ExerciseManagerStore = require('../../stores/admin/ExerciseManagerStore');
 var Forbidden = require('../../components/Forbidden.react');
-var ResponseConstants = require('../../constants/ResponseConstants');
 
 var ExerciseManager = React.createClass({
   propTypes: {
@@ -24,19 +23,6 @@ var ExerciseManager = React.createClass({
       };
     })
   ],
-  _renderAlert: function() {
-    var alert = this.state.ex.alert;
-    if(alert){
-      switch(alert.type) {
-        case ResponseConstants.OK:
-          return (<Alert bsStyle='success' onDismiss={Actions.dismissAlert}>{alert.userMsg}</Alert>);
-        case ResponseConstants.FORBIDDEN:
-        case ResponseConstants.ERROR:
-          return (<Alert bsStyle='danger' onDismiss={Actions.dismissAlert}>{alert.userMsg}</Alert>);
-      }
-    }
-    return false;
-  },
 
   render: function() {
     var authorized = this.props.user && this.props.user.auth && this.props.user.auth;
@@ -50,7 +36,6 @@ var ExerciseManager = React.createClass({
       view = (
         <ExerciseEditor
             {...this.state.ex.editorState}
-            alert={this.state.ex.alert}
             doCreateNewFile={Actions.createNewFile}
             doResetExerciseProperties={Actions.resetExerciseProperties}
             doSaveExerciseProperties={Actions.saveExerciseProperties}
@@ -85,11 +70,6 @@ var ExerciseManager = React.createClass({
             <Col lg={10}><h1 className='inline'>Exercises</h1></Col>
             <Col lg={2} className='right'>
                 <Button bsSize='medium' onClick={Actions.createNewExercise}><Glyphicon glyph='plus'/></Button>
-            </Col>
-          </Row>
-          <Row>
-            <Col lg={8}>
-              {this._renderAlert()}
             </Col>
           </Row>
           <Row><Col lg={12}>{view}</Col></Row>
