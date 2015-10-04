@@ -7,14 +7,10 @@ var Constants = require('../../constants/admin/ExerciseManagerConstants');
 var StoreListenBase = require('../StoreListenBase');
 var {handlePromise} = require('../PromiseHandlers');
 
-var _alert = false;
 var _exercises = false;
 var _exerciseEditorState = {};
 
 var ExerciseManagerStore = Object.assign({}, StoreListenBase, {
-  getAlert: function() {
-    return _alert;
-  },
   getExercises: function() {
     if(!_exercises) {
       this.refreshExercises();
@@ -32,10 +28,6 @@ var ExerciseManagerStore = Object.assign({}, StoreListenBase, {
       403: 'Not authorized to fetch exercises.',
       default: (r,s) => 'Could not fetch exercises: '+s
     });
-  },
-  setAlert: function(alert) {
-    _alert = alert;
-    this.emitChange();
   },
   updateExerciseEditorState: function(state) {
     _exerciseEditorState = _exerciseEditorState || {};

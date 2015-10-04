@@ -28,10 +28,10 @@ var ExerciseManagerActions = {
   createNewExercise: function() {
     _updateExerciseEditorState({$merge: {show: true, properties: {}, sourceFiles: {}, newFileId: 1, feedback: {}}});
   },
-  createNewFile: function(id) {
+  createNewFile: function(exercise_id, id) {
     var name = 'unsaved-file-' + id;
     var sourceUpdate = {};
-    sourceUpdate[name] = {$set: {name, contents: '', '@unsaved': true}};
+    sourceUpdate[name] = {$set: {exercise_id, name, contents: '', '@unsaved': true}};
     _updateExerciseEditorState({
       newFileId: {$set: id+1},
       selectedSourceFile: {$set: name},
@@ -58,11 +58,16 @@ var ExerciseManagerActions = {
       });
     }
   },
-  dismissAlert: function() {
-    AppDispatcher.handleViewAction({
-      actionType: Constants.SET_ALERT,
-      data: false
-    });
+  deleteExercise: function(ex) {
+    console.log('delete: '+ex.name);
+  },
+  renameSourceFile: function(oldName, newName, sourceFiles) {
+    sourceFiles[newName] = sourceFiles[oldName];
+    delete sourceFiles[oldName];
+    sourceFiles[newName].name = newName;
+    sourceFiles[newName]['@unsaved'] = true;
+
+    _updateExerciseEditorState({sourceFiles: {$set: sourceFiles}, selectedSourceFile: {$set: newName}});
   },
   resetExerciseProperties: function(resetTo) {
     _updateExerciseEditorState({properties: {$set: Object.assign({}, resetTo, {'@unsaved': false})}});

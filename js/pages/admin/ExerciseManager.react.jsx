@@ -2,7 +2,7 @@
 
 var React = require('react');
 var PropTypes = React.PropTypes;
-var {Row,Col,ListGroup,ListGroupItem,Button,Glyphicon} = require('react-bootstrap');
+var {Row,Col,ListGroup,ListGroupItem,Button,ButtonGroup,Glyphicon} = require('react-bootstrap');
 
 var Actions = require('../../actions/admin/ExerciseManagerActions');
 var ConnectToStore = require('../../mixins/ConnectToStore');
@@ -17,7 +17,6 @@ var ExerciseManager = React.createClass({
   mixins: [
     ConnectToStore('ex', ExerciseManagerStore, function(store) {
       return {
-        alert: store.getAlert(),
         editorState: store.getExerciseEditorState(),
         exercises: store.getExercises()
       };
@@ -37,6 +36,7 @@ var ExerciseManager = React.createClass({
         <ExerciseEditor
             {...this.state.ex.editorState}
             doCreateNewFile={Actions.createNewFile}
+            doRenameSourceFile={Actions.renameSourceFile}
             doResetExerciseProperties={Actions.resetExerciseProperties}
             doSaveExerciseProperties={Actions.saveExerciseProperties}
             doSaveSourceFile={Actions.saveSourceFile}
@@ -55,7 +55,10 @@ var ExerciseManager = React.createClass({
               <Row>
                 <Col lg={9}>{ex.name}</Col>
                 <Col lg={3}>
-                  <Button bsSize='small' onClick={() => Actions.editExercise(ex)}><Glyphicon glyph='pencil'/></Button>
+                  <ButtonGroup className='pull-right'>
+                    <Button bsSize='small' onClick={() => Actions.editExercise(ex)}><Glyphicon glyph='pencil'/></Button>
+                    <Button bsSize='small' onClick={() => Actions.deleteExercise(ex)}><Glyphicon glyph='trash'/></Button>
+                  </ButtonGroup>
                 </Col>
               </Row>
             </ListGroupItem>
