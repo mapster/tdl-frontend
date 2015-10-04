@@ -8,15 +8,20 @@ var PromiseHandlers = require('../stores/PromiseHandlers');
 var SessionActions = {
   login: function(email, password) {
     var actionType = SessionConstants.SESSION_UPDATE_FROM_SERVER;
-    SessionDAO.login({email, password})
-      .then(PromiseHandlers.handleSuccess.bind(null, actionType))
-      .catch(PromiseHandlers.handleNotFound.bind(null, {}, actionType));
+    PromiseHandlers.handlePromise(SessionDAO.login({email, password}), {
+      actionType
+    }, {
+      actionType,
+      404: 'Invalid email/password combination'
+    });
   },
   logout: function() {
     var actionType = SessionConstants.SESSION_UPDATE_FROM_SERVER;
-    SessionDAO.logout()
-      .then(PromiseHandlers.handleSuccess.bind(null, actionType))
-      .catch(PromiseHandlers.handleNotFound.bind(null, {}, actionType));
+    PromiseHandlers.handlePromise(SessionDAO.logout(), {
+      actionType
+    }, {
+      actionType
+    });
   }
 };
 
