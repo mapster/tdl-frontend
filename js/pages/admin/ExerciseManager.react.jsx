@@ -59,7 +59,7 @@ var ExerciseManager = React.createClass({
             doSetEditorTab={Actions.setEditorTab}
             doUpdateExerciseProperties={Actions.updateExerciseProperties}
             doUpdateSourceFile={Actions.updateSourceFile}
-            doClose={Actions.closeEditExercise}
+            doClose={() => Actions.closeEditExercise(this.state.ex.editorState.properties, this.state.ex.editorState.sourceFiles)}
         />
       );
     } else {

@@ -38,8 +38,8 @@ var ExerciseEditor = React.createClass({
     }
     return false;
   },
-  _tabTitle: function(text, isSaved) {
-    if(!isSaved) {
+  _tabTitle: function(text, unsaved) {
+    if(unsaved) {
       text += '*';
     }
     return text;
@@ -59,7 +59,7 @@ var ExerciseEditor = React.createClass({
         </Row>
         <Row>
           <Tabs position='left' activeKey={this.props.tab} onSelect={this.props.doSetEditorTab}>
-            <Tab eventKey='properties' title={this._tabTitle('Properties', this.props.properties['@saved'])}>
+            <Tab eventKey='properties' title={this._tabTitle('Properties', this.props.properties['@unsaved'])}>
               <ExercisePropertyEditor
                   alert={this._passPropertiesAlerts()}
                   doChange={this.props.doUpdateExerciseProperties}
@@ -70,7 +70,7 @@ var ExerciseEditor = React.createClass({
               />
             </Tab>
             {this.props.properties.id && (
-              <Tab eventKey='sources' title={this._tabTitle('Sources', !this._anyUnsavedFiles())}>
+              <Tab eventKey='sources' title={this._tabTitle('Sources', this._anyUnsavedFiles())}>
                 <SourcesManager
                     doCreateNewFile={() => this.props.doCreateNewFile(this.props.newFileId)}
                     doSaveSourceFile={this.props.doSaveSourceFile}

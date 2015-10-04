@@ -35,7 +35,7 @@ var ExercisePropertyEditor = React.createClass({
 
   render: function() {
     var {name,kind,difficulty,description} = this.props.properties;
-    var _saved = this.props.properties['@saved'] || false;
+    var _unsaved = this.props.properties['@unsaved'];
     return (
       <form>
         <Input type='text' label='Name' value={name}
@@ -71,7 +71,7 @@ var ExercisePropertyEditor = React.createClass({
             onChange={this._change.bind(this, 'description')}
         />
         <Button onClick={this.props.doReset}>Reset</Button>
-        <Button bsStyle='success' disabled={_saved} onClick={this._doSaveExercise}>Save</Button>
+        <Button bsStyle='success' disabled={!_unsaved} onClick={this._doSaveExercise}>Save</Button>
       </form>
     );
   }

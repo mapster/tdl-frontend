@@ -1,7 +1,8 @@
 'use strict';
 
 var constants = [
-  'NOTIFICATION'
+  'NOTIFICATION',
+  'SET_CONFIRMATION'
 ];
 
 var obj = {};

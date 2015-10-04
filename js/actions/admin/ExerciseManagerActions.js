@@ -2,6 +2,7 @@
 
 var AppDispatcher = require('../../dispatcher/AppDispatcher');
 var Constants = require('../../constants/admin/ExerciseManagerConstants');
+var ConfirmationActions = require('../ConfirmationActions');
 var ExerciseManagerDAO = require('../../dao/admin/ExerciseManagerDAO');
 var {handlePromise} = require('../../stores/PromiseHandlers');
 
@@ -13,8 +14,16 @@ function _updateExerciseEditorState(state) {
 }
 
 var ExerciseManagerActions = {
-  closeEditExercise: function() {
-    _updateExerciseEditorState({show: {$set: false}});
+  closeEditExercise: function(properties, sourceFiles) {
+    if(properties['@unsaved'] || Object.keys(sourceFiles).some((f) => sourceFiles[f]['@unsaved'])){
+      ConfirmationActions.requestConfirmation('You will lose all unsaved changes. Are you sure you wish to leave?',{
+        actionType: Constants.UPDATE_EDIT_EXERCISE_STATE,
+        data: {show: {$set: false}}
+      });
+
+    } else {
+      _updateExerciseEditorState({show: {$set: false}});
+    }
   },
   createNewExercise: function() {
     _updateExerciseEditorState({$merge: {show: true, properties: {}, sourceFiles: {}, newFileId: 1, feedback: {}}});
@@ -34,7 +43,7 @@ var ExerciseManagerActions = {
       feedback: {},
       newFileId: 1,
       origProperties: exercise,
-      properties: Object.assign({}, exercise, {'@saved': true}),
+      properties: Object.assign({}, exercise, {'@unsaved': false}),
       show: true,
       selectedSourceFile: '',
       sourceFiles: {},
@@ -56,7 +65,7 @@ var ExerciseManagerActions = {
     });
   },
   resetExerciseProperties: function(resetTo) {
-    _updateExerciseEditorState({properties: {$set: Object.assign({}, resetTo, {'@saved': true})}});
+    _updateExerciseEditorState({properties: {$set: Object.assign({}, resetTo, {'@unsaved': false})}});
   },
   saveExerciseProperties: function(id, exercise) {
     var promise = (id === undefined) ? ExerciseManagerDAO.postExercise(exercise) : ExerciseManagerDAO.putExercise(id, exercise);
@@ -66,7 +75,7 @@ var ExerciseManagerActions = {
       default: 'Exercise properties saved',
       callbacks: [(r) => _updateExerciseEditorState({
         origProperties: {$set: r},
-        properties: {$set: Object.assign({}, r, {'@saved': true}) }
+        properties: {$set: Object.assign({}, r, {'@unsaved': false}) }
       })]
     }, {
       400: (r) => _updateExerciseEditorState({feedback: {$set: JSON.parse(r)}}),
@@ -99,7 +108,7 @@ var ExerciseManagerActions = {
     _updateExerciseEditorState({tab: {$set: tab}});
   },
   updateExerciseProperties: function(properties) {
-    properties['@saved'] = false;
+    properties['@unsaved'] = true;
     _updateExerciseEditorState({properties: {$set: properties}});
   },
   updateSourceFile: function(name, contents) {
