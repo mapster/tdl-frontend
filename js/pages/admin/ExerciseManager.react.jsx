@@ -2,11 +2,12 @@
 
 var React = require('react');
 var PropTypes = React.PropTypes;
-var {Row,Col,ListGroup,ListGroupItem,Button,ButtonGroup,Glyphicon} = require('react-bootstrap');
+var {Row,Col,Button,Glyphicon} = require('react-bootstrap');
 
 var Actions = require('../../actions/admin/ExerciseManagerActions');
 var ConnectToStore = require('../../mixins/ConnectToStore');
 var ExerciseEditor = require('../../components/admin/ExerciseEditor.react');
+var ExerciseList = require('../../components/ExerciseList.react');
 var ExerciseManagerStore = require('../../stores/admin/ExerciseManagerStore');
 var Forbidden = require('../../components/Forbidden.react');
 
@@ -28,7 +29,6 @@ var ExerciseManager = React.createClass({
     if(!authorized.manage_exercises){
       return (<Forbidden />);
     }
-    var exercises = this.state.ex.exercises;
 
     var view;
     if(this.state.ex.editorState.show) {
@@ -49,21 +49,7 @@ var ExerciseManager = React.createClass({
       );
     } else {
       view = (
-        <ListGroup>
-          {exercises && exercises.map((ex) => (
-            <ListGroupItem key={ex.id}>
-              <Row>
-                <Col lg={9}>{ex.name}</Col>
-                <Col lg={3}>
-                  <ButtonGroup className='pull-right'>
-                    <Button bsSize='small' onClick={() => Actions.editExercise(ex)}><Glyphicon glyph='pencil'/></Button>
-                    <Button bsSize='small' onClick={() => Actions.deleteExercise(ex)}><Glyphicon glyph='trash'/></Button>
-                  </ButtonGroup>
-                </Col>
-              </Row>
-            </ListGroupItem>
-          ))}
-        </ListGroup>
+        <ExerciseList doDeleteExercise={Actions.deleteExercise} doEditExercise={Actions.editExercise} exercises={this.state.ex.exercises}/>
       );
     }
     return (
