@@ -2,6 +2,8 @@
 
 var PREFIX = 'EXERCISES';
 var constants = [
+  'EXERCISES_UPDATE_FROM_SERVER',
+  'SOLUTIONS_UPDATE_FROM_SERVER'
 ];
 
 var obj = {};
