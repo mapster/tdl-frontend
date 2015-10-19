@@ -10,21 +10,25 @@ var ExerciseList = React.createClass({
   },
 
   render: function() {
+    var exercises = this.props.exercises;
     return (
       <ListGroup>
-        {this.props.exercises && this.props.exercises.map((ex) => (
-          <ListGroupItem key={ex.id}>
-            <Row>
-              <Col lg={9}>{ex.name}</Col>
-              <Col lg={3}>
-                <ButtonGroup className='pull-right'>
-                  <Button bsSize='small' onClick={() => this.props.doEditExercise(ex)}><Glyphicon glyph='pencil'/></Button>
-                  <Button bsSize='small' onClick={() => this.props.doDeleteExercise(ex)}><Glyphicon glyph='trash'/></Button>
-                </ButtonGroup>
-              </Col>
-            </Row>
-          </ListGroupItem>
-        ))}
+        {exercises && Object.keys(exercises).map((ex_id) => {
+          var ex = exercises[ex_id];
+          return(
+            <ListGroupItem key={ex.id}>
+              <Row>
+                <Col lg={9}>{ex.name}</Col>
+                <Col lg={3}>
+                  <ButtonGroup className='pull-right'>
+                    <Button bsSize='small' onClick={() => this.props.doEditExercise(ex)}><Glyphicon glyph='pencil'/></Button>
+                    <Button bsSize='small' onClick={() => this.props.doDeleteExercise(ex)}><Glyphicon glyph='trash'/></Button>
+                  </ButtonGroup>
+                </Col>
+              </Row>
+            </ListGroupItem>
+          );
+        })}
       </ListGroup>
     );
   }
