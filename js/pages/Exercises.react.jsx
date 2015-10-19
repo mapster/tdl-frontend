@@ -1,33 +1,28 @@
 'use strict';
 
 var React = require('react');
-var $ = require('jquery');
 
+var ConnectToStore = require('../mixins/ConnectToStore');
 var Exercise = require('../components/Exercise.react');
+var ExerciseStore = require('../stores/ExerciseStore');
 
 var Exercises = React.createClass({
-  getInitialState: function() {
-    return {
-      exercises: []
-    };
-  },
-  componentDidMount: function() {
-    $.get('http://127.0.0.1/exercises', function(result) {
-      if (this.isMounted()) {
-        this.setState({exercises: result});
-      }
-    }.bind(this))
-    .fail(function() {
-      this.setState({exercises: []});
-    }.bind(this));
-  },
+  mixins: [
+    ConnectToStore('ex', ExerciseStore, function(store) {
+      return {
+        editorState: store.getExerciseEditorState(),
+        exercises: store.getExercises(),
+        solutions: store.getSolutions()
+      };
+    })
+  ],
   render: function() {
-    var exercises = $.map(this.state.exercises,function(ex) {
-      return (<Exercise key={ex} name={ex} />);
-    });
+    var exercises = this.state.ex.exercises;
     return (
       <div>
-        {exercises}
+        {exercises && Object.keys(exercises).map((exID) => (
+          <Exercise key={exID} {...exercises[exID]} solution={this.state.ex.solutions[exID]} />
+        ))}
       </div>
     );
   }
