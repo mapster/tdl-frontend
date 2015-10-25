@@ -10,7 +10,7 @@ var {handlePromise} = require('./PromiseHandlers');
 
 var _exercises = false;
 var _solutions = false;
-var _exerciseEditorState = {};
+var _solutionEditorState = {};
 
 var ExerciseStore = Object.assign({}, StoreListenBase, {
   getExercises: function() {
@@ -25,8 +25,8 @@ var ExerciseStore = Object.assign({}, StoreListenBase, {
     }
     return _solutions;
   },
-  getExerciseEditorState: function() {
-    return _exerciseEditorState;
+  getSolutionEditorState: function() {
+    return _solutionEditorState;
   },
   refreshExercises: function() {
     var actionType = Constants.EXERCISES_UPDATE_FROM_SERVER;
@@ -45,9 +45,9 @@ var ExerciseStore = Object.assign({}, StoreListenBase, {
       default: (r, s) => 'Could not fetch exercise solutions: '+s
     });
   },
-  updateExerciseEditorState: function(state) {
-    _exerciseEditorState = _exerciseEditorState || {};
-    _exerciseEditorState = React.addons.update(_exerciseEditorState, state);
+  updateSolutionEditorState: function(state) {
+    _solutionEditorState = _solutionEditorState || {};
+    _solutionEditorState = React.addons.update(_solutionEditorState, state);
     this.emitChange();
   }
 });
@@ -69,6 +69,18 @@ AppDispatcher.register(function(payload) {
         ExerciseStore.emitChange();
         break;
       default:
+    }
+  }
+  //==============
+  // VIEW_ACTION
+  //
+  else if(payload.source === AppDispatcher.VIEW_ACTION) {
+    switch (action.actionType) {
+      case Constants.UPDATE_EDIT_EXERCISE_STATE:
+        ExerciseStore.updateSolutionEditorState(action.data);
+        break;
+      default:
+
     }
   }
 });

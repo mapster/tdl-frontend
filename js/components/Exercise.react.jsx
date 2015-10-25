@@ -44,6 +44,7 @@ var {Accordion, Button, Label, Panel} = require('react-bootstrap');
 
 var Exercise = React.createClass({
   propTypes: {
+    doEditExercise: PropTypes.func.isRequired,
     name: PropTypes.string.isRequired
   },
   render: function() {
@@ -64,6 +65,7 @@ var Exercise = React.createClass({
       <div>
         <h4>{this.props.name}</h4>
         {statusText}
+        <Button onClick={this.props.doEditExercise}>Edit</Button>
       </div>
     );
 

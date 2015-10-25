@@ -73,6 +73,7 @@ AppDispatcher.register(function(payload) {
       case Constants.SAVE_EXERCISE:
         alert = Object.assign({}, action);
         alert.userMsg = 'Could not save exercise: ' + alert.status;
+        //TODO should be looked into, setAlert doesn't exist any more
         ExerciseManagerStore.setAlert(alert);
         break;
       default:
