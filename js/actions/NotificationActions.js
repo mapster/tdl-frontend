@@ -9,6 +9,12 @@ var NotificationActions = {
       actionType: Constants.NOTIFICATION,
       data: false
     });
+  },
+  dispatchNotification: function(text, type) {
+    AppDispatcher.handleStoreRefreshAction({
+      actionType: Constants.NOTIFICATION,
+      data: {text, type}
+    });
   }
 };
 

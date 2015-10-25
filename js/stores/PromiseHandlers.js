@@ -1,7 +1,7 @@
 'use strict';
 
 var AppDispatcher = require('../dispatcher/AppDispatcher');
-var Constants = require('../constants/Constants');
+var NotificationActions = require('../actions/NotificationActions');
 
 function isFunction(functionToCheck) {
   var getType = {};
@@ -12,10 +12,7 @@ function _doStatusHandler(notificationType, response, status, statusHandler) {
   if(isFunction(statusHandler)) {
     statusHandler(response, status);
   } else if(typeof statusHandler === 'string') {
-    AppDispatcher.handleStoreRefreshAction({
-      actionType: Constants.NOTIFICATION,
-      data: {text: statusHandler, type: notificationType}
-    });
+    NotificationActions.dispatchNotification(statusHandler, notificationType);
   } else {
     throw new Error('promiseHandler: Invalid value in status-case');
   }
