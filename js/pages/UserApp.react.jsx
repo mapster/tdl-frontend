@@ -5,6 +5,7 @@ var {PropTypes} = React;
 var {Grid,Row,Col} = require('react-bootstrap');
 
 var Header = require('../components/Header.react');
+var NotificationView = require('../components/NotificationView.react');
 
 var UserApp = React.createClass({
   propTypes: {
@@ -24,6 +25,9 @@ var UserApp = React.createClass({
             <Col lg={12}>
               <Header title='JavaTDL' menu={menu} auth={this.props.user.auth} session={this.props.session} />
             </Col>
+          </Row>
+          <Row>
+            <Col lg={12}><NotificationView /></Col>
           </Row>
           <Row>
             <Col lg={12}>
