@@ -60,7 +60,14 @@ var SourcesManager = React.createClass({
           <Tabs activeKey={this.props.selectedSourceFile} onSelect={this.props.doSelectSourceFile}>
             {files && Object.keys(files).map((name) => (
               <Tab key={name} eventKey={name} title={this._tabTitle(name)}>
-                <AceEditor name={this._aceId(name)} value={files[name].contents} onChange={files[name] && this._onFileChange.bind(null, name)} mode='java' theme="github"/>
+                <AceEditor
+                    readOnly={files[name]['@readOnly']}
+                    name={this._aceId(name)}
+                    value={files[name].contents}
+                    onChange={files[name] && this._onFileChange.bind(null, name)}
+                    mode='java'
+                    theme="github"
+                />
               </Tab>
             ))}
           </Tabs>
