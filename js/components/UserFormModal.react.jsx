@@ -1,4 +1,4 @@
-var React = require('react/addons');
+var React = require('react');
 var PropTypes = React.PropTypes;
 var {Modal,Button,Input,Col,Row} = require('react-bootstrap');
 

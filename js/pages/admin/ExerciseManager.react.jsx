@@ -56,7 +56,7 @@ var ExerciseManager = React.createClass({
           <Row>
             <Col lg={10}><h1 className='inline'>Exercises</h1></Col>
             <Col lg={2} className='right'>
-                <Button bsSize='medium' onClick={Actions.createNewExercise}><Glyphicon glyph='plus'/></Button>
+                <Button bsSize='sm' onClick={Actions.createNewExercise}><Glyphicon glyph='plus'/></Button>
             </Col>
           </Row>
           <Row><Col lg={12}>{view}</Col></Row>

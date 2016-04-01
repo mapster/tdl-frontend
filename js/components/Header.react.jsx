@@ -34,7 +34,7 @@ var Header = React.createClass({
     var auth = this.props.auth;
     var isAdmin = auth && Object.keys(auth).some((k) => auth[k]);
     var sessionNav = (
-      <Nav right>
+      <Nav pullRight>
         <NavDropdown title={this.props.session.name || ''} id="session-nav">
           {isAdmin && <MenuItem href='#/admin'>Admin</MenuItem>}
           <MenuItem onSelect={SessionActions.logout}>Logout</MenuItem>
@@ -46,7 +46,8 @@ var Header = React.createClass({
       <div>
         <Row>
           <Col lg={12}>
-            <Navbar brand={this.props.title}>
+            <Navbar>
+              <Navbar.Brand>{this.props.title}</Navbar.Brand>
               <Nav>
                 {this.props.menu.map(function(item, index) {
                   return <NavItem key={index} href={item.href}>{item.text}</NavItem>;

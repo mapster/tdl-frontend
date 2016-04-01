@@ -55,8 +55,8 @@ var UserAdmin = React.createClass({
           <Row>
             <Col lg={10}><h1 className='inline'>Users</h1></Col>
             <Col lg={2} className='right'>
-              <OverlayTrigger placment='right' overlay={(<Tooltip>Add new user</Tooltip>)}>
-                <Button bsSize='medium' onClick={UserAdminActions.newUser}>
+              <OverlayTrigger placment='right' overlay={(<Tooltip id='add-user-tp'>Add new user</Tooltip>)}>
+                <Button bsSize='sm' onClick={UserAdminActions.newUser}>
                   <Glyphicon glyph='plus'/>
                 </Button>
               </OverlayTrigger>

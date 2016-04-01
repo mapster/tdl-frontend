@@ -34,15 +34,15 @@ var UserList = React.createClass({
               </Col>
               <Col lg={3}>
                 <ButtonGroup className='pull-right'>
-                  <OverlayTrigger placement='left' overlay={(<Tooltip>Edit user</Tooltip>)}>
+                  <OverlayTrigger placement='left' overlay={(<Tooltip id='edit-user-tp'>Edit user</Tooltip>)}>
                     <Button bsSize='small' onClick={() => this.props.doEditUser(user)}><Glyphicon glyph='pencil'/></Button>
                   </OverlayTrigger>
                   {showAuthsButton &&
-                    (<OverlayTrigger placement='top' overlay={(<Tooltip>Edit authorizations</Tooltip>)}>
+                    (<OverlayTrigger placement='top' overlay={(<Tooltip id='edit-uset-auth-tp'>Edit authorizations</Tooltip>)}>
                       <Button bsSize='small' onClick={() => this.props.doEditUserAuths(user.id)}><Glyphicon glyph='lock'/></Button>
                     </OverlayTrigger>)
                   }
-                  <OverlayTrigger placement='right' overlay={(<Tooltip>Delete user</Tooltip>)}>
+                  <OverlayTrigger placement='right' overlay={(<Tooltip id='delete-user-tp'>Delete user</Tooltip>)}>
                     <Button bsSize='small' onClick={() => this.props.doDeleteUser(user)}><Glyphicon glyph='trash' /></Button>
                   </OverlayTrigger>
                 </ButtonGroup>

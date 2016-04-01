@@ -1,6 +1,7 @@
 'use strict';
 
-var React = require('react/addons');
+var React = require('react');
+var immutableUpdate = require('react-addons-update');
 var AppDispatcher = require('../../dispatcher/AppDispatcher');
 var ExerciseManagerDAO = require('../../dao/admin/ExerciseManagerDAO');
 var Constants = require('../../constants/admin/ExerciseManagerConstants');
@@ -31,7 +32,7 @@ var ExerciseManagerStore = Object.assign({}, StoreListenBase, {
   },
   updateExerciseEditorState: function(state) {
     _exerciseEditorState = _exerciseEditorState || {};
-    _exerciseEditorState = React.addons.update(_exerciseEditorState, state);
+    _exerciseEditorState = immutableUpdate(_exerciseEditorState, state);
     this.emitChange();
   }
 });

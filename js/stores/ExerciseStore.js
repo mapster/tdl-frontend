@@ -1,7 +1,6 @@
 'use strict';
 
-var React = require('react/addons');
-
+var immutableUpdate = require('react-addons-update');
 var AppDispatcher = require('../dispatcher/AppDispatcher');
 var ExerciseDAO = require('../dao/ExerciseDAO');
 var Constants = require('../constants/ExerciseConstants');
@@ -47,7 +46,7 @@ var ExerciseStore = Object.assign({}, StoreListenBase, {
   },
   updateSolutionEditorState: function(state) {
     _solutionEditorState = _solutionEditorState || {};
-    _solutionEditorState = React.addons.update(_solutionEditorState, state);
+    _solutionEditorState = immutableUpdate(_solutionEditorState, state);
     this.emitChange();
   }
 });
