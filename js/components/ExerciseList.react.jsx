@@ -6,7 +6,7 @@ var ExerciseList = React.createClass({
   propTypes: {
     doDeleteExercise: PropTypes.func.isRequired,
     doEditExercise: PropTypes.func.isRequired,
-    exercises: PropTypes.array.isRequired
+    exercises: PropTypes.object
   },
 
   render: function() {

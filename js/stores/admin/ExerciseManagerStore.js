@@ -7,7 +7,7 @@ var Constants = require('../../constants/admin/ExerciseManagerConstants');
 var StoreListenBase = require('../StoreListenBase');
 var {handlePromise} = require('../PromiseHandlers');
 
-var _exercises = false;
+var _exercises;
 var _exerciseEditorState = {};
 
 var ExerciseManagerStore = Object.assign({}, StoreListenBase, {

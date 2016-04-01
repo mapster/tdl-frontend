@@ -1,5 +1,3 @@
-'use strict';
-
 var React = require('react');
 var PropTypes = React.PropTypes;
 var {Row,Col,Button,Glyphicon} = require('react-bootstrap');
