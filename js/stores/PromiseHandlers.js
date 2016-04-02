@@ -77,6 +77,11 @@ var PromiseHandlers = {
     promise
       .then((v) => _doPromise(thenProps, AppDispatcher.handleStoreRefreshAction, v[0], v[2].status))
       .catch((v) => _doPromise(catchProps, AppDispatcher.handleErrorResponse, v[0].responseText, v[0].status));
+
+    // TODO: catch is incorrectly used to process error responses. The then callback will be invoked no matter what
+    // the response is. If it fails with a thrown error, then catch callback is invoked. thenProps and catchProps will
+    // need to be merged.
+    console.log("TODO: fix catch in PromiseHandlers.");
   }
 };
 

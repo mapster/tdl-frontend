@@ -8,7 +8,6 @@ var {handlePromise} = require('../../stores/PromiseHandlers');
 var NotificationActions = require('../NotificationActions');
 
 function _updateExerciseEditorState(state) {
-  console.log("About to update editor state: " + state);
   AppDispatcher.handleViewAction({
     actionType: Constants.UPDATE_EDIT_EXERCISE_STATE,
     data: state
@@ -77,7 +76,7 @@ var ExerciseManagerActions = {
         handlePromise(promise, {
           actionType: Constants.DELETE_SOURCE_FILE,
           default: 'Source file deleted: ' + name,
-          callbacks: [() => _updateExerciseEditorState({sourceFiles})]
+          callbacks: [() => _updateExerciseEditorState(stateUpdate)]
         }, {
           403: 'Not authorized to delete source file in exercise: ' + name,
           default: 'Something went wrong when deleting source file: ' + name
