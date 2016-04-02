@@ -4,6 +4,7 @@ var AceEditor = require('react-ace');
 require('brace');
 require('brace/mode/java');
 require('brace/theme/github');
+require('brace/ext/language_tools')
 var {Tabs,Tab,Row,Col,Button,ButtonGroup} = require('react-bootstrap');
 
 var SingleFieldModal = require('../SingleFieldModal.react');

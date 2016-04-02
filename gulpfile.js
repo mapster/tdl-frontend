@@ -1,5 +1,3 @@
-'use strict';
-
 var browserify = require('browserify');
 var del = require('del');
 var esnext = require('esnext');
