@@ -1,5 +1,3 @@
-'use strict';
-
 var React = require('react');
 var immutableUpdate = require('react-addons-update');
 var AppDispatcher = require('../../dispatcher/AppDispatcher');

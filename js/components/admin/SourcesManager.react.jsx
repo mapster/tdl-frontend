@@ -12,6 +12,7 @@ var SingleFieldModal = require('../SingleFieldModal.react');
 var SourcesManager = React.createClass({
   propTypes: {
     doCreateNewFile: PropTypes.func.isRequired,
+    doDeleteSourceFile: PropTypes.func.isRequired,
     doRenameSourceFile: PropTypes.func.isRequired,
     doSaveSourceFile: PropTypes.func.isRequired,
     doSelectSourceFile: PropTypes.func.isRequired,
@@ -78,6 +79,7 @@ var SourcesManager = React.createClass({
             <Button onClick={this.props.doCreateNewFile}>New file</Button>
             <Button onClick={() => this.props.doSaveSourceFile(files[this.props.selectedSourceFile])}>Save</Button>
             <Button onClick={() => this._showRename(this.props.selectedSourceFile)}>Rename</Button>
+            <Button onClick={() => this.props.doDeleteSourceFile(this.props.selectedSourceFile, this.props.sourceFiles)}>Delete</Button>
           </ButtonGroup>
         </Col>
       </Row>

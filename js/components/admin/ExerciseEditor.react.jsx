@@ -11,6 +11,7 @@ var ExerciseEditor = React.createClass({
   propTypes: {
     doClose: PropTypes.func.isRequired,
     doCreateNewFile: PropTypes.func.isRequired,
+    doDeleteSourceFile: PropTypes.func.isRequired,
     doRenameSourceFile: PropTypes.func.isRequired,
     doResetExerciseProperties: PropTypes.func.isRequired,
     doSaveExerciseProperties: PropTypes.func.isRequired,
@@ -63,6 +64,7 @@ var ExerciseEditor = React.createClass({
               <Tab eventKey='sources' title={this._tabTitle('Sources', this._anyUnsavedFiles())}>
                 <SourcesManager
                     doCreateNewFile={() => this.props.doCreateNewFile(this.props.properties.id, this.props.newFileId)}
+                    doDeleteSourceFile={this.props.doDeleteSourceFile}
                     doRenameSourceFile={this.props.doRenameSourceFile}
                     doSaveSourceFile={this.props.doSaveSourceFile}
                     doSelectSourceFile={this.props.doSelectSourceFile}

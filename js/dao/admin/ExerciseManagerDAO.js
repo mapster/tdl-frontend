@@ -4,6 +4,7 @@ var AppConfig = require('../../appconfig.json');
 var promiseRequest = require('../PromiseRequest');
 var ExerciseDAO = require('../ExerciseDAO');
 
+var DELETE_SOURCE_FILE = 'deleteSourceFile';
 var POST_EXERCISE = 'postExercise';
 var POST_SOURCE_FILE= 'postSourceFile';
 var PUT_EXERCISE = 'putExercise';
@@ -15,6 +16,12 @@ var SOURCES_SUB_RESOURCES = 'source_files';
 var ExerciseManagerDAO = {
   getExercises: ExerciseDAO.getExercises,
   getExerciseSources: ExerciseDAO.getExerciseSources,
+  deleteSourceFile: function(exerciseId, id) {
+    return promiseRequest(DELETE_SOURCE_FILE, {
+      type: 'DELETE',
+      url: RESOURCE_URL + '/' + exerciseId + '/' + SOURCES_SUB_RESOURCES + '/' + id
+    });
+  },
   postExercise: function(exercise) {
     return promiseRequest(POST_EXERCISE, {
       type: 'POST',

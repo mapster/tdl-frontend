@@ -5,8 +5,10 @@ var Constants = require('../../constants/admin/ExerciseManagerConstants');
 var ConfirmationActions = require('../ConfirmationActions');
 var ExerciseManagerDAO = require('../../dao/admin/ExerciseManagerDAO');
 var {handlePromise} = require('../../stores/PromiseHandlers');
+var NotificationActions = require('../NotificationActions');
 
 function _updateExerciseEditorState(state) {
+  console.log("About to update editor state: " + state);
   AppDispatcher.handleViewAction({
     actionType: Constants.UPDATE_EDIT_EXERCISE_STATE,
     data: state
@@ -61,6 +63,28 @@ var ExerciseManagerActions = {
   deleteExercise: function(ex) {
     console.log('delete: '+ex.name);
   },
+  deleteSourceFile: function(name, sourceFiles) {
+    ConfirmationActions.confirmAndInvoke("Are you sure you wish to delete " + name +"?", function() {
+      var file = sourceFiles[name];
+      delete sourceFiles[name];
+      var stateUpdate = {sourceFiles: {$set: sourceFiles}};
+
+      if(file.id === undefined) {
+        _updateExerciseEditorState(stateUpdate);
+        NotificationActions.dispatchNotification("Unsaved source file deleted: " + name);
+      } else {
+        var promise = ExerciseManagerDAO.deleteSourceFile(file.exercise_id, file.id);
+        handlePromise(promise, {
+          actionType: Constants.DELETE_SOURCE_FILE,
+          default: 'Source file deleted: ' + name,
+          callbacks: [() => _updateExerciseEditorState({sourceFiles})]
+        }, {
+          403: 'Not authorized to delete source file in exercise: ' + name,
+          default: 'Something went wrong when deleting source file: ' + name
+        });
+      }
+    });
+  },
   renameSourceFile: function(oldName, newName, sourceFiles) {
     sourceFiles[newName] = sourceFiles[oldName];
     delete sourceFiles[oldName];
@@ -95,12 +119,14 @@ var ExerciseManagerActions = {
       ExerciseManagerDAO.postSourceFile(exercise_id, {name, contents}) :
       ExerciseManagerDAO.putSourceFile(exercise_id, id, {name, contents});
 
-    var unsaved = {};
-    unsaved[name] = {'@unsaved': {$set: false}};
     handlePromise(promise, {
       actionType: Constants.SAVE_SOURCE_FILE,
       default: 'Source file saved',
-      callbacks: [() => _updateExerciseEditorState({sourceFiles: unsaved})]
+      callbacks: [function(file) {
+        var sourceFiles = {};
+        sourceFiles[name] = {$set: file};
+        _updateExerciseEditorState({sourceFiles});
+      }]
     }, {
       403: 'Not authorized to save source file to exercise',
       default: 'Something went wrong when saving source file'

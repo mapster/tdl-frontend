@@ -27,13 +27,13 @@ var ExerciseManager = React.createClass({
     if(!authorized.manage_exercises){
       return (<Forbidden />);
     }
-
     var view;
     if(this.state.ex.editorState.show) {
       view = (
         <ExerciseEditor
             {...this.state.ex.editorState}
             doCreateNewFile={Actions.createNewFile}
+            doDeleteSourceFile={Actions.deleteSourceFile}
             doRenameSourceFile={Actions.renameSourceFile}
             doResetExerciseProperties={Actions.resetExerciseProperties}
             doSaveExerciseProperties={Actions.saveExerciseProperties}
