@@ -61,6 +61,9 @@ AppDispatcher.register(function(payload) {
       case Constants.SAVE_EXERCISE:
         ExerciseManagerStore.refreshExercises();
         break;
+      case Constants.DELETE_EXERCISE:
+        ExerciseManagerStore.refreshExercises();
+        break;
       default:
     }
   }

@@ -27,7 +27,16 @@ var ExerciseManagerActions = {
     }
   },
   createNewExercise: function() {
-    _updateExerciseEditorState({$merge: {show: true, properties: {}, sourceFiles: {}, newFileId: 1, feedback: {}}});
+    _updateExerciseEditorState({$merge: {
+      feedback: {},
+      newFileId: 1,
+      origProperties: {},
+      properties: {},
+      show: true,
+      selectedSourceFile: '',
+      sourceFiles: {},
+      tab: 'properties'
+    }});
   },
   createNewFile: function(exercise_id, id) {
     var name = 'unsaved-file-' + id;
@@ -52,7 +61,7 @@ var ExerciseManagerActions = {
     }});
     if(exercise.id){
       handlePromise(ExerciseManagerDAO.getExerciseSources(exercise.id), {
-        callbacks: [(r) => _updateExerciseEditorState({sourceFiles: {$set: r}, selectedSourceFile: {$set: Object.keys(r)[0]}}) ]
+        callbacks: [(r) => _updateExerciseEditorState({sourceFiles: {$set: r}, selectedSourceFile: {$set: Object.keys(r)[0] || ''}}) ]
       }, {
         403: 'Not authorized to fetch exercise source files',
         default: (r,s) => 'Could not fetch exercise source files: '+s
@@ -60,7 +69,16 @@ var ExerciseManagerActions = {
     }
   },
   deleteExercise: function(ex) {
-    console.log('delete: '+ex.name);
+    ConfirmationActions.confirmAndInvoke("Are you sure you wish to delete exercise: " + ex.name, function() {
+      var promise = ExerciseManagerDAO.deleteExercise(ex.id);
+      handlePromise(promise, {
+        actionType: Constants.DELETE_EXERCISE,
+        default: 'Exercise deleted: ' + ex.name
+      }, {
+        403: 'Not authorized to delete exercise: ' + ex.name,
+        default: 'Something went wrong when deleting exercise: ' + ex.name
+      });
+    });
   },
   deleteSourceFile: function(name, sourceFiles) {
     ConfirmationActions.confirmAndInvoke("Are you sure you wish to delete " + name +"?", function() {
