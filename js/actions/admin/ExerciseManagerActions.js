@@ -69,7 +69,7 @@ var ExerciseManagerActions = {
     }
   },
   deleteExercise: function(ex) {
-    ConfirmationActions.confirmAndInvoke("Are you sure you wish to delete exercise: " + ex.name, function() {
+    ConfirmationActions.confirmAndInvoke('Are you sure you wish to delete exercise: ' + ex.name, function() {
       var promise = ExerciseManagerDAO.deleteExercise(ex.id);
       handlePromise(promise, {
         actionType: Constants.DELETE_EXERCISE,
@@ -81,14 +81,14 @@ var ExerciseManagerActions = {
     });
   },
   deleteSourceFile: function(name, sourceFiles) {
-    ConfirmationActions.confirmAndInvoke("Are you sure you wish to delete " + name +"?", function() {
+    ConfirmationActions.confirmAndInvoke('Are you sure you wish to delete ' + name +'?', function() {
       var file = sourceFiles[name];
       delete sourceFiles[name];
       var stateUpdate = {sourceFiles: {$set: sourceFiles}};
 
       if(file.id === undefined) {
         _updateExerciseEditorState(stateUpdate);
-        NotificationActions.dispatchNotification("Unsaved source file deleted: " + name);
+        NotificationActions.dispatchNotification('Unsaved source file deleted: ' + name);
       } else {
         var promise = ExerciseManagerDAO.deleteSourceFile(file.exercise_id, file.id);
         handlePromise(promise, {
@@ -133,7 +133,7 @@ var ExerciseManagerActions = {
   saveSourceFile: function(sourceFile) {
     var {id, exercise_id, name, contents} = sourceFile;
     if(name.startsWith('unsaved-file-')) {
-      NotificationActions.dispatchNotification("Please give the source file a name before saving", "warning");
+      NotificationActions.dispatchNotification('Please give the source file a name before saving', 'warning');
     } else {
       var promise = (sourceFile.id === undefined) ?
         ExerciseManagerDAO.postSourceFile(exercise_id, {name, contents}) :

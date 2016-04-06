@@ -8,7 +8,9 @@ var SolutionEditor = React.createClass({
   propTypes: {
     doClose: PropTypes.func.isRequired,
     doCreateNewFile: PropTypes.func.isRequired,
+    doDeleteSourceFile: PropTypes.func.isRequired,
     doRenameSourceFile: PropTypes.func.isRequired,
+    doSaveSourceFile: PropTypes.func.isRequired,
     doSelectSourceFile: PropTypes.func.isRequired,
     doUpdateSourceFile: PropTypes.func.isRequired,
     newFileId: PropTypes.number.isRequired,
@@ -29,6 +31,7 @@ var SolutionEditor = React.createClass({
         <Row>
           <SourcesManager
               doCreateNewFile={() => this.props.doCreateNewFile(this.props.properties.id, this.props.newFileId)}
+              doDeleteSourceFile={this.props.doDeleteSourceFile}
               doRenameSourceFile={this.props.doRenameSourceFile}
               doSaveSourceFile={this.props.doSaveSourceFile}
               doSelectSourceFile={this.props.doSelectSourceFile}

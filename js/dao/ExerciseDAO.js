@@ -8,8 +8,8 @@ var GET_EXERCISE_SOURCES = 'getExerciseSoures';
 var GET_SOLUTIONS = 'getSolutions';
 
 var EXERCISES_URL = AppConfig.Host + '/exercises';
-var EXERCISE_SOURCE_FILES_URL = 'source_files';
-var SOLUTIONS_URL = AppConfig.Host + 'users/solutions';
+var EXERCISE_SOURCE_FILES_URL = '/source_files';
+var SOLUTIONS_URL = AppConfig.Host + '/users/solutions';
 
 var ExerciseDAO = {
   getExercises: function() {
@@ -21,7 +21,7 @@ var ExerciseDAO = {
   getExerciseSources: function(id) {
     return promiseRequest(GET_EXERCISE_SOURCES, {
       type: 'GET',
-      url: EXERCISES_URL + '/' + id + '/' + EXERCISE_SOURCE_FILES_URL
+      url: EXERCISES_URL + '/' + id + EXERCISE_SOURCE_FILES_URL
     });
   },
   getSolutions: function() {

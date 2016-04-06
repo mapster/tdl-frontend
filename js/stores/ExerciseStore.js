@@ -4,6 +4,7 @@ var immutableUpdate = require('react-addons-update');
 var AppDispatcher = require('../dispatcher/AppDispatcher');
 var ExerciseDAO = require('../dao/ExerciseDAO');
 var Constants = require('../constants/ExerciseConstants');
+var ExerciseManagerConstants = require('../constants/admin/ExerciseManagerConstants');
 var StoreListenBase = require('./StoreListenBase');
 var {handlePromise} = require('./PromiseHandlers');
 
@@ -60,6 +61,7 @@ AppDispatcher.register(function(payload) {
   if(payload.source === AppDispatcher.STORE_REFRESH){
     switch (action.actionType) {
       case Constants.EXERCISES_UPDATE_FROM_SERVER:
+      case ExerciseManagerConstants.EXERCISES_UPDATE_FROM_SERVER:
         _exercises = action.data;
         ExerciseStore.emitChange();
         break;
