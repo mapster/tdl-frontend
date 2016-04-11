@@ -68,6 +68,29 @@ var SolutionActions = {
       _updateSolutionEditorState({sourceFiles: {$set: sourceFiles}, selectedSourceFile: {$set: newName}});
     }
   },
+  saveSourceFile: function(sourceFile) {
+    var {id, exercise_id, name, contents} = sourceFile;
+    if(name.startsWith('unsaved-file-')) {
+      NotificationActions.dispatchNotification('Please give the source file a name before saving', 'warning');
+    } else {
+      var promise = (sourceFile.id === undefined) ?
+        ExerciseDAO.postSourceFile(exercise_id, {name, contents}) :
+        ExerciseDAO.putSourceFile(exercise_id, id, {name, contents});
+
+      handlePromise(promise, {
+        actionType: Constants.SAVE_SOURCE_FILE,
+        default: 'Source file saved',
+        callbacks: [function(file) {
+          var sourceFiles = {};
+          sourceFiles[name] = {$set: file};
+          _updateSolutionEditorState({sourceFiles});
+        }]
+      }, {
+        403: 'Not authorized to save source file to exercise',
+        default: 'Something went wrong when saving source file'
+      });
+    }
+  },
   selectSourceFile: function(name) {
     _updateSolutionEditorState({selectedSourceFile: {$set: name}});
   },

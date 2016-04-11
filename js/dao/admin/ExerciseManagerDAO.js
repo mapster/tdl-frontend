@@ -4,7 +4,7 @@ var AppConfig = require('../../appconfig.json');
 var promiseRequest = require('../PromiseRequest');
 var ExerciseDAO = require('../ExerciseDAO');
 
-var DELETE_EXERCISE = "deleteExercise";
+var DELETE_EXERCISE = 'deleteExercise';
 var DELETE_SOURCE_FILE = 'deleteSourceFile';
 var POST_EXERCISE = 'postExercise';
 var POST_SOURCE_FILE= 'postSourceFile';
