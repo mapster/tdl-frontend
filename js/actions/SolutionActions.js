@@ -1,7 +1,5 @@
-'use strict';
-
 var AppDispatcher = require('../dispatcher/AppDispatcher');
-var Constants = require('../constants/ExerciseConstants');
+var Constants = require('../constants/Constants');
 var ConfirmationActions = require('./ConfirmationActions');
 var ExerciseDAO = require('../dao/ExerciseDAO');
 var NotificationActions = require('./NotificationActions');

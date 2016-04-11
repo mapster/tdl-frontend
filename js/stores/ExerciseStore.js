@@ -3,8 +3,7 @@
 var immutableUpdate = require('react-addons-update');
 var AppDispatcher = require('../dispatcher/AppDispatcher');
 var ExerciseDAO = require('../dao/ExerciseDAO');
-var Constants = require('../constants/ExerciseConstants');
-var ExerciseManagerConstants = require('../constants/admin/ExerciseManagerConstants');
+var Constants = require('../constants/Constants');
 var StoreListenBase = require('./StoreListenBase');
 var {handlePromise} = require('./PromiseHandlers');
 
@@ -29,7 +28,7 @@ var ExerciseStore = Object.assign({}, StoreListenBase, {
     return _solutionEditorState;
   },
   refreshExercises: function() {
-    var actionType = Constants.EXERCISES_UPDATE_FROM_SERVER;
+    var actionType = Constants.EXERCISES_UPDATE;
     handlePromise(ExerciseDAO.getExercises(), {
       actionType
     }, {
@@ -38,7 +37,7 @@ var ExerciseStore = Object.assign({}, StoreListenBase, {
     });
   },
   refreshSolutions: function() {
-    var actionType = Constants.SOLUTIONS_UPDATE_FROM_SERVER;
+    var actionType = Constants.SOLUTIONS_UPDATE;
     handlePromise(ExerciseDAO.getSolutions(), {
       actionType
     }, {
@@ -60,12 +59,11 @@ AppDispatcher.register(function(payload) {
   //
   if(payload.source === AppDispatcher.STORE_REFRESH){
     switch (action.actionType) {
-      case Constants.EXERCISES_UPDATE_FROM_SERVER:
-      case ExerciseManagerConstants.EXERCISES_UPDATE_FROM_SERVER:
+      case Constants.EXERCISES_UPDATE:
         _exercises = action.data;
         ExerciseStore.emitChange();
         break;
-      case Constants.SOLUTIONS_UPDATE_FROM_SERVER:
+      case Constants.SOLUTIONS_UPDATE:
         _solutions = action.data;
         ExerciseStore.emitChange();
         break;

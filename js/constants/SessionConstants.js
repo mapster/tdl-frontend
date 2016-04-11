@@ -1,9 +1,0 @@
-'use strict';
-
-var PREFIX = 'SESSION_STORE_';
-
-module.exports = {
-  SESSION_UPDATE_FROM_SERVER: PREFIX + 'SESSION_UPDATE_FROM_SERVER',
-  LOGIN: PREFIX + 'LOGIN',
-  LOGOUT: PREFIX + 'LOGOUT'
-};

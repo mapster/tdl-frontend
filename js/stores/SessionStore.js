@@ -4,7 +4,7 @@ var assign = require('object-assign');
 
 var AppDispatcher = require('../dispatcher/AppDispatcher');
 var SessionDAO = require('../dao/SessionDAO');
-var SessionConstants = require('../constants/SessionConstants');
+var Constants = require('../constants/Constants');
 var UsersConstants = require('../constants/admin/UsersConstants');
 var StoreListenBase = require('./StoreListenBase');
 var PromiseHandlers = require('./PromiseHandlers');
@@ -20,7 +20,7 @@ var SessionStore = assign({}, StoreListenBase, {
     return _session;
   },
   refreshSession: function() {
-    var actionType = SessionConstants.SESSION_UPDATE_FROM_SERVER;
+    var actionType = Constants.SESSION_UPDATE;
     PromiseHandlers.handlePromise(SessionDAO.getSession(), {actionType}, {});
   }
 });
@@ -33,7 +33,7 @@ AppDispatcher.register(function(payload) {
   //
   if(payload.source == AppDispatcher.STORE_REFRESH) {
     switch (action.actionType) {
-      case SessionConstants.SESSION_UPDATE_FROM_SERVER:
+      case Constants.SESSION_UPDATE:
         _session = action.data;
         SessionStore.emitChange();
         break;

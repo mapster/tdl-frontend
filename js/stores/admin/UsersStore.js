@@ -5,7 +5,7 @@ var assign = require('object-assign');
 var AppDispatcher = require('../../dispatcher/AppDispatcher');
 var UsersDAO = require('../../dao/admin/UsersDAO');
 var UsersConstants = require('../../constants/admin/UsersConstants');
-var SessionConstants = require('../../constants/SessionConstants');
+var Constants = require('../../constants/Constants');
 var StoreListenBase = require('../StoreListenBase');
 var PromiseHandlers = require('../PromiseHandlers');
 
@@ -68,7 +68,7 @@ AppDispatcher.register(function(payload) {
         UsersStore.refreshUsers();
         break;
 
-      case SessionConstants.SESSION_UPDATE_FROM_SERVER:
+      case Constants.SESSION_UPDATE:
         UsersStore.refreshUsers();
         break;
 
