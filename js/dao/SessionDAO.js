@@ -5,7 +5,7 @@ var promiseRequest = require('./PromiseRequest');
 
 var LOGIN = 'login';
 var LOGOUT = 'logout';
-var GET = 'get';
+var GET = 'getSession';
 var RESOURCE_URL = AppConfig.Host + '/user_session';
 
 function login(credentials) {

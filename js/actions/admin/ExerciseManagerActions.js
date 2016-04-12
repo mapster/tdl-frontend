@@ -61,6 +61,7 @@ var ExerciseManagerActions = {
     }});
     if(exercise.id){
       handlePromise(ExerciseManagerDAO.getExerciseSources(exercise.id), {
+        actionType: Constants.EXERCISE_SOURCES_UPDATE_FROM_SERVER,
         callbacks: [(r) => _updateExerciseEditorState({sourceFiles: {$set: r}, selectedSourceFile: {$set: Object.keys(r)[0] || ''}}) ]
       }, {
         403: 'Not authorized to fetch exercise source files',
