@@ -76,6 +76,7 @@ var SolutionActions = {
       sourceFiles[newName]['@unsaved'] = true;
 
       _updateSolutionEditorState({sourceFiles: {$set: sourceFiles}, selectedSourceFile: {$set: newName}});
+      SolutionActions.saveSourceFile(sourceFiles[newName]);
     }
   },
   saveSourceFile: function(sourceFile) {
