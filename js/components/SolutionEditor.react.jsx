@@ -12,6 +12,7 @@ var SolutionEditor = React.createClass({
     doRenameSourceFile: PropTypes.func.isRequired,
     doSaveSourceFile: PropTypes.func.isRequired,
     doSelectSourceFile: PropTypes.func.isRequired,
+    doTestSolution: PropTypes.func.isRequired,
     doUpdateSourceFile: PropTypes.func.isRequired,
     newFileId: PropTypes.number.isRequired,
     properties: PropTypes.object.isRequired,
@@ -27,6 +28,7 @@ var SolutionEditor = React.createClass({
       <div>
         <Row>
           <Col lg={3}><Button onClick={() => this.props.doClose(this.props.sourceFiles)}><Glyphicon glyph='arrow-left'/> Back</Button></Col>
+          <Col lg={3}><Button onClick={() => this.props.doTestSolution(this.props.properties.id, this.props.sourceFiles)}>Run tests</Button></Col>
         </Row>
         <Row>
           <SourcesManager

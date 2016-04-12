@@ -10,10 +10,12 @@ var GET_EXERCISE_SOURCES = 'getExerciseSoures';
 var GET_SOLUTIONS = 'getSolutions';
 var GET_SOLUTION_SOURCES= 'getSolutionSources';
 var PUT_SOURCE_FILE = 'putSourceFile';
+var POST_SOLVE_ATTEMPT = 'postSolveAttempt';
 var POST_SOURCE_FILE = 'postSourceFile';
 
 var EXERCISES_URL = AppConfig.Host + '/exercises';
 var SOURCE_FILES_RELATIVE_PATH = '/source_files';
+var SOLVE_ATTEMPTS_RELATIVE_PATH = '/solve_attempts';
 var SOLUTIONS_URL = AppConfig.Host + '/users/solutions';
 
 var ExerciseDAO = {
@@ -66,15 +68,34 @@ var ExerciseDAO = {
     });
   },
   postSourceFile: function(exerciseId, sourceFile) {
-    return promiseRequest(POST_SOURCE_FILE, {
+    return promiseRequest(POST_SOURCE_FILE+sourceFile.name, {
       type: 'POST',
       url: SOLUTIONS_URL + '/' + exerciseId + SOURCE_FILES_RELATIVE_PATH,
       data: JSON.stringify(sourceFile),
       contentType: 'application/json'
     });
   },
+  postSolveAttempt: function(exerciseId, sourceFiles) {
+    var attempt = {};
+    attempt.source_files = [];
+    Object.keys(sourceFiles).forEach((key) => attempt.source_files.push({name: sourceFiles[key].name, contents: sourceFiles[key].contents}));
+
+    // TODO: PostSolveAttempt is not handled properly
+    handlePromise(promiseRequest(POST_SOLVE_ATTEMPT+exerciseId, {
+      type: 'POST',
+      url: SOLUTIONS_URL + '/' + exerciseId + SOLVE_ATTEMPTS_RELATIVE_PATH,
+      data: JSON.stringify(attempt),
+      contentType: 'application/json'
+    }), {
+      actionType: Constants.NEW_SOLVE_ATTEMPT,
+      default: 'Solution tested'
+    }, {
+      403: 'Not authorized to send solve attempt',
+      default: 'Something went wrong with testing solution'
+    });
+  },
   putSourceFile: function(exerciseId, id, sourceFile) {
-    return promiseRequest(PUT_SOURCE_FILE, {
+    return promiseRequest(PUT_SOURCE_FILE+id, {
       type: 'PUT',
       url: SOLUTIONS_URL + '/' + exerciseId + SOURCE_FILES_RELATIVE_PATH + '/' + id,
       data: JSON.stringify(sourceFile),

@@ -79,6 +79,9 @@ var SolutionActions = {
       SolutionActions.saveSourceFile(sourceFiles[newName]);
     }
   },
+  testSolution: function(exerciseId, sourceFiles) {
+    ExerciseDAO.postSolveAttempt(exerciseId, sourceFiles);
+  },
   saveSourceFile: function(sourceFile) {
     var {id, exercise_id, name, contents} = sourceFile;
     if(name.startsWith('unsaved-file-')) {

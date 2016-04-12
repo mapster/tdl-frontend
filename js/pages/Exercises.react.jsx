@@ -27,6 +27,7 @@ var Exercises = React.createClass({
             doRenameSourceFile={Actions.renameSourceFile}
             doSaveSourceFile={Actions.saveSourceFile}
             doSelectSourceFile={Actions.selectSourceFile}
+            doTestSolution={Actions.testSolution}
             doUpdateSourceFile={Actions.updateSourceFile}
         />
       );
