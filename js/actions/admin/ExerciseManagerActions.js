@@ -60,7 +60,7 @@ var ExerciseManagerActions = {
     if(exercise.id){
       handlePromise(ExerciseManagerDAO.getExerciseSources(exercise.id), {
         default: [(r) => _updateExerciseEditorState({sourceFiles: {$set: r}, selectedSourceFile: {$set: Object.keys(r)[0] || ''}})]
-      }, {});
+      });
     }
   },
   deleteExercise: function(ex) {

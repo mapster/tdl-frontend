@@ -34,6 +34,22 @@ var SolutionActions = {
       sourceFiles: sourceUpdate
     });
   },
+  deleteSourceFile: function(name, sourceFiles) {
+    ConfirmationActions.confirmAndInvoke('Are you sure you wish to delete ' + name +'?', function() {
+      var file = sourceFiles[name];
+      delete sourceFiles[name];
+      var stateUpdate = {sourceFiles: {$set: sourceFiles}};
+
+      if(file.id === undefined) {
+        _updateSolutionEditorState(stateUpdate);
+        NotificationActions.dispatchNotification('Unsaved source file deleted: ' + name);
+      } else {
+        handlePromise(ExerciseDAO.deleteSolutionSourceFile(file), {
+          default: () => _updateSolutionEditorState(stateUpdate)
+        });
+      }
+    });
+  },
   editExercise: function(exercise) {
     _updateSolutionEditorState({$merge: {
       feedback: {},
@@ -44,13 +60,9 @@ var SolutionActions = {
       sourceFiles: {}
     }});
     if(exercise.id){
-      handlePromise(ExerciseDAO.getExerciseSources(exercise.id), {
-        callbacks: [(r) => {
-          Object.keys(r).forEach((name) => r[name]['@readOnly'] = true);
-          _updateSolutionEditorState({sourceFiles: {$set: r}, selectedSourceFile: {$set: Object.keys(r)[0]}});
-        }]
-      }, {
-        default: (r,s) => 'Could not fetch exercise source files: '+s
+      ExerciseDAO.getExerciseSources(exercise.id);
+      handlePromise(ExerciseDAO.getSolutionSources(exercise.id), {
+        default: [(r) => _updateSolutionEditorState({sourceFiles: {$set: r}, selectedSourceFile: {$set: Object.keys(r)[0]}})]
       });
     }
   },
