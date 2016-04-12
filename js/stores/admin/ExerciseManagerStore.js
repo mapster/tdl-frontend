@@ -2,9 +2,10 @@ var React = require('react');
 var immutableUpdate = require('react-addons-update');
 var AppDispatcher = require('../../dispatcher/AppDispatcher');
 var ExerciseManagerDAO = require('../../dao/admin/ExerciseManagerDAO');
-var Constants = require('../../constants/admin/ExerciseManagerConstants');
 var StoreListenBase = require('../StoreListenBase');
 var {handlePromise} = require('../PromiseHandlers');
+var EMConstants = require('../../constants/admin/ExerciseManagerConstants');
+var Constants = require('../../constants/Constants');
 
 var _exercises;
 var _exerciseEditorState = {};
@@ -20,7 +21,7 @@ var ExerciseManagerStore = Object.assign({}, StoreListenBase, {
     return _exerciseEditorState;
   },
   refreshExercises: function() {
-    var actionType = Constants.EXERCISES_UPDATE_FROM_SERVER;
+    var actionType = EMConstants.EXERCISES_UPDATE_FROM_SERVER;
     handlePromise(ExerciseManagerDAO.getExercises(), {
       actionType
     }, {
@@ -40,10 +41,11 @@ AppDispatcher.register(function(payload) {
   var action = payload.action;
   if(payload.source === AppDispatcher.VIEW_ACTION) {
     switch (action.actionType) {
-      case Constants.SET_ALERT:
+      //TODO should be looked into, setAlert doesn't exist any more
+      case EMConstants.SET_ALERT:
         ExerciseManagerStore.setAlert(action.data);
         break;
-      case Constants.UPDATE_EDIT_EXERCISE_STATE:
+      case EMConstants.UPDATE_EDIT_EXERCISE_STATE:
         ExerciseManagerStore.updateExerciseEditorState(action.data);
         break;
       default:
@@ -54,15 +56,21 @@ AppDispatcher.register(function(payload) {
   //
   else if(payload.source === AppDispatcher.STORE_REFRESH){
     switch (action.actionType) {
-      case Constants.EXERCISES_UPDATE_FROM_SERVER:
+      case EMConstants.EXERCISES_UPDATE_FROM_SERVER:
         _exercises = action.data;
         ExerciseManagerStore.emitChange();
         break;
-      case Constants.SAVE_EXERCISE:
+      case EMConstants.SAVE_EXERCISE:
         ExerciseManagerStore.refreshExercises();
         break;
-      case Constants.DELETE_EXERCISE:
+      case EMConstants.DELETE_EXERCISE:
         ExerciseManagerStore.refreshExercises();
+        break;
+      case Constants.EXERCISE_SOURCES_UPDATE:
+        if(_exercises) {
+          _exercises[action.id].source_files = action.data;
+          ExerciseManagerStore.emitChange();
+        }
         break;
       default:
     }
@@ -72,7 +80,7 @@ AppDispatcher.register(function(payload) {
   //
   else if(payload.source === AppDispatcher.ERROR_RESPONSE) {
     switch (action.actionType) {
-      case Constants.SAVE_EXERCISE:
+      case EMConstants.SAVE_EXERCISE:
         alert = Object.assign({}, action);
         alert.userMsg = 'Could not save exercise: ' + alert.status;
         //TODO should be looked into, setAlert doesn't exist any more

@@ -82,6 +82,8 @@ var PromiseHandlers = {
     // the response is. If it fails with a thrown error, then catch callback is invoked. thenProps and catchProps will
     // need to be merged.
     console.log("TODO: fix catch in PromiseHandlers.");
+
+    return promise;
   }
 };
 

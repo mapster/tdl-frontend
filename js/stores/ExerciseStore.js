@@ -63,6 +63,12 @@ AppDispatcher.register(function(payload) {
         _exercises = action.data;
         ExerciseStore.emitChange();
         break;
+      case Constants.EXERCISE_SOURCES_UPDATE:
+        if(_exercises) {
+          _exercises[action.id].source_files = action.data;
+          ExerciseStore.emitChange();
+        }
+        break;
       case Constants.SOLUTIONS_UPDATE:
         _solutions = action.data;
         ExerciseStore.emitChange();

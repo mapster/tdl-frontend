@@ -1,7 +1,8 @@
-'use strict';
-
 var AppConfig = require('../appconfig.json');
 var promiseRequest = require('./PromiseRequest');
+var {handlePromise} = require('../stores/PromiseHandlers');
+var AppDispatcher = require('../dispatcher/AppDispatcher');
+var Constants = require('../constants/Constants');
 
 var GET_EXERCISES = 'getExercises';
 var GET_EXERCISE_SOURCES = 'getExerciseSoures';
@@ -21,10 +22,16 @@ var ExerciseDAO = {
     });
   },
   getExerciseSources: function(id) {
-    return promiseRequest(GET_EXERCISE_SOURCES+id, {
-      type: 'GET',
-      url: EXERCISES_URL + '/' + id + SOURCE_FILES_RELATIVE_PATH
-    });
+    return handlePromise(
+      promiseRequest(GET_EXERCISE_SOURCES+id, {
+        type: 'GET',
+        url: EXERCISES_URL + '/' + id + SOURCE_FILES_RELATIVE_PATH
+      }), {
+        default: [(r) => AppDispatcher.handleStoreRefreshAction({actionType: Constants.EXERCISE_SOURCES_UPDATE, id, data: r})]
+      }, {
+        403: 'Not authorized to fetch exercise source files',
+        default: (r,s) => 'Could not fetch exercise source files: '+s
+      });
   },
   getSolutions: function() {
     return promiseRequest(GET_SOLUTIONS, {

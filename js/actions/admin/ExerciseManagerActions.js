@@ -1,7 +1,5 @@
-'use strict';
-
 var AppDispatcher = require('../../dispatcher/AppDispatcher');
-var Constants = require('../../constants/admin/ExerciseManagerConstants');
+var AdminConstants = require('../../constants/admin/ExerciseManagerConstants');
 var ConfirmationActions = require('../ConfirmationActions');
 var ExerciseManagerDAO = require('../../dao/admin/ExerciseManagerDAO');
 var {handlePromise} = require('../../stores/PromiseHandlers');
@@ -9,7 +7,7 @@ var NotificationActions = require('../NotificationActions');
 
 function _updateExerciseEditorState(state) {
   AppDispatcher.handleViewAction({
-    actionType: Constants.UPDATE_EDIT_EXERCISE_STATE,
+    actionType: AdminConstants.UPDATE_EDIT_EXERCISE_STATE,
     data: state
   });
 }
@@ -18,7 +16,7 @@ var ExerciseManagerActions = {
   closeEditExercise: function(properties, sourceFiles) {
     if(properties['@unsaved'] || Object.keys(sourceFiles).some((f) => sourceFiles[f]['@unsaved'])){
       ConfirmationActions.confirmAndDispatch('You will lose all unsaved changes. Are you sure you wish to leave?',{
-        actionType: Constants.UPDATE_EDIT_EXERCISE_STATE,
+        actionType: AdminConstants.UPDATE_EDIT_EXERCISE_STATE,
         data: {show: {$set: false}}
       });
 
@@ -61,19 +59,15 @@ var ExerciseManagerActions = {
     }});
     if(exercise.id){
       handlePromise(ExerciseManagerDAO.getExerciseSources(exercise.id), {
-        actionType: Constants.EXERCISE_SOURCES_UPDATE_FROM_SERVER,
-        callbacks: [(r) => _updateExerciseEditorState({sourceFiles: {$set: r}, selectedSourceFile: {$set: Object.keys(r)[0] || ''}}) ]
-      }, {
-        403: 'Not authorized to fetch exercise source files',
-        default: (r,s) => 'Could not fetch exercise source files: '+s
-      });
+        default: [(r) => _updateExerciseEditorState({sourceFiles: {$set: r}, selectedSourceFile: {$set: Object.keys(r)[0] || ''}})]
+      }, {});
     }
   },
   deleteExercise: function(ex) {
     ConfirmationActions.confirmAndInvoke('Are you sure you wish to delete exercise: ' + ex.name, function() {
       var promise = ExerciseManagerDAO.deleteExercise(ex.id);
       handlePromise(promise, {
-        actionType: Constants.DELETE_EXERCISE,
+        actionType: AdminConstants.DELETE_EXERCISE,
         default: 'Exercise deleted: ' + ex.name
       }, {
         403: 'Not authorized to delete exercise: ' + ex.name,
@@ -93,7 +87,7 @@ var ExerciseManagerActions = {
       } else {
         var promise = ExerciseManagerDAO.deleteSourceFile(file.exercise_id, file.id);
         handlePromise(promise, {
-          actionType: Constants.DELETE_SOURCE_FILE,
+          actionType: AdminConstants.DELETE_SOURCE_FILE,
           default: 'Source file deleted: ' + name,
           callbacks: [() => _updateExerciseEditorState(stateUpdate)]
         }, {
@@ -118,7 +112,7 @@ var ExerciseManagerActions = {
     var promise = (id === undefined) ? ExerciseManagerDAO.postExercise(exercise) : ExerciseManagerDAO.putExercise(id, exercise);
 
     handlePromise(promise, {
-      actionType: Constants.SAVE_EXERCISE,
+      actionType: AdminConstants.SAVE_EXERCISE,
       default: 'Exercise properties saved',
       callbacks: [(r) => _updateExerciseEditorState({
         origProperties: {$set: r},
@@ -141,7 +135,7 @@ var ExerciseManagerActions = {
         ExerciseManagerDAO.putSourceFile(exercise_id, id, {name, contents});
 
       handlePromise(promise, {
-        actionType: Constants.SAVE_SOURCE_FILE,
+        actionType: AdminConstants.SAVE_SOURCE_FILE,
         default: 'Source file saved',
         callbacks: [function(file) {
           var sourceFiles = {};
