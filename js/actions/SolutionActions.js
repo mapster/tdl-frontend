@@ -31,15 +31,24 @@ var SolutionActions = {
     sourceUpdate[name] = {$set: {exercise_id, name, contents: '', '@unsaved': true}};
     _updateSolutionEditorState({
       newFileId: {$set: id+1},
-      selectedSourceFile: {$set: name},
+      selectedSolutionSourceFile: {$set: name},
       sourceFiles: sourceUpdate
     });
   },
   deleteSourceFile: function(name, sourceFiles) {
     ConfirmationActions.confirmAndInvoke('Are you sure you wish to delete ' + name +'?', function() {
+      var stateUpdate = {};
+
+      // find new selectedSolutionSourceFile
+      var sourceFilesNames = Object.keys(sourceFiles);
+      var index = sourceFilesNames.indexOf(name);
+      index = (index < sourceFilesNames.length-1 ? index + 1 : index -1);
+      if(index >= 0) {
+        stateUpdate.selectedSolutionSourceFile = {$set: sourceFilesNames[index]};
+      }
       var file = sourceFiles[name];
       delete sourceFiles[name];
-      var stateUpdate = {sourceFiles: {$set: sourceFiles}};
+      stateUpdate.sourceFiles = {$set: sourceFiles};
 
       if(file.id === undefined) {
         _updateSolutionEditorState(stateUpdate);
@@ -57,14 +66,17 @@ var SolutionActions = {
       newFileId: 1,
       properties: exercise,
       show: true,
-      selectedSourceFile: '',
+      selectedExerciseSourceFile: '',
+      selectedSolutionSourceFile: '',
       sourceFiles: {},
       tab: SolutionConstants.TAB_SOLUTION_SOURCES
     }});
     if(exercise.id){
-      ExerciseDAO.getExerciseSources(exercise.id);
+      handlePromise(ExerciseDAO.getExerciseSources(exercise.id), {
+        default: [(r) => SolutionActions.selectExerciseSourceFile(Object.keys(r)[0])]
+      });
       handlePromise(ExerciseDAO.getSolutionSources(exercise.id), {
-        default: [(r) => _updateSolutionEditorState({sourceFiles: {$set: r}, selectedSourceFile: {$set: Object.keys(r)[0]}})]
+        default: [(r) => _updateSolutionEditorState({sourceFiles: {$set: r}, selectedSolutionSourceFile: {$set: Object.keys(r)[0]}})]
       });
     }
   },
@@ -104,8 +116,11 @@ var SolutionActions = {
       });
     }
   },
-  selectSourceFile: function(name) {
-    _updateSolutionEditorState({selectedSourceFile: {$set: name}});
+  selectExerciseSourceFile: function(name) {
+    _updateSolutionEditorState({selectedExerciseSourceFile: {$set: name}});
+  },
+  selectSolutionSourceFile: function(name) {
+    _updateSolutionEditorState({selectedSolutionSourceFile: {$set: name}});
   },
   setEditorTab: function(tab) {
     _updateSolutionEditorState({tab: {$set: tab}});

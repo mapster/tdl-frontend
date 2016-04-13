@@ -11,12 +11,12 @@ var SingleFieldModal = require('../SingleFieldModal.react');
 
 var SourcesManager = React.createClass({
   propTypes: {
-    doCreateNewFile: PropTypes.func.isRequired,
-    doDeleteSourceFile: PropTypes.func.isRequired,
-    doRenameSourceFile: PropTypes.func.isRequired,
-    doSaveSourceFile: PropTypes.func.isRequired,
+    doCreateNewFile: PropTypes.func,
+    doDeleteSourceFile: PropTypes.func,
+    doRenameSourceFile: PropTypes.func,
+    doSaveSourceFile: PropTypes.func,
     doSelectSourceFile: PropTypes.func.isRequired,
-    doUpdateSourceFile: PropTypes.func.isRequired,
+    doUpdateSourceFile: PropTypes.func,
     selectedSourceFile: PropTypes.string.isRequired,
     sourceFiles: PropTypes.object.isRequired
   },
@@ -47,6 +47,8 @@ var SourcesManager = React.createClass({
   },
 
   render: function() {
+    var showButtons = this.props.doCreateNewFile && this.props.doSaveSourceFile && this.props.doRenameSourceFile && this.props.doDeleteSourceFile && true;
+
     var files = this.props.sourceFiles;
     return (
       <Row>
@@ -74,14 +76,16 @@ var SourcesManager = React.createClass({
             ))}
           </Tabs>
         </Col>
-        <Col lg={2}>
-          <ButtonGroup vertical>
-            <Button onClick={this.props.doCreateNewFile}>New file</Button>
-            <Button onClick={() => this.props.doSaveSourceFile(files[this.props.selectedSourceFile])}>Save</Button>
-            <Button onClick={() => this._showRename(this.props.selectedSourceFile)}>Rename</Button>
-            <Button onClick={() => this.props.doDeleteSourceFile(this.props.selectedSourceFile, this.props.sourceFiles)}>Delete</Button>
-          </ButtonGroup>
-        </Col>
+        {showButtons &&
+          <Col lg={2}>
+            <ButtonGroup vertical>
+              {this.props.doCreateNewFile && (<Button onClick={this.props.doCreateNewFile}>New file</Button>)}
+              {this.props.doSaveSourceFile && (<Button onClick={() => this.props.doSaveSourceFile(files[this.props.selectedSourceFile])}>Save</Button>)}
+              {this.props.doRenameSourceFile && (<Button onClick={() => this._showRename(this.props.selectedSourceFile)}>Rename</Button>)}
+              {this.props.doDeleteSourceFile && (<Button onClick={() => this.props.doDeleteSourceFile(this.props.selectedSourceFile, this.props.sourceFiles)}>Delete</Button>)}
+            </ButtonGroup>
+          </Col>
+        }
       </Row>
     );
   }

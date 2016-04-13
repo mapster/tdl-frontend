@@ -12,13 +12,16 @@ var SolutionEditor = React.createClass({
     doDeleteSourceFile: PropTypes.func.isRequired,
     doRenameSourceFile: PropTypes.func.isRequired,
     doSaveSourceFile: PropTypes.func.isRequired,
-    doSelectSourceFile: PropTypes.func.isRequired,
+    doSelectExerciseSourceFile: PropTypes.func.isRequired,
+    doSelectSolutionSourceFile: PropTypes.func.isRequired,
     doSetEditorTab: PropTypes.func.isRequired,
     doTestSolution: PropTypes.func.isRequired,
     doUpdateSourceFile: PropTypes.func.isRequired,
+    exercises: PropTypes.object.isRequired,
     newFileId: PropTypes.number.isRequired,
     properties: PropTypes.object.isRequired,
-    selectedSourceFile: PropTypes.string.isRequired,
+    selectedExerciseSourceFile: PropTypes.string.isRequired,
+    selectedSolutionSourceFile: PropTypes.string.isRequired,
     show: PropTypes.bool.isRequired,
     sourceFiles: PropTypes.object.isRequired,
     tab: PropTypes.string.isRequired
@@ -37,6 +40,7 @@ var SolutionEditor = React.createClass({
     if(!this.props.show) {
       return false;
     }
+    var exerciseSources = this.props.exercises[this.props.properties.id].sourceFiles || {};
     return (
       <div>
         <Row>
@@ -51,14 +55,18 @@ var SolutionEditor = React.createClass({
                   doDeleteSourceFile={this.props.doDeleteSourceFile}
                   doRenameSourceFile={this.props.doRenameSourceFile}
                   doSaveSourceFile={this.props.doSaveSourceFile}
-                  doSelectSourceFile={this.props.doSelectSourceFile}
+                  doSelectSourceFile={this.props.doSelectSolutionSourceFile}
                   doUpdateSourceFile={this.props.doUpdateSourceFile}
-                  selectedSourceFile={this.props.selectedSourceFile}
+                  selectedSourceFile={this.props.selectedSolutionSourceFile}
                   sourceFiles={this.props.sourceFiles}
               />
             </Tab>
             <Tab eventKey={SolutionConstants.TAB_EXERCISE_SOURCES} title='Exercise sources'>
-              <div>hello</div>
+              <SourcesManager
+                  doSelectSourceFile={this.props.doSelectExerciseSourceFile}
+                  selectedSourceFile={this.props.selectedExerciseSourceFile}
+                  sourceFiles={exerciseSources}
+              />
             </Tab>
           </Tabs>
         </Row>

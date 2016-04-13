@@ -65,7 +65,7 @@ AppDispatcher.register(function(payload) {
         break;
       case Constants.EXERCISE_SOURCES_UPDATE:
         if(_exercises) {
-          _exercises[action.id].source_files = action.data;
+          _exercises[action.id].sourceFiles = action.data;
           ExerciseStore.emitChange();
         }
         break;
