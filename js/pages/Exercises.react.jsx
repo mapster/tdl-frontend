@@ -21,12 +21,14 @@ var Exercises = React.createClass({
     if (this.state.ex.editorState.show) {
       view = (
         <SolutionEditor {...this.state.ex.editorState}
+            exercises={this.state.ex.exercises}
             doClose={Actions.closeEditSolution}
             doCreateNewFile={Actions.createNewFile}
             doDeleteSourceFile={Actions.deleteSourceFile}
             doRenameSourceFile={Actions.renameSourceFile}
             doSaveSourceFile={Actions.saveSourceFile}
             doSelectSourceFile={Actions.selectSourceFile}
+            doSetEditorTab={Actions.setEditorTab}
             doTestSolution={Actions.testSolution}
             doUpdateSourceFile={Actions.updateSourceFile}
         />

@@ -1,5 +1,6 @@
 var AppDispatcher = require('../dispatcher/AppDispatcher');
 var Constants = require('../constants/Constants');
+var SolutionConstants = require('../constants/SolutionEditor');
 var ConfirmationActions = require('./ConfirmationActions');
 var ExerciseDAO = require('../dao/ExerciseDAO');
 var NotificationActions = require('./NotificationActions');
@@ -57,7 +58,8 @@ var SolutionActions = {
       properties: exercise,
       show: true,
       selectedSourceFile: '',
-      sourceFiles: {}
+      sourceFiles: {},
+      tab: SolutionConstants.TAB_SOLUTION_SOURCES
     }});
     if(exercise.id){
       ExerciseDAO.getExerciseSources(exercise.id);
@@ -78,9 +80,6 @@ var SolutionActions = {
       _updateSolutionEditorState({sourceFiles: {$set: sourceFiles}, selectedSourceFile: {$set: newName}});
       SolutionActions.saveSourceFile(sourceFiles[newName]);
     }
-  },
-  testSolution: function(exerciseId, sourceFiles) {
-    ExerciseDAO.postSolveAttempt(exerciseId, sourceFiles);
   },
   saveSourceFile: function(sourceFile) {
     var {id, exercise_id, name, contents} = sourceFile;
@@ -107,6 +106,12 @@ var SolutionActions = {
   },
   selectSourceFile: function(name) {
     _updateSolutionEditorState({selectedSourceFile: {$set: name}});
+  },
+  setEditorTab: function(tab) {
+    _updateSolutionEditorState({tab: {$set: tab}});
+  },
+  testSolution: function(exerciseId, sourceFiles) {
+    ExerciseDAO.postSolveAttempt(exerciseId, sourceFiles);
   },
   updateSourceFile: function(name, contents) {
     var sourceUpdate = {};
