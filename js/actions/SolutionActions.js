@@ -78,6 +78,7 @@ var SolutionActions = {
       handlePromise(ExerciseDAO.getSolutionSources(exercise.id), {
         default: [(r) => _updateSolutionEditorState({sourceFiles: {$set: r}, selectedSolutionSourceFile: {$set: Object.keys(r)[0]}})]
       });
+      ExerciseDAO.getSolveAttempts(exercise.id);
     }
   },
   renameSourceFile: function(oldName, newName, sourceFiles) {

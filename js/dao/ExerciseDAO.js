@@ -7,6 +7,7 @@ var Constants = require('../constants/Constants');
 var DELETE_SOLUTION_SOURCE_FILE = 'deleteSolutionSourceFile';
 var GET_EXERCISES = 'getExercises';
 var GET_EXERCISE_SOURCES = 'getExerciseSoures';
+var GET_SOLVE_ATTEMPTS = 'getSolveAttempts';
 var GET_SOLUTIONS = 'getSolutions';
 var GET_SOLUTION_SOURCES= 'getSolutionSources';
 var PUT_SOURCE_FILE = 'putSourceFile';
@@ -54,6 +55,17 @@ var ExerciseDAO = {
     return promiseRequest(GET_SOLUTIONS, {
       type: 'GET',
       url: SOLUTIONS_URL
+    });
+  },
+  getSolveAttempts: function(id) {
+    return handlePromise(promiseRequest(GET_SOLVE_ATTEMPTS+id, {
+      type: 'GET',
+      url: SOLUTIONS_URL + '/' + id + SOLVE_ATTEMPTS_RELATIVE_PATH
+    }), {
+      default: [(r) => AppDispatcher.handleStoreRefreshAction({actionType: Constants.SOLVE_ATTEMPTS_UPDATE, id, data: r})]
+    }, {
+      403: 'Not authorized to fetch solution solve attempts',
+      default: (r,s) => 'Could not fetch solution solve attempts: '+s
     });
   },
   getSolutionSources: function(id) {

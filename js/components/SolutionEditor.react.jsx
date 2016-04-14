@@ -3,6 +3,7 @@ var PropTypes = React.PropTypes;
 var {Tabs, Tab, Row, Col, Button, Glyphicon} = require('react-bootstrap');
 
 var SourcesManager = require('./admin/SourcesManager.react');
+var SolveAttempts = require('./SolveAttempts.react');
 var SolutionConstants = require('../constants/SolutionEditor');
 
 var SolutionEditor = React.createClass({
@@ -23,6 +24,7 @@ var SolutionEditor = React.createClass({
     selectedExerciseSourceFile: PropTypes.string.isRequired,
     selectedSolutionSourceFile: PropTypes.string.isRequired,
     show: PropTypes.bool.isRequired,
+    solutions: PropTypes.object.isRequired,
     sourceFiles: PropTypes.object.isRequired,
     tab: PropTypes.string.isRequired
   },
@@ -40,9 +42,13 @@ var SolutionEditor = React.createClass({
     if(!this.props.show) {
       return false;
     }
-    var exerciseSources = this.props.exercises[this.props.properties.id].sourceFiles || {};
+    var exerciseId = this.props.properties.id;
+    var exerciseSources = this.props.exercises[exerciseId].sourceFiles || {};
     return (
       <div>
+        <Row>
+          <Col lg={9}><SolveAttempts attempts={this.props.solutions[exerciseId].solve_attempts}/></Col>
+        </Row>
         <Row>
           <Col lg={3}><Button onClick={() => this.props.doClose(this.props.sourceFiles)}><Glyphicon glyph='arrow-left'/> Back</Button></Col>
           <Col lg={3}><Button onClick={() => this.props.doTestSolution(this.props.properties.id, this.props.sourceFiles)}>Run tests</Button></Col>

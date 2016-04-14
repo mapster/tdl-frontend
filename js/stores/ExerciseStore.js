@@ -69,6 +69,12 @@ AppDispatcher.register(function(payload) {
           ExerciseStore.emitChange();
         }
         break;
+      case Constants.SOLVE_ATTEMPTS_UPDATE:
+        if(_solutions) {
+          _solutions[action.id].solve_attempts = action.data;
+          ExerciseStore.emitChange();
+        }
+        break;
       case Constants.SOLUTIONS_UPDATE:
         _solutions = action.data;
         ExerciseStore.emitChange();
