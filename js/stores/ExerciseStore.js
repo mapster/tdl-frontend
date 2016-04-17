@@ -89,6 +89,12 @@ AppDispatcher.register(function(payload) {
         _solutions = action.data;
         ExerciseStore.emitChange();
         break;
+      case Constants.SOLUTION_UPDATE:
+        if(!_solutions) {
+          _solutions = {};
+        }
+        _solutions[action.data.exercise_id] = action.data;
+        break;
       default:
     }
   }

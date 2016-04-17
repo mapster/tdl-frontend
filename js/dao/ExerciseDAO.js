@@ -8,6 +8,7 @@ var DELETE_SOLUTION_SOURCE_FILE = 'deleteSolutionSourceFile';
 var GET_EXERCISES = 'getExercises';
 var GET_EXERCISE_SOURCES = 'getExerciseSoures';
 var GET_SOLVE_ATTEMPTS = 'getSolveAttempts';
+var GET_SOLUTION = 'getSolution';
 var GET_SOLUTIONS = 'getSolutions';
 var GET_SOLUTION_SOURCES= 'getSolutionSources';
 var PUT_SOURCE_FILE = 'putSourceFile';
@@ -50,6 +51,17 @@ var ExerciseDAO = {
         403: 'Not authorized to fetch exercise source files',
         default: (r,s) => 'Could not fetch exercise source files: '+s
       });
+  },
+  getSolution: function(exerciseId) {
+    return handlePromise(promiseRequest(GET_SOLUTION+exerciseId, {
+      type: 'GET',
+      url: SOLUTIONS_URL + '/' + exerciseId
+    }), {
+      actionType: Constants.SOLUTION_UPDATE
+    }, {
+      403: 'Not authorized to fetch solution for exercise: '+exerciseId,
+      default: 'Could not fetch solution for exercise: '+exerciseId
+    });
   },
   getSolutions: function() {
     return promiseRequest(GET_SOLUTIONS, {

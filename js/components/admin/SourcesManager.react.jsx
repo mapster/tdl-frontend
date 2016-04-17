@@ -78,6 +78,8 @@ var SourcesManager = React.createClass({
                     onChange={files[name] && this._onFileChange.bind(null, name)}
                     mode='java'
                     theme="github"
+                    width='100%'
+                    editorProps={{$blockScrolling: 'infinity'}}
                 />
               </Tab>
             ))}

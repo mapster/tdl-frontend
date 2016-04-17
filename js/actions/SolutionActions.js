@@ -4,7 +4,7 @@ var SolutionConstants = require('../constants/SolutionEditor');
 var ConfirmationActions = require('./ConfirmationActions');
 var ExerciseDAO = require('../dao/ExerciseDAO');
 var NotificationActions = require('./NotificationActions');
-var Report = require('../Report.js');
+var Report = require('../Report');
 var {handlePromise} = require('../stores/PromiseHandlers');
 
 function _updateSolutionEditorState(state) {
@@ -73,13 +73,17 @@ var SolutionActions = {
       tab: SolutionConstants.TAB_SOLUTION_SOURCES
     }});
     if(exercise.id){
-      handlePromise(ExerciseDAO.getExerciseSources(exercise.id), {
-        default: [(r) => SolutionActions.selectExerciseSourceFile(Object.keys(r)[0])]
+      handlePromise(ExerciseDAO.getSolution(exercise.id), {
+        default: [function() {
+          handlePromise(ExerciseDAO.getExerciseSources(exercise.id), {
+            default: [(r) => SolutionActions.selectExerciseSourceFile(Object.keys(r)[0])]
+          });
+          handlePromise(ExerciseDAO.getSolutionSources(exercise.id), {
+            default: [(r) => _updateSolutionEditorState({sourceFiles: {$set: r}, selectedSolutionSourceFile: {$set: Object.keys(r)[0]}})]
+          });
+          ExerciseDAO.getSolveAttempts(exercise.id);
+        }]
       });
-      handlePromise(ExerciseDAO.getSolutionSources(exercise.id), {
-        default: [(r) => _updateSolutionEditorState({sourceFiles: {$set: r}, selectedSolutionSourceFile: {$set: Object.keys(r)[0]}})]
-      });
-      ExerciseDAO.getSolveAttempts(exercise.id);
     }
   },
   renameSourceFile: function(oldName, newName, sourceFiles) {
