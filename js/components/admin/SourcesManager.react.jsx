@@ -17,8 +17,12 @@ var SourcesManager = React.createClass({
     doSaveSourceFile: PropTypes.func,
     doSelectSourceFile: PropTypes.func.isRequired,
     doUpdateSourceFile: PropTypes.func,
+    readOnly: PropTypes.bool,
     selectedSourceFile: PropTypes.string.isRequired,
     sourceFiles: PropTypes.object.isRequired
+  },
+  getDefaultProps: function() {
+    return {readOnly: false};
   },
   getInitialState: function() {
     return {rename: false};
@@ -27,6 +31,9 @@ var SourcesManager = React.createClass({
     return 'ace-editor-'+name+'-'+this.props.sourceFiles[name].id;
   },
   _onFileChange: function(name, contents) {
+    if(this.props.readOnly) {
+      return;
+    }
     if(contents !== this.props.sourceFiles[name].contents){
       this.props.doUpdateSourceFile(name, contents);
     }
@@ -65,7 +72,7 @@ var SourcesManager = React.createClass({
             {files && Object.keys(files).map((name) => (
               <Tab key={name} eventKey={name} title={this._tabTitle(name)}>
                 <AceEditor
-                    readOnly={files[name]['@readOnly']}
+                    readOnly={this.props.readOnly || files[name]['@readOnly']}
                     name={this._aceId(name)}
                     value={files[name].contents}
                     onChange={files[name] && this._onFileChange.bind(null, name)}

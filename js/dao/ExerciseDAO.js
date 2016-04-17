@@ -93,14 +93,13 @@ var ExerciseDAO = {
     Object.keys(sourceFiles).forEach((key) => attempt.source_files.push({name: sourceFiles[key].name, contents: sourceFiles[key].contents}));
 
     // TODO: PostSolveAttempt is not handled properly
-    handlePromise(promiseRequest(POST_SOLVE_ATTEMPT+exerciseId, {
+    return handlePromise(promiseRequest(POST_SOLVE_ATTEMPT+exerciseId, {
       type: 'POST',
       url: SOLUTIONS_URL + '/' + exerciseId + SOLVE_ATTEMPTS_RELATIVE_PATH,
       data: JSON.stringify(attempt),
       contentType: 'application/json'
     }), {
-      actionType: Constants.NEW_SOLVE_ATTEMPT,
-      default: 'Solution tested'
+      actionType: Constants.NEW_SOLVE_ATTEMPT
     }, {
       403: 'Not authorized to send solve attempt',
       default: 'Something went wrong with testing solution'

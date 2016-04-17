@@ -4,6 +4,7 @@ var SolutionConstants = require('../constants/SolutionEditor');
 var ConfirmationActions = require('./ConfirmationActions');
 var ExerciseDAO = require('../dao/ExerciseDAO');
 var NotificationActions = require('./NotificationActions');
+var Report = require('../Report.js');
 var {handlePromise} = require('../stores/PromiseHandlers');
 
 function _updateSolutionEditorState(state) {
@@ -127,7 +128,12 @@ var SolutionActions = {
     _updateSolutionEditorState({tab: {$set: tab}});
   },
   testSolution: function(exerciseId, sourceFiles) {
-    ExerciseDAO.postSolveAttempt(exerciseId, sourceFiles);
+    handlePromise(ExerciseDAO.postSolveAttempt(exerciseId, sourceFiles), {
+      default: function(r) {
+        var report = Report(r.report);
+        NotificationActions.dispatchNotification(report.toString(), report.style);
+      }
+    });
   },
   updateSourceFile: function(name, contents) {
     var sourceUpdate = {};

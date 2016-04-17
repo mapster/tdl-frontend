@@ -1,6 +1,6 @@
 var React = require('react');
 var PropTypes = React.PropTypes;
-var {Tabs, Tab, Row, Col, Button, Glyphicon} = require('react-bootstrap');
+var {Media, Tabs, Tab, Row, Col, Button, Glyphicon} = require('react-bootstrap');
 
 var SourcesManager = require('./admin/SourcesManager.react');
 var SolveAttempts = require('./SolveAttempts.react');
@@ -44,11 +44,9 @@ var SolutionEditor = React.createClass({
     }
     var exerciseId = this.props.properties.id;
     var exerciseSources = this.props.exercises[exerciseId].sourceFiles || {};
+    var solveAttempts = this.props.solutions[exerciseId].solve_attempts || [];
     return (
       <div>
-        <Row>
-          <Col lg={9}><SolveAttempts attempts={this.props.solutions[exerciseId].solve_attempts}/></Col>
-        </Row>
         <Row>
           <Col lg={3}><Button onClick={() => this.props.doClose(this.props.sourceFiles)}><Glyphicon glyph='arrow-left'/> Back</Button></Col>
           <Col lg={3}><Button onClick={() => this.props.doTestSolution(this.props.properties.id, this.props.sourceFiles)}>Run tests</Button></Col>
@@ -71,10 +69,21 @@ var SolutionEditor = React.createClass({
               <SourcesManager
                   doSelectSourceFile={this.props.doSelectExerciseSourceFile}
                   selectedSourceFile={this.props.selectedExerciseSourceFile}
+                  readOnly
                   sourceFiles={exerciseSources}
               />
             </Tab>
           </Tabs>
+        </Row>
+        <Row>
+          <Col lg={12}>
+            <Media>
+              <Media.Body>
+                <Media.Heading>Solve Attempts</Media.Heading>
+                <SolveAttempts attempts={solveAttempts}/>
+              </Media.Body>
+            </Media>
+          </Col>
         </Row>
       </div>
     );
