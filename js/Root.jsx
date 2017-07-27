@@ -1,11 +1,25 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {Provider} from 'react-redux';
-import {Router, Route, browserHistory} from 'react-router';
+import {Router, Route, browserHistory, Link} from 'react-router';
 import {syncHistoryWithStore} from 'react-router-redux';
 
 const Test = () => {
-  return <h1>dude</h1>;
+  return (
+    <div>
+      <h1>dude</h1>
+      <Link to="a">a</Link>
+    </div>
+  );
+};
+
+const A = () => {
+  return (
+    <div>
+      <h1>A yeah</h1>
+      <Link to="/">test</Link>
+    </div>
+  );
 };
 
 
@@ -18,6 +32,7 @@ export default class RootDev extends React.Component {
       <Provider store={store}>
         <Router history={history}>
           <Route path="/" component={Test} />
+          <Route path="a" component={A} />
         </Router>
       </Provider>
     );

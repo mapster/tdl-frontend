@@ -1,15 +1,10 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import {createStore, combineReducers} from 'redux';
-import {routerReducer} from 'react-router-redux';
 
 import Root from './Root';
+import configureStore from './store/configureStore';
 
-const store = createStore(
-  combineReducers({
-    routing: routerReducer
-  })
-);
+const store = configureStore({});
 
 ReactDOM.render(
   <Root store={store} />,
