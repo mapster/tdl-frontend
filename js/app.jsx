@@ -1,8 +1,55 @@
-var React = require('react');
-var ReactDOM = require('react-dom');
-var {Router,hashHistory} = require('react-router');
-require('./debug/EventLogger');
+import React from 'react';
+import ReactDOM from 'react-dom';
+import {createStore, combineReducers} from 'redux';
+import {routerReducer} from 'react-router-redux';
 
-var routes = require('./routes.react');
+import Root from './Root';
 
-ReactDOM.render(<Router history={hashHistory} routes={routes}/>, document.getElementById('app-contents'));
+const store = createStore(
+  combineReducers({
+    routing: routerReducer
+  })
+);
+
+ReactDOM.render(
+  <Root store={store} />,
+  document.getElementById('app')
+);
+
+
+// ReactDOM.render(<Router history={hashHistory} routes={routes}/>, document.getElementById('app-contents'));
+
+
+
+
+
+
+
+// import configureStore from './store/configureStore';
+// import storage from './libs/storage';
+//
+// // Configure Store and Root component
+// const store = configureStore(storage.get('weighty_beer') || {});
+// if (!store.getState().navigation.transitioning) {
+//   if (!store.getState().navigation.transitioning) {
+//     ReactDOM.render(
+//       <Root store={store} />,
+//       document.getElementById('app')
+//     );
+//   }
+// }
+//
+// // Setup database connections
+// setTimeout(() => {
+//   store.dispatch(startListeningToBrewsData());
+//   store.dispatch(startListeningToWeightHub());
+//   store.dispatch(startListeningToTapsData());
+//   store.dispatch(startListeningToImagesData());
+// });
+//
+// // Setup hash (#) navigation
+// const onHashChange = () => {
+//   store.dispatch(navigationComplete());
+// }
+// window.addEventListener('hashchange', onHashChange , false);
+// onHashChange();

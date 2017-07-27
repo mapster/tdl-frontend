@@ -1,4 +1,4 @@
-var $ = require('jquery');
+var $ = {};
 var PromiseLogger = require('../debug/PromiseLogger');
 
 var _promises = {};
