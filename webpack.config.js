@@ -139,6 +139,12 @@ module.exports = function (env) {
       historyApiFallback: true,
       host: '0.0.0.0',
       port: 3001,
+      proxy: {
+        '/rest': {
+          target: 'http://localhost:3000/',
+          pathRewrite: {'^/rest' : ''}
+        }
+      },
       compress: isProd,
       inline: !isProd,
       hot: !isProd,

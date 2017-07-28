@@ -5,7 +5,7 @@ var NotificationView = require('../../components/NotificationView.react');
 var {PropTypes} = React;
 var {Grid,Row,Col} = require('react-bootstrap');
 
-var Header = require('../../components/Header.react');
+var Header = require('../../containers/Header.react');
 
 var AdminApp = React.createClass({
   propTypes: {

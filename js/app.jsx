@@ -1,10 +1,13 @@
+import 'babel-polyfill';
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-import Root from './Root';
+import Root from './containers/Root';
 import configureStore from './store/configureStore';
+import sessionEffects from './effects/session';
 
 const store = configureStore({});
+store.runSaga(sessionEffects);
 
 ReactDOM.render(
   <Root store={store} />,
@@ -12,17 +15,6 @@ ReactDOM.render(
 );
 
 
-// ReactDOM.render(<Router history={hashHistory} routes={routes}/>, document.getElementById('app-contents'));
-
-
-
-
-
-
-
-// import configureStore from './store/configureStore';
-// import storage from './libs/storage';
-//
 // // Configure Store and Root component
 // const store = configureStore(storage.get('weighty_beer') || {});
 // if (!store.getState().navigation.transitioning) {
@@ -34,17 +26,3 @@ ReactDOM.render(
 //   }
 // }
 //
-// // Setup database connections
-// setTimeout(() => {
-//   store.dispatch(startListeningToBrewsData());
-//   store.dispatch(startListeningToWeightHub());
-//   store.dispatch(startListeningToTapsData());
-//   store.dispatch(startListeningToImagesData());
-// });
-//
-// // Setup hash (#) navigation
-// const onHashChange = () => {
-//   store.dispatch(navigationComplete());
-// }
-// window.addEventListener('hashchange', onHashChange , false);
-// onHashChange();
