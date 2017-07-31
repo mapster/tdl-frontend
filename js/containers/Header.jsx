@@ -2,10 +2,11 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {compose} from 'redux';
 import {connect} from 'react-redux';
-import {push} from 'react-router-redux';
-import {Link} from 'react-router';
+import {push} from 'connected-react-router';
+import {Link} from 'react-router-dom';
 import {Row, Col, Navbar, Nav, NavItem, NavDropdown, MenuItem} from 'react-bootstrap';
 
+import * as ROUTE from '../routes';
 import {SELECTORS} from '../reducers';
 import * as SessionAction from '../actions/session';
 import LoginInput from '../components/LoginInput';
@@ -32,7 +33,7 @@ const LoggedInNavigation = ({show = true, userName = '', isAdmin = false, doLogo
     return (
       <Nav pullRight>
         <NavDropdown title={userName || ''} id="session-nav">
-          {isAdmin && <MenuItem onClick={() => navigateTo('/admin')}>Admin</MenuItem>}
+          {isAdmin && <MenuItem onClick={() => navigateTo(ROUTE.admin)}>Admin</MenuItem>}
           <MenuItem onSelect={doLogout}>Logout</MenuItem>
         </NavDropdown>
       </Nav>
@@ -60,7 +61,7 @@ const Header = ({auth, menu = [], session = false, title = '', doLogin, doLogout
       <Row>
         <Col lg={12}>
           <Navbar>
-            <Navbar.Brand><Link to="/">{title}</Link></Navbar.Brand>
+            <Navbar.Brand><Link to={ROUTE.tdl}>{title}</Link></Navbar.Brand>
             <Nav>
               {menu.map(function(item, index) {
                 return <NavItem key={index} onClick={() => navigateTo(item.href)}>{item.text}</NavItem>;

@@ -1,5 +1,6 @@
 import * as type from '../constants/actionTypes';
 
-export const initialize = () => ({
-    type: type.INIT
+export const initialize = (location) => ({
+  type: type.INIT,
+  payload: {location},
 });

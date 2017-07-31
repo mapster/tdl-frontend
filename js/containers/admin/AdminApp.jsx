@@ -4,12 +4,15 @@ import {compose} from 'redux';
 import {connect} from 'react-redux';
 import {Grid, Row, Col} from 'react-bootstrap';
 
+import * as ROUTE from '../../routes';
 import {SELECTORS} from '../../reducers';
 import Header from '../Header';
+import ExerciseManager from './ExerciseManager';
+import {Route} from 'react-router-dom';
 
 const authorizedMenuItems = {
-  'manage_exercises': {href: '/admin/exercises', text: 'Exercises'},
-  'manage_users': {href: '/admin/users', text: 'Users'},
+  'manage_exercises': {href: ROUTE.admin_exercises, text: 'Exercises'},
+  'manage_users': {href: ROUTE.admin_users, text: 'Users'},
 };
 
 const createMenu = (auth) => {
@@ -22,7 +25,7 @@ const createMenu = (auth) => {
   return menu;
 };
 
-const AdminApp = ({children, auth}) => (
+const AdminApp = ({auth}) => (
   <div className='container'>
     <Grid>
       <Row>
@@ -32,14 +35,13 @@ const AdminApp = ({children, auth}) => (
       </Row>
       <Row>
         <Col lg={12}>
-          {children}
+          <Route path={ROUTE.admin_exercises} component={ExerciseManager} />
         </Col>
       </Row>
     </Grid>
   </div>
 );
 AdminApp.propTypes ={
-  children: PropTypes.node,
   auth: PropTypes.object,
 };
 

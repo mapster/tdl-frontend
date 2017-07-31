@@ -1,27 +1,49 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {Provider} from 'react-redux';
-import {Router, Route} from 'react-router';
+import {Route, Switch} from 'react-router-dom';
+import {ConnectedRouter} from 'connected-react-router';
 
-import App from './App';
+import * as ROUTE from '../routes.js';
 import UserApp from './UserApp';
-import Exercises from './Exercises';
 import AdminApp from './admin/AdminApp';
-import ExerciseManager from './admin/ExerciseManager';
 
+// TODO: fix the remaining connectToStore
+// mixins: [
+//   ConnectToStore('confirmation', ConfirmationStore, (store) => store.getState()),
+// ],
+// TODO: fix confirmation modal
+/*
+  <ConfirmationModal
+  {...this.state.confirmation}
+  doCancel={ConfirmationActions.cancel}
+  doOk={() => ConfirmationActions.confirm(this.state.confirmation)}
+  />
+*/
+
+// TODO: add notification view
+//   <Row>
+//     <Col lg={12}><NotificationView /></Col>
+//   </Row>
+//   <Row>
+//   <Col lg={12}>
+//  {this.props.children}
+// </Col>
+//  </Row>
+
+//<Route path="exercises" component={ExerciseManager}/>
 const Root = ({store, history}) => {
   return (
     <Provider store={store}>
-      <Router history={history}>
-        <Route component={App}>
-          <Route path="/"  component={UserApp}>
-            <Route path="exercises" component={Exercises} />
-          </Route>
-          <Route path="/admin" component={AdminApp}>
-            <Route path="exercises" component={ExerciseManager} />
-          </Route>
-        </Route>
-      </Router>
+      <ConnectedRouter history={history}>
+        <div className='container'>
+          <Switch>
+            <Route path={ROUTE.admin} component={AdminApp}/>
+            <Route path={ROUTE.tdl} component={UserApp}/>
+            <Route path='/' component={UserApp}/>
+          </Switch>
+        </div>
+      </ConnectedRouter>
     </Provider>
   );
 };
