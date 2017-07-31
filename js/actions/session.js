@@ -21,3 +21,17 @@ export function logout() {
     type: type.SESSION_LOGOUT
   }
 }
+
+export function sessionUpdate(session) {
+  return {
+    type: type.SESSION_UPDATE,
+    data: session,
+  };
+}
+
+export function authUpdate(auth) {
+  return {
+    type: type.SESSION_AUTH_UPDATE,
+    data: auth,
+  }
+}

@@ -59,10 +59,6 @@ AppDispatcher.register(function(payload) {
   //
   if(payload.source === AppDispatcher.STORE_REFRESH){
     switch (action.actionType) {
-      case Constants.EXERCISES_UPDATE:
-        _exercises = action.data;
-        ExerciseStore.emitChange();
-        break;
       case Constants.EXERCISE_SOURCES_UPDATE:
         if(_exercises) {
           _exercises[action.id].sourceFiles = action.data;

@@ -1,28 +1,19 @@
 import 'babel-polyfill';
 import React from 'react';
 import ReactDOM from 'react-dom';
+import {browserHistory} from 'react-router';
+import {syncHistoryWithStore} from 'react-router-redux';
+
 
 import Root from './containers/Root';
+import * as AppActions from './actions/app';
 import configureStore from './store/configureStore';
-import sessionEffects from './effects/session';
 
 const store = configureStore({});
-store.runSaga(sessionEffects);
+const history = syncHistoryWithStore(browserHistory, store);
+store.dispatch(AppActions.initialize());
 
 ReactDOM.render(
-  <Root store={store} />,
+  <Root store={store} history={history}/>,
   document.getElementById('app')
 );
-
-
-// // Configure Store and Root component
-// const store = configureStore(storage.get('weighty_beer') || {});
-// if (!store.getState().navigation.transitioning) {
-//   if (!store.getState().navigation.transitioning) {
-//     ReactDOM.render(
-//       <Root store={store} />,
-//       document.getElementById('app')
-//     );
-//   }
-// }
-//

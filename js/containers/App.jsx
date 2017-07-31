@@ -6,17 +6,9 @@ import {connect} from 'react-redux';
 import * as SessionActions from '../actions/session';
 
 class App extends React.Component {
-
-  constructor(props) {
-    super(props);
-    console.log('hei');
-    props.getSession();
-  }
-
   // TODO: fix the remaining connectToStore
   // mixins: [
   //   ConnectToStore('confirmation', ConfirmationStore, (store) => store.getState()),
-  //   ConnectToStore('user', UserStore, (store) => ({user: store.getUser(), auth: store.getAuth()}) )
   // ],
   // TODO: fix confirmation modal
   /*
@@ -52,7 +44,7 @@ App.propTypes = {
 
 export default compose(
   connect(
-    state => ({}),
+    () => ({}),
     {
       getSession: SessionActions.getSession,
     }
