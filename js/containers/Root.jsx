@@ -7,6 +7,7 @@ import App from './App';
 import UserApp from './UserApp';
 import Exercises from './Exercises';
 import AdminApp from './admin/AdminApp';
+import ExerciseManager from './admin/ExerciseManager';
 
 const Root = ({store, history}) => {
   return (
@@ -17,6 +18,7 @@ const Root = ({store, history}) => {
             <Route path="exercises" component={Exercises} />
           </Route>
           <Route path="/admin" component={AdminApp}>
+            <Route path="exercises" component={ExerciseManager} />
           </Route>
         </Route>
       </Router>

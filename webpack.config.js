@@ -80,6 +80,7 @@ module.exports = function (env) {
     output: {
       path: buildPath,
       filename: '[name].bundle.js',
+      publicPath: '/',
     },
     module: {
       rules: [
