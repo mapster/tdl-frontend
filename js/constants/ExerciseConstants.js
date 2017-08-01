@@ -1,4 +1,4 @@
-module.exports = {
+export default {
   symbols: {
     expectation: 'question-sign',
     error: 'exclamation-sign',

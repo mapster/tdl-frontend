@@ -1,12 +1,16 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {Button, Col, Glyphicon, Row} from 'react-bootstrap';
-import Forbidden from '../../components/Forbidden';
-import ExerciseList from '../../components/ExerciseList';
 import {compose} from 'redux';
 import {connect} from 'react-redux';
+import {Route, Switch} from 'react-router-dom';
+
+import Forbidden from '../../components/Forbidden';
+import ExerciseList from '../../components/ExerciseList';
 import {SELECTORS} from '../../reducers';
 import * as Action from '../../actions/admin/exerciseManager';
+import * as ROUTE from '../../routes';
+import ExerciseEditor from './ExerciseEditor';
 
 
 // var Actions = require('../../actions/admin/ExerciseManagerActions');
@@ -50,10 +54,15 @@ const ExerciseManager = ({auth, exercises, deleteExercise, editExercise, createN
           </Col>
         </Row>
         <Row><Col lg={12}>
-          <ExerciseList deleteExercise={deleteExercise}
-                        editExercise={editExercise}
-                        exercises={exercises}
-          />
+          <Switch>
+            <Route path={ROUTE.admin_exercises_edit} component={ExerciseEditor}/>
+            <Route path={ROUTE.admin_exercises} render={props => (
+              <ExerciseList {...props}
+                            deleteExercise={deleteExercise}
+                            editExercise={editExercise}
+                            exercises={exercises}/>)
+            }/>
+          </Switch>
         </Col></Row>
       </Col>
     </Row>

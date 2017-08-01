@@ -4,7 +4,9 @@ import {Grid, Row, Col} from 'react-bootstrap';
 import * as ROUTE from '../routes';
 import Header from './Header';
 import Exercises from './Exercises';
-import {Route} from 'react-router-dom';
+import {Route, Switch} from 'react-router-dom';
+import NotFound from '../components/NotFound';
+import Editor from './Editor';
 
 const menu = [
   {href: ROUTE.tdl_exercises, text: 'Exercises'},
@@ -16,10 +18,14 @@ const UserApp = () => (
     <Grid>
       <Row>
         <Col lg={12}>
-          <Header title='JavaTDL' menu={menu} />
+          <Header title='JavaTDL' menu={menu}/>
         </Col>
       </Row>
-      <Route path={ROUTE.tdl_exercises} component={Exercises} />
+      <Switch>
+        <Route path={ROUTE.tdl_exercises} component={Exercises}/>
+        <Route path={ROUTE.tdl_editor} component={Editor}/>
+        <Route component={NotFound}/>
+      </Switch>
     </Grid>
   </div>
 );

@@ -1,4 +1,5 @@
 import * as type from '../constants/actionTypes';
+import createReducer from './createReducer';
 
 const initialState = {
   user: null,
@@ -23,11 +24,4 @@ const reducers = {
   [type.SESSION_AUTH_UPDATE]: authUpdate,
 };
 
-export default function session(state = initialState, action) {
-  const reducer = reducers[action.type];
-  if (reducer) {
-    return reducer(state, action);
-  }
-
-  return state;
-}
+export default createReducer(initialState, reducers);

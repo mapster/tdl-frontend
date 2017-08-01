@@ -1,12 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {Provider} from 'react-redux';
-import {Route, Switch} from 'react-router-dom';
+import {Redirect, Route, Switch} from 'react-router-dom';
 import {ConnectedRouter} from 'connected-react-router';
 
 import * as ROUTE from '../routes.js';
 import UserApp from './UserApp';
 import AdminApp from './admin/AdminApp';
+import NotFound from '../components/NotFound';
 
 // TODO: fix the remaining connectToStore
 // mixins: [
@@ -40,7 +41,10 @@ const Root = ({store, history}) => {
           <Switch>
             <Route path={ROUTE.admin} component={AdminApp}/>
             <Route path={ROUTE.tdl} component={UserApp}/>
-            <Route path='/' component={UserApp}/>
+            <Route path='/' exact={true}>
+              <Redirect to={ROUTE.tdl} />
+            </Route>
+            <Route component={NotFound} />
           </Switch>
         </div>
       </ConnectedRouter>

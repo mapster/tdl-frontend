@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {Row, Col, Well, FormControl, Button} from 'react-bootstrap';
+import {Row, Col, Well, Button} from 'react-bootstrap';
+import TextInput from './TextInput';
 
 function onTextChange(field, event) {
   const change = {};
@@ -27,10 +28,10 @@ class LoginInput extends React.Component {
         <form>
           <Row>
             <Col lg={5}>
-              <FormControl bsSize='small' type='email' placeholder='user@email.com' onChange={onTextChange.bind(this,'email')} />
+              <TextInput id='email' bsSize='small' type='email' placeholder='user@email.com' onChange={onTextChange.bind(this,'email')}/>
             </Col>
             <Col lg={5}>
-              <FormControl bsSize='small' type='password' onChange={onTextChange.bind(this,'password')} />
+              <TextInput id='email' bsSize='small' type='password' placeholder='password' onChange={onTextChange.bind(this,'password')}/>
             </Col>
             <Col lg={1}>
               <Button onClick={login.bind(this)}>Login</Button>
@@ -41,9 +42,8 @@ class LoginInput extends React.Component {
     );
   }
 }
-
 LoginInput.propTypes = {
   doLogin: PropTypes.func.isRequired,
-}
+};
 
 export default LoginInput;

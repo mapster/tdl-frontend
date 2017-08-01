@@ -1,4 +1,6 @@
 import * as type from '../../constants/actionTypes';
+import {push} from 'connected-react-router';
+import * as ROUTE from '../../routes';
 
 export function deleteExercise(id) {
   return {
@@ -8,10 +10,7 @@ export function deleteExercise(id) {
 }
 
 export function editExercise(id) {
-  return {
-    type: type.EXERCISE_MANAGER_EDIT,
-    data: { id },
-  };
+  return push(ROUTE.admin_exercises + '/' + id);
 }
 
 export function createNewExercise() {
