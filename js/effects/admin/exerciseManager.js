@@ -1,4 +1,4 @@
-import {put, takeLatest} from 'redux-saga/effects';
+import {put, takeEvery} from 'redux-saga/effects';
 import * as type from '../../constants/actionTypes';
 import * as ExercisesAction from '../../actions/exercises';
 import * as ROUTE from '../../routes';
@@ -17,5 +17,5 @@ function* navigateToExerciseManager({payload: {location: {pathname}}}) {
 }
 
 export default function* exerciseManagerSaga() {
-  yield takeLatest([type.LOCATION_CHANGE, type.INIT], navigateToExerciseManager);
+  yield takeEvery([type.LOCATION_CHANGE, type.INIT], navigateToExerciseManager);
 }

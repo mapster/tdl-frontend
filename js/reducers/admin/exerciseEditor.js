@@ -8,9 +8,9 @@ const exerciseUpdate = (state, action) => ({
   ...state,
   exercises: {
     ...state.exercises,
-    feedback: {},
     [action.data.id]: {
       properties: pickModifiableFields(action.data),
+      feedback: {},
       isChanged: action.isChanged,
     },
   }
@@ -21,9 +21,21 @@ const setCurrent = (state, {data: {id}}) => ({
   currentExercise: id,
 });
 
+const setCurrentFeedback = (state, {data: feedback}) => ({
+  ...state,
+  exercises: {
+    ...state.exercises,
+    [state.currentExercise]: {
+      ...state.exercises[state.currentExercise],
+      feedback,
+    }
+  }
+});
+
 const reducers = {
   [type.EXERCISE_EDITOR_UPDATE]: exerciseUpdate,
   [type.EXERCISE_EDITOR_SET_CURRENT]: setCurrent,
+  [type.EXERCISE_EDITOR_SET_CURRENT_FEEDBACK]: setCurrentFeedback,
 };
 
 export const getCurrentExercise = (state) => state.exerciseEditor.exercises[state.exerciseEditor.currentExercise] || {};

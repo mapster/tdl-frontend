@@ -57,6 +57,7 @@ module.exports = function (env) {
           evaluate: true,
           if_return: true,
           join_vars: true,
+          sourceMap: true,
         },
         output: {
           comments: false,
@@ -70,7 +71,7 @@ module.exports = function (env) {
   }
 
   return {
-    devtool: isProd ? 'source-map' : 'eval',
+    devtool: isProd ? 'eval' : 'eval-source-map',
     context: sourcePath,
     entry: {
       js: './app.jsx',

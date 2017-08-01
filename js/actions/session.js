@@ -35,3 +35,10 @@ export function authUpdate(auth) {
     data: auth,
   }
 }
+
+export function redirectToLogin(from) {
+  return {
+    type: type.SESSION_REDIRECT_TO_LOGIN,
+    data: from,
+  };
+}

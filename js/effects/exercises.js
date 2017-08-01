@@ -1,4 +1,4 @@
-import {call, put, takeLatest} from 'redux-saga/effects';
+import {call, put, takeLatest, takeEvery} from 'redux-saga/effects';
 import * as type from '../constants/actionTypes';
 import * as Api from '../api/exercises';
 import * as Action from '../actions/exercises';
@@ -27,6 +27,6 @@ function* navigateToExercises({payload: {location: {pathname}}}) {
 }
 
 export default function* exercisesEffects() {
-  yield takeLatest([type.LOCATION_CHANGE, type.INIT], navigateToExercises);
+  yield takeEvery([type.LOCATION_CHANGE, type.INIT], navigateToExercises);
   yield takeLatest(type.EXERCISES_GET, getExercises);
 }

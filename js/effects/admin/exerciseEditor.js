@@ -1,8 +1,9 @@
 import * as ROUTE from '../../routes';
 import {matchPath} from 'react-router-dom';
-import {put, call, takeLatest, select} from 'redux-saga/effects';
+import {put, call, takeLatest, takeEvery, select} from 'redux-saga/effects';
 import * as type from '../../constants/actionTypes';
 import * as Action from '../../actions/admin/exerciseEditor';
+import * as Notification from '../../actions/notification';
 import * as Api from '../../api/exercises';
 import {SELECTORS} from '../../reducers';
 
@@ -30,16 +31,31 @@ function* navigateToExerciseEditor({payload: {location: {pathname}}}) {
   }
 }
 
+function handleErrorResponse(status, data) {
+  switch (status) {
+    case 401: return put(Notification.error('Not logged in'));
+    case 403: return put(Notification.error('Forbidden'));
+    case 500: return put(Notification.error('Internal server error'));
+    default: return put(Notification.error('Unknown error code: ' + status));
+  }
+}
+
 function* saveExercise({data: exercise}) {
   try {
     const response = yield call(Api.putExercise, exercise);
     yield put(Action.exerciseUpdate(response.data));
   } catch (e) {
+    const {data, status} = e.response;
+    if (status === 400) {
+      yield put(Action.setCurrentExerciseFeedback(data))
+    } else {
+      yield handleErrorResponse(status, data);
+    }
     // TODO: Handle error
   }
 }
 
 export default function* exerciseEditorSaga() {
-  yield takeLatest([type.LOCATION_CHANGE, type.INIT], navigateToExerciseEditor);
+  yield takeEvery([type.LOCATION_CHANGE, type.INIT], navigateToExerciseEditor);
   yield takeLatest(type.EXERCISE_EDITOR_SAVE, saveExercise)
 }

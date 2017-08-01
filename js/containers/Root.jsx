@@ -8,6 +8,8 @@ import * as ROUTE from '../routes.js';
 import UserApp from './UserApp';
 import AdminApp from './admin/AdminApp';
 import NotFound from '../components/NotFound';
+import Login from './Login';
+import {Col, Row} from 'react-bootstrap';
 
 // TODO: fix the remaining connectToStore
 // mixins: [
@@ -23,9 +25,7 @@ import NotFound from '../components/NotFound';
 */
 
 // TODO: add notification view
-//   <Row>
-//     <Col lg={12}><NotificationView /></Col>
-//   </Row>
+
 //   <Row>
 //   <Col lg={12}>
 //  {this.props.children}
@@ -41,10 +41,11 @@ const Root = ({store, history}) => {
           <Switch>
             <Route path={ROUTE.admin} component={AdminApp}/>
             <Route path={ROUTE.tdl} component={UserApp}/>
-            <Route path='/' exact={true}>
-              <Redirect to={ROUTE.tdl} />
+            <Route path={ROUTE.login} component={Login}/>
+            <Route path={ROUTE.home} exact={true}>
+              <Redirect to={ROUTE.tdl_exercises}/>
             </Route>
-            <Route component={NotFound} />
+            <Route component={NotFound}/>
           </Switch>
         </div>
       </ConnectedRouter>

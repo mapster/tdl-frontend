@@ -15,6 +15,13 @@ export function setCurrentExercise(id) {
   };
 }
 
+export function setCurrentExerciseFeedback(feedback) {
+  return {
+    type: type.EXERCISE_EDITOR_SET_CURRENT_FEEDBACK,
+    data: feedback,
+  };
+}
+
 export function saveExercise(exercise = {}) {
   return {
     type: type.EXERCISE_EDITOR_SAVE,

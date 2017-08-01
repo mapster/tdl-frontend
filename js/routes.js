@@ -1,3 +1,6 @@
+export const login = '/login';
+export const home = '/';
+
 // User
 export const tdl = '/tdl';
 export const tdl_exercises = tdl + '/exercises';

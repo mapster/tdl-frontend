@@ -9,24 +9,6 @@ import {Row, Col, Navbar, Nav, NavItem, NavDropdown, MenuItem} from 'react-boots
 import * as ROUTE from '../routes';
 import {SELECTORS} from '../reducers';
 import * as SessionAction from '../actions/session';
-import LoginInput from '../components/LoginInput';
-
-const LoginWell = ({show = true, doLogin}) => {
-  if (show) {
-    return (
-      <Row>
-        <Col lg={5} lgPush={7}>
-          <LoginInput doLogin={doLogin} />
-        </Col>
-      </Row>
-    );
-  }
-  return null;
-};
-LoginWell.propTypes = {
-  doLogin: PropTypes.func.isRequired,
-  show: PropTypes.bool,
-};
 
 const LoggedInNavigation = ({show = true, userName = '', isAdmin = false, doLogout, navigateTo}) => {
   if (show) {
@@ -51,7 +33,7 @@ LoggedInNavigation.propTypes = {
 };
 
 
-const Header = ({auth, menu = [], session = false, title = '', doLogin, doLogout, navigateTo}) => {
+const Header = ({auth, menu = [], session = false, title = '', doLogout, navigateTo}) => {
   const userName = session && session.name;
   const isLoggedIn = userName && true;
   const isAdmin = auth && Object.keys(auth).length > 0;
@@ -71,7 +53,6 @@ const Header = ({auth, menu = [], session = false, title = '', doLogin, doLogout
           </Navbar>
         </Col>
       </Row>
-      <LoginWell doLogin={doLogin} show={!isLoggedIn}/>
     </div>
   );
 };
@@ -80,7 +61,6 @@ Header.propTypes = {
   menu: PropTypes.array,
   session: PropTypes.object,
   title: PropTypes.string,
-  doLogin: PropTypes.func.isRequired,
   doLogout: PropTypes.func.isRequired,
   navigateTo: PropTypes.func.isRequired,
 };
@@ -91,7 +71,6 @@ export default compose(
     session: SELECTORS.session.getSession(state),
     auth: SELECTORS.session.getAuth(state),
   }), {
-    doLogin: SessionAction.login,
     doLogout: SessionAction.logout,
     navigateTo: push,
   })
