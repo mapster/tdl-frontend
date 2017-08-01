@@ -1,13 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {Button, Col, Glyphicon, Row, Tab, Tabs} from 'react-bootstrap';
+import {Button, Col, Glyphicon, Nav, NavItem, Row, Tab, Tabs} from 'react-bootstrap';
 import {connect} from 'react-redux';
 import {compose} from 'redux';
 
 import {SELECTORS} from '../../reducers';
 import * as Action from '../../actions/admin/exerciseEditor';
 import ExercisePropertyEditor from '../../components/admin/ExercisePropertyEditor';
-import {saveExercise} from '../../actions/admin/exerciseEditor';
 
 // var SourcesManager = require('./SourcesManager.react');
 
@@ -73,39 +72,62 @@ const tabTitle = (text, unsaved) => {
   return text;
 };
 
-const ExerciseEditor = ({isChanged, properties, feedback, exerciseUpdate, saveExercise}) => (
+const ExerciseEditor = ({currentTab, isChanged, properties, feedback, selectTab, exerciseUpdate, saveExercise}) => (
   <Row>
     <Row>
       <Col lg={3}><Button><Glyphicon glyph='arrow-left'/> Back</Button></Col>
     </Row>
     <Row>
-          <ExercisePropertyEditor
-            exerciseUpdate={exerciseUpdate}
-            saveExercise={saveExercise}
-            isChanged={isChanged}
-            properties={properties}
-            feedback={feedback}
-          />
+      <Tab.Container id='tabs' activeKey={currentTab} onSelect={selectTab}>
+        <Row className="clearfix">
+          <Col sm={4}>
+            <Nav bsStyle="pills" stacked>
+              <NavItem eventKey="properties">{tabTitle('Properties', isChanged)}</NavItem>
+              <NavItem eventKey="sources">{tabTitle('Sources', true)}</NavItem>
+            </Nav>
+          </Col>
+          <Col sm={8}>
+            <Tab.Content>
+              <Tab.Pane eventKey='properties'>
+                <ExercisePropertyEditor
+                  exerciseUpdate={exerciseUpdate}
+                  saveExercise={saveExercise}
+                  isChanged={isChanged}
+                  properties={properties}
+                  feedback={feedback}
+                />
+              </Tab.Pane>
+              <Tab.Pane eventKey='sources'>
+                <div>heisannn</div>
+              </Tab.Pane>
+            </Tab.Content>
+          </Col>
+        </Row>
+      </Tab.Container>
     </Row>
   </Row>
 );
 ExerciseEditor.propTypes = {
+  currentTab: PropTypes.string.isRequired,
   isChanged: PropTypes.bool.isRequired,
   properties: PropTypes.object.isRequired,
   feedback: PropTypes.object.isRequired,
+  selectTab: PropTypes.func.isRequired,
   exerciseUpdate: PropTypes.func.isRequired,
   saveExercise: PropTypes.func.isRequired,
 };
 
 export default compose(
-  connect(state => (
-    {
-      isChanged: SELECTORS.exerciseEditor.isCurrentExerciseChanged(state),
-      properties: SELECTORS.exerciseEditor.getCurrentExerciseProperties(state),
-      feedback: SELECTORS.exerciseEditor.getCurrentExerciseFeedback(state),
-    }),{
-      exerciseUpdate: Action.exerciseUpdate,
-      saveExercise: Action.saveExercise,
-    }
-  )
+connect(state => (
+{
+  currentTab: SELECTORS.exerciseEditor.getCurrentTab(state),
+  isChanged: SELECTORS.exerciseEditor.isCurrentExerciseChanged(state),
+  properties: SELECTORS.exerciseEditor.getCurrentExerciseProperties(state),
+  feedback: SELECTORS.exerciseEditor.getCurrentExerciseFeedback(state),
+}),{
+  selectTab: Action.selectTab,
+  exerciseUpdate: Action.exerciseUpdate,
+  saveExercise: Action.saveExercise,
+}
+)
 )(ExerciseEditor);

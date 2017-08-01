@@ -5,6 +5,7 @@ import * as Action from '../actions/session';
 import {SELECTORS} from '../reducers/index';
 import * as ROUTE from '../routes';
 import {push} from 'connected-react-router';
+import {matchPath} from 'react-router-dom';
 
 function* login(action) {
   const {username, password} = action.data;
@@ -43,11 +44,21 @@ function* getAuth() {
   }
 }
 
+const LOGIN_PATH = {
+  path: ROUTE.login,
+  exact: true,
+  strict: false,
+};
 function* sessionUpdate({data: session}) {
   if (session && session.name) {
     yield fork(getAuth);
-    const redirectFrom = yield select(SELECTORS.session.getRedirectFrom);
-    yield put(push(redirectFrom.pathname));
+
+    // redirect if current location is ROUTE.login
+    const currentLocation = yield select(SELECTORS.router.getLocation);
+    if (matchPath(currentLocation.pathname, LOGIN_PATH)) {
+      const redirectFrom = yield select(SELECTORS.session.getRedirectFrom);
+      yield put(push(redirectFrom.pathname));
+    }
   } else {
     const from = yield select(SELECTORS.router.getLocation);
     yield put(Action.redirectToLogin(from))

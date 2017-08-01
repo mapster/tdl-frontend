@@ -1,11 +1,13 @@
 import * as ROUTE from '../../routes';
 import {matchPath} from 'react-router-dom';
 import {put, call, takeLatest, takeEvery, select} from 'redux-saga/effects';
+
 import * as type from '../../constants/actionTypes';
 import * as Action from '../../actions/admin/exerciseEditor';
 import * as Notification from '../../actions/notification';
 import * as Api from '../../api/exercises';
 import {SELECTORS} from '../../reducers';
+import handleErrorResponse from '../errorResponse';
 
 const ADMIN_EXERCISE_EDIT = {
   path: ROUTE.admin_exercises_edit,
@@ -28,15 +30,6 @@ function* navigateToExerciseEditor({payload: {location: {pathname}}}) {
         // TODO: Handle error
       }
     }
-  }
-}
-
-function handleErrorResponse(status, data) {
-  switch (status) {
-    case 401: return put(Notification.error('Not logged in'));
-    case 403: return put(Notification.error('Forbidden'));
-    case 500: return put(Notification.error('Internal server error'));
-    default: return put(Notification.error('Unknown error code: ' + status));
   }
 }
 

@@ -1,5 +1,12 @@
 import * as type from '../../constants/actionTypes';
 
+export function selectTab(key) {
+  return {
+    type: type.EXERCISE_EDITOR_CHANGE_TAB,
+    data: {key},
+  };
+}
+
 export function exerciseUpdate(exercise, isChanged = false) {
   return {
     type: type.EXERCISE_EDITOR_UPDATE,
