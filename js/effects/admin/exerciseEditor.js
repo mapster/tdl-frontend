@@ -4,6 +4,7 @@ import {put, call, takeLatest, takeEvery, select, fork} from 'redux-saga/effects
 
 import * as type from '../../constants/actionTypes';
 import * as Action from '../../actions/admin/exerciseEditor';
+import * as Notification from '../../actions/notification';
 import * as Api from '../../api/exercises';
 import {SELECTORS} from '../../reducers';
 import handleErrorResponse from '../errorResponse';
@@ -60,7 +61,40 @@ function* saveExercise({data: exercise}) {
   }
 }
 
+function* saveSourceFile({data: sourceFile}) {
+  try {
+    const {id: exerciseId} = yield select(SELECTORS.exerciseEditor.getExerciseProperties);
+    const request = sourceFile.isNew ? Api.postSourceFile : Api.putSourceFile;
+    const {data: savedFile} = yield call(request, exerciseId, sourceFile.data);
+    yield put(Action.deleteSourceFile(sourceFile));
+    yield put(Action.sourceFileUpdateFromServer(savedFile));
+    yield put(Action.selectSourceFile(savedFile.id));
+  } catch (e) {
+    const {data, status} = e.response;
+    if (status === 409) {
+      yield put(Notification.error(data));
+    } else {
+      yield handleErrorResponse(status, data instanceof Object ? JSON.stringify(data) : data);
+    }
+  }
+}
+
+function* deleteSourceFile({data: sourceFile}) {
+  if (!sourceFile.isNew) {
+    try {
+      const {id: exerciseId} = yield select(SELECTORS.exerciseEditor.getExerciseProperties);
+      yield call(Api.deleteSourceFile, exerciseId, sourceFile.id);
+      yield getExerciseSourceFiles(exerciseId);
+    } catch (e) {
+      const {data, status} = e.response;
+      yield handleErrorResponse(status, data);
+    }
+  }
+}
+
 export default function* exerciseEditorSaga() {
   yield takeEvery([type.LOCATION_CHANGE, type.INIT], navigateToExerciseEditor);
   yield takeLatest(type.EXERCISE_EDITOR_SAVE_PROPERTIES, saveExercise);
+  yield takeLatest(type.EXERCISE_EDITOR_SOURCE_FILE_SAVE, saveSourceFile);
+  yield takeLatest(type.EXERCISE_EDITOR_SOURCE_FILE_DELETE, deleteSourceFile);
 }

@@ -3,10 +3,8 @@ import PropTypes from 'prop-types';
 import {Button} from 'react-bootstrap';
 import TextInput from './TextInput';
 
-function onTextChange(field, event) {
-  const change = {};
-  change[field] = event.target.value;
-  this.setState(change);
+function onTextChange(field, value) {
+  this.setState({[field]: value});
 }
 
 function login() {

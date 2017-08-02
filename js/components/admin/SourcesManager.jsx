@@ -8,93 +8,46 @@ import brace01 from 'brace/theme/github';
 import brace012 from 'brace/ext/language_tools';
 /* eslint-enable no-unused-vars */
 
-import {Col, Nav, NavItem, Row} from 'react-bootstrap';
-// import SingleFieldModal from '../SingleFieldModal.react';
-
-/*
-getDefaultProps:
-
-function () {
-  return {readOnly: false};
-}
-
-,
-getInitialState: function () {
-  return {rename: false};
-}
-_onFileChange: function (name, contents) {
-  if (this.props.readOnly) {
-    return;
-  }
-  if (contents !== this.props.sourceFiles[name].contents) {
-    this.props.doUpdateSourceFile(name, contents);
-  }
-}
-,
-,
-_showRename: function (name) {
-  this.setState({rename: name});
-}
-,
-_saveRename: function (name) {
-  this.props.doRenameSourceFile(this.props.selectedSourceFile, name, this.props.sourceFiles);
-  this._showRename(false);
-}
-
-,
-
-
-  var showButtons = this.props.doCreateNewFile && this.props.doSaveSourceFile && this.props.doRenameSourceFile && this.props.doDeleteSourceFile && true;
-
-  var files = this.props.sourceFiles;
-
-    <SingleFieldModal
-      doCancel={() => this._showRename(false)}
-      doSave={this._saveRename}
-      label={this.state.rename + ' => '}
-      show={this.state.rename && true}
-      title='Rename'
-      value={this.state.rename}
-    />
-
-
-    {showButtons &&
-    <Col lg={2}>
-      <ButtonGroup vertical>
-        {this.props.doCreateNewFile && (<Button onClick={this.props.doCreateNewFile}>New file</Button>)}
-        {this.props.doSaveSourceFile && (
-          <Button onClick={() => this.props.doSaveSourceFile(files[this.props.selectedSourceFile])}>Save</Button>)}
-        {this.props.doRenameSourceFile && (
-          <Button onClick={() => this._showRename(this.props.selectedSourceFile)}>Rename</Button>)}
-        {this.props.doDeleteSourceFile && (<Button
-          onClick={() => this.props.doDeleteSourceFile(this.props.selectedSourceFile, this.props.sourceFiles)}>Delete</Button>)}
-      </ButtonGroup>
-    </Col>
-    }
-
-              <Tab key={name} eventKey={name} title={this._tabTitle(name)}>
-
-          </Tab>
- */
-
+import {Button, ButtonGroup, Col, Nav, NavItem, Row} from 'react-bootstrap';
+import SingleFieldModal from '../SingleFieldModal';
 
 const tabTitle = (file) => file.data.name + (file.isChanged ? '*' : '');
 
-const SourcesManager = ({files, currentFile, readOnly = false, selectSourceFile, sourceFileUpdate}) => {
-  const onFileContentsChange = (contents) => {
+const SourcesManager = ({
+                          files,
+                          currentFile,
+                          readOnly = false,
+                          renameCurrentFile,
+                          selectSourceFile,
+                          sourceFileUpdate,
+                          createNewFile,
+                          deleteSourceFile,
+                          saveSourceFile,
+                          updateRenameCurrentFile,
+                          okRenameCurrentFile,
+                        }) => {
+  const onFileContentsChange = sourceFileUpdate && ((contents) => {
     if (!readOnly) {
       sourceFileUpdate({
         ...currentFile.data,
         contents,
       });
     }
-  };
+  });
+  if (files.length === 0) {
+    if (createNewFile) {
+      return (<Button onClick={createNewFile}>New file</Button>);
+    }
+    else {
+      return false;
+    }
+  }
   return (
     <Row>
       <Col lg={10}>
         <Nav bsStyle='tabs'>
           {files && files.map(file => (
-            <NavItem key={file.data.name} active={currentFile.id === file.id} onClick={() => selectSourceFile(file.id)}>
+            <NavItem key={file.data.id} active={currentFile.id === file.id} onClick={() => selectSourceFile(file.id)}>
               {tabTitle(file)}
             </NavItem>
           ))}
@@ -107,29 +60,45 @@ const SourcesManager = ({files, currentFile, readOnly = false, selectSourceFile,
               mode='java'
               theme="github"
               width='100%'
-              editorProps={{$blockScrolling: 'infinity'}}
+              editorProps={{$blockScrolling: true}}
             />
           )}
         </Nav>
       </Col>
+      {!readOnly &&
+      <Col lg={2}>
+        <ButtonGroup vertical>
+          {createNewFile && (<Button onClick={createNewFile}>New file</Button>)}
+          {updateRenameCurrentFile && (<Button onClick={() => updateRenameCurrentFile(true, currentFile.data.name)}>Rename</Button>)}
+          {saveSourceFile && (<Button onClick={() => saveSourceFile(currentFile)}>Save</Button>)}
+          {deleteSourceFile && (<Button onClick={() => deleteSourceFile(currentFile)}>Delete</Button>)}
+        </ButtonGroup>
+      </Col>
+      }
+      <SingleFieldModal
+        doCancel={() => updateRenameCurrentFile(false)}
+        doOk={okRenameCurrentFile}
+        doUpdate={(value) => updateRenameCurrentFile(true, value)}
+        label={currentFile.data.name + ' => '}
+        show={renameCurrentFile.show}
+        title='Rename'
+        value={renameCurrentFile.value}/>
     </Row>
   );
 };
 
 SourcesManager.propTypes = {
-  // doCreateNewFile: PropTypes.func,
-  // doDeleteSourceFile: PropTypes.func,
-  // doRenameSourceFile: PropTypes.func,
-  // doSaveSourceFile: PropTypes.func,
-  // doSelectSourceFile: PropTypes.func.isRequired,
-  // doUpdateSourceFile: PropTypes.func,
-  // readOnly: PropTypes.bool,
-  // selectedSourceFile: PropTypes.string.isRequired,
   files: PropTypes.array.isRequired,
   currentFile: PropTypes.object,
   readOnly: PropTypes.bool,
+  renameCurrentFile: PropTypes.object.isRequired,
   selectSourceFile: PropTypes.func.isRequired,
-  sourceFileUpdate: PropTypes.func.isRequired,
+  sourceFileUpdate: PropTypes.func,
+  createNewFile: PropTypes.func,
+  deleteSourceFile: PropTypes.func,
+  saveSourceFile: PropTypes.func,
+  updateRenameCurrentFile: PropTypes.func,
+  okRenameCurrentFile: PropTypes.func,
 };
 
 export default SourcesManager;

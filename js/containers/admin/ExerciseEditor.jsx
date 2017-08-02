@@ -9,63 +9,6 @@ import * as Action from '../../actions/admin/exerciseEditor';
 import ExercisePropertyEditor from '../../components/admin/ExercisePropertyEditor';
 import SourcesManager from '../../components/admin/SourcesManager';
 
-// var SourcesManager = require('./SourcesManager.react');
-
-// propTypes: {
-//   doClose: PropTypes.func.isRequired,
-//     doCreateNewFile: PropTypes.func.isRequired,
-//     doDeleteSourceFile: PropTypes.func.isRequired,
-//     doRenameSourceFile: PropTypes.func.isRequired,
-//     doResetExerciseProperties: PropTypes.func.isRequired,
-//     doSaveExerciseProperties: PropTypes.func.isRequired,
-//     doSaveSourceFile: PropTypes.func.isRequired,
-//     doSelectSourceFile: PropTypes.func.isRequired,
-//     doSetEditorTab: PropTypes.func.isRequired,
-//     doUpdateExerciseProperties: PropTypes.func.isRequired,
-//     doUpdateSourceFile: PropTypes.func.isRequired,
-//     feedback: PropTypes.object.isRequired,
-//     newFileId: PropTypes.number.isRequired,
-//     origProperties: PropTypes.object.isRequired,
-//     properties: PropTypes.object.isRequired,
-//     selectedSourceFile: PropTypes.string.isRequired,
-//     show: PropTypes.bool.isRequired,
-//     sourceFiles: PropTypes.object.isRequired,
-//     tab: PropTypes.string
-// },
-
-// _anyUnsavedFiles: function () {
-//   var files = this.props.sourceFiles;
-//   return Object.keys(files).some((f) => files[f]['@unsaved']);
-// },
-/*
-
-        {this.props.properties.id && (
-          <Tab eventKey='sources' title={this._tabTitle('Sources', this._anyUnsavedFiles())}>
-            <SourcesManager
-              doCreateNewFile={() => this.props.doCreateNewFile(this.props.properties.id, this.props.newFileId)}
-              doDeleteSourceFile={this.props.doDeleteSourceFile}
-              doRenameSourceFile={this.props.doRenameSourceFile}
-              doSaveSourceFile={this.props.doSaveSourceFile}
-              doSelectSourceFile={this.props.doSelectSourceFile}
-              doUpdateSourceFile={this.props.doUpdateSourceFile}
-              selectedSourceFile={this.props.selectedSourceFile}
-              sourceFiles={this.props.sourceFiles}
-            />
-          </Tab>
-        )}
- */
-
-/*
-
-            doChange={this.props.doUpdateExerciseProperties}
-            doReset={() => this.props.doResetExerciseProperties(this.props.origProperties)}
-            doSaveExercise={this.props.doSaveExerciseProperties}
-
-
-      <Tabs id="tabs" position='left'>
-        <Tab id="properties" eventKey='properties' title={tabTitle('Properties', exercise['@unsaved'])}>
- */
-
 const tabTitle = (text, unsaved) => {
   if (unsaved) {
     text += '*';
@@ -73,18 +16,36 @@ const tabTitle = (text, unsaved) => {
   return text;
 };
 
-const ExerciseEditor = ({currentTab, isChanged, properties, feedback, sourceFiles, currentSourceFile, selectTab, exerciseUpdate, saveExercise, selectSourceFile, sourceFileUpdate}) => (
+const ExerciseEditor = ({
+                          currentTab,
+                          isChanged,
+                          properties,
+                          feedback,
+                          sourceFiles,
+                          currentSourceFile,
+                          renameCurrentFile,
+                          selectTab,
+                          exerciseUpdate,
+                          saveExercise,
+                          selectSourceFile,
+                          sourceFileUpdate,
+                          createNewSourceFile,
+                          saveSourceFile,
+                          deleteSourceFile,
+                          updateRenameCurrentFile,
+                          okRenameCurrentFile,
+                        }) => (
   <Row>
     <Row>
       <Tab.Container id='tabs' activeKey={currentTab} onSelect={selectTab}>
         <Row className="clearfix">
-          <Col sm={4}>
+          <Col lg={4}>
             <Nav bsStyle="pills" stacked>
               <NavItem eventKey="properties">{tabTitle('Properties', isChanged)}</NavItem>
               <NavItem eventKey="sources">{tabTitle('Sources', sourceFiles.some(file => file.isChanged))}</NavItem>
             </Nav>
           </Col>
-          <Col sm={8}>
+          <Col lg={8}>
             <Tab.Content>
               <Tab.Pane eventKey='properties'>
                 <ExercisePropertyEditor
@@ -98,8 +59,14 @@ const ExerciseEditor = ({currentTab, isChanged, properties, feedback, sourceFile
               <Tab.Pane eventKey='sources'>
                 <SourcesManager currentFile={currentSourceFile}
                                 files={sourceFiles}
+                                renameCurrentFile={renameCurrentFile}
                                 selectSourceFile={selectSourceFile}
-                                sourceFileUpdate={sourceFileUpdate}/>
+                                sourceFileUpdate={sourceFileUpdate}
+                                createNewFile={createNewSourceFile}
+                                saveSourceFile={saveSourceFile}
+                                deleteSourceFile={deleteSourceFile}
+                                updateRenameCurrentFile={updateRenameCurrentFile}
+                                okRenameCurrentFile={okRenameCurrentFile}/>
               </Tab.Pane>
             </Tab.Content>
           </Col>
@@ -115,11 +82,17 @@ ExerciseEditor.propTypes = {
   feedback: PropTypes.object.isRequired,
   sourceFiles: PropTypes.array.isRequired,
   currentSourceFile: PropTypes.object,
+  renameCurrentFile: PropTypes.object.isRequired,
   selectTab: PropTypes.func.isRequired,
   exerciseUpdate: PropTypes.func.isRequired,
   saveExercise: PropTypes.func.isRequired,
   selectSourceFile: PropTypes.func.isRequired,
   sourceFileUpdate: PropTypes.func.isRequired,
+  createNewSourceFile: PropTypes.func.isRequired,
+  saveSourceFile: PropTypes.func.isRequired,
+  deleteSourceFile: PropTypes.func.isRequired,
+  updateRenameCurrentFile: PropTypes.func,
+  okRenameCurrentFile: PropTypes.func,
 };
 
 export default compose(
@@ -131,12 +104,18 @@ export default compose(
         feedback: SELECTORS.exerciseEditor.getExercisePropertiesFeedback(state),
         sourceFiles: SELECTORS.exerciseEditor.getSourceFiles(state),
         currentSourceFile: SELECTORS.exerciseEditor.getCurrentSourceFile(state),
+        renameCurrentFile: SELECTORS.exerciseEditor.getRenameCurrentFile(state),
       }), {
       selectTab: Action.selectTab,
       exerciseUpdate: Action.exercisePropertiesUpdate,
       saveExercise: Action.saveExercise,
       selectSourceFile: Action.selectSourceFile,
       sourceFileUpdate: Action.sourceFileUpdate,
+      createNewSourceFile: Action.createNewSourceFile,
+      saveSourceFile: Action.saveSourceFile,
+      deleteSourceFile: Action.deleteSourceFile,
+      updateRenameCurrentFile: Action.updateRenameCurrentFile,
+      okRenameCurrentFile: Action.okRenameCurrentFile,
     }
   )
 )(ExerciseEditor);

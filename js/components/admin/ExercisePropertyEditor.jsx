@@ -14,9 +14,9 @@ const KIND_OPTIONS = [
 
 const ExercisePropertyEditor = ({properties, isChanged, feedback, exerciseUpdate, saveExercise}) => {
   const createUpdater = (field) => {
-    return (event) => exerciseUpdate({
+    return (value) => exerciseUpdate({
         ...properties,
-        [field]: event.target.value,
+        [field]: value,
       },
       true,
     );

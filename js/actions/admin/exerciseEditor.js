@@ -49,9 +49,40 @@ export function sourceFileUpdate(data) {
   }
 }
 
+export function sourceFileUpdateFromServer(data) {
+  return {
+    type: type.EXERCISE_EDITOR_SOURCE_FILE_UPDATE_FROM_SERVER,
+    data,
+  };
+}
+
 export function selectSourceFile(sourceFileId) {
   return {
     type: type.EXERCISE_EDITOR_SET_CURRENT_FILE,
     data: {sourceFileId},
   }
 }
+
+export function saveSourceFile(sourceFile) {
+  return {
+    type: type.EXERCISE_EDITOR_SOURCE_FILE_SAVE,
+    data: sourceFile
+  }
+}
+
+export function createNewSourceFile() {
+  return {
+    type: type.EXERCISE_EDITOR_SOURCE_FILE_CREATE_NEW,
+  };
+}
+
+export const deleteSourceFile = (sourceFile) => ({
+  type: type.EXERCISE_EDITOR_SOURCE_FILE_DELETE,
+  data: sourceFile,
+});
+
+export const updateRenameCurrentFile = (show = false, value) => ({
+  type: type.EXERCISE_EDITOR_RENAME_CURRENT_FILE_UPDATE,
+  data: {show, value},
+});
+export const okRenameCurrentFile = () => ({type: type.EXERCISE_EDITOR_RENAME_CURRENT_FILE_OK});
