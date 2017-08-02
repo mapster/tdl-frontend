@@ -9,7 +9,6 @@ import UserApp from './UserApp';
 import AdminApp from './admin/AdminApp';
 import NotFound from '../components/NotFound';
 import Login from './Login';
-import {Col, Row} from 'react-bootstrap';
 
 // TODO: fix the remaining connectToStore
 // mixins: [

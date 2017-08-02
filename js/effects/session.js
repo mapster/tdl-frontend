@@ -1,4 +1,5 @@
 import {call, put, takeLatest, select, fork} from 'redux-saga/effects';
+
 import * as type from '../constants/actionTypes';
 import * as Api from '../api/session';
 import * as Action from '../actions/session';
@@ -6,6 +7,7 @@ import {SELECTORS} from '../reducers/index';
 import * as ROUTE from '../routes';
 import {push} from 'connected-react-router';
 import {matchPath} from 'react-router-dom';
+import handleErrorResponse from './errorResponse';
 
 function* login(action) {
   const {username, password} = action.data;
@@ -31,7 +33,13 @@ function* getSession() {
     const session = yield call(Api.getSession);
     yield put(Action.sessionUpdate(session.data));
   } catch (e) {
-    // TODO: Handle error
+    const {data, status} = e.response;
+    if (status === 404) {
+      const from = yield select(SELECTORS.router.getLocation);
+      yield put(Action.redirectToLogin(from));
+    } else {
+      yield handleErrorResponse(status, data);
+    }
   }
 }
 

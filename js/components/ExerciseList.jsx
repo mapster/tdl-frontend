@@ -23,16 +23,30 @@ ExerciseListItem.propTypes = {
   deleteExercise: PropTypes.func.isRequired,
 };
 
-const ExerciseList = ({deleteExercise, editExercise, exercises}) => (
-  <ListGroup>
-    {exercises && Object.keys(exercises).map((id) => (
-      <ExerciseListItem exercise={exercises[id]} deleteExercise={() => deleteExercise(id)} editExercise={() => editExercise(id)} key={id} />
-    ))}
-  </ListGroup>
+const ExerciseList = ({deleteExercise, editExercise, createNewExercise, exercises}) => (
+  <div>
+    <Row>
+      <Col lg={10}><h1 className='inline'>Exercises</h1></Col>
+      <Col lg={2} className='right'>
+        <Button bsSize='sm' onClick={createNewExercise}><Glyphicon glyph='plus'/></Button>
+      </Col>
+    </Row>
+    <Row>
+      <Col>
+        <ListGroup>
+          {exercises && Object.keys(exercises).map((id) => (
+            <ExerciseListItem exercise={exercises[id]} deleteExercise={() => deleteExercise(id)}
+                              editExercise={() => editExercise(id)} key={id}/>
+          ))}
+        </ListGroup>
+      </Col>
+    </Row>
+  </div>
 );
 ExerciseList.propTypes = {
   deleteExercise: PropTypes.func.isRequired,
   editExercise: PropTypes.func.isRequired,
+  createNewExercise: PropTypes.func.isRequired,
   exercises: PropTypes.object
 };
 

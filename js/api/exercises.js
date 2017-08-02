@@ -16,3 +16,7 @@ export function putExercise(exercise) {
   const {id, ...payload} = exercise;
   return axios.put(EXERCISES_RESOURCE_URL + '/' + exercise.id, payload);
 }
+
+export function getExerciseSourceFiles(id) {
+  return axios.get(EXERCISES_RESOURCE_URL + '/' + id + '/source_files');
+}

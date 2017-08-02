@@ -48,22 +48,19 @@ const ExerciseManager = ({auth, exercises, deleteExercise, editExercise, createN
     <Row>
       <Col lg={8}>
         <Row>
-          <Col lg={10}><h1 className='inline'>Exercises</h1></Col>
-          <Col lg={2} className='right'>
-            <Button bsSize='sm' onClick={createNewExercise}><Glyphicon glyph='plus'/></Button>
+          <Col lg={12}>
+            <Switch>
+              <Route path={ROUTE.admin_exercises_edit} component={ExerciseEditor}/>
+              <Route path={ROUTE.admin_exercises} render={props => (
+                <ExerciseList {...props}
+                              deleteExercise={deleteExercise}
+                              editExercise={editExercise}
+                              createNewExercise={() => {}}
+                              exercises={exercises}/>)
+              }/>
+            </Switch>
           </Col>
         </Row>
-        <Row><Col lg={12}>
-          <Switch>
-            <Route path={ROUTE.admin_exercises_edit} component={ExerciseEditor}/>
-            <Route path={ROUTE.admin_exercises} render={props => (
-              <ExerciseList {...props}
-                            deleteExercise={deleteExercise}
-                            editExercise={editExercise}
-                            exercises={exercises}/>)
-            }/>
-          </Switch>
-        </Col></Row>
       </Col>
     </Row>
   );

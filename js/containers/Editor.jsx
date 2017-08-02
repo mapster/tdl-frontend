@@ -1,10 +1,9 @@
 import React from 'react';
 import AceEditor from 'react-ace';
-// eslint-disable-next-line no-unused-vars
+/* eslint-disable no-unused-vars */
 import brace from 'brace/mode/java';
-// eslint-disable-next-line no-unused-vars
 import brace0 from 'brace/theme/eclipse';
-
+/* eslint-enable no-unused-vars */
 
 const Editor = () => (
   <div>

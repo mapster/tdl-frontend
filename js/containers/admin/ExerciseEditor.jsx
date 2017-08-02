@@ -7,6 +7,7 @@ import {compose} from 'redux';
 import {SELECTORS} from '../../reducers';
 import * as Action from '../../actions/admin/exerciseEditor';
 import ExercisePropertyEditor from '../../components/admin/ExercisePropertyEditor';
+import SourcesManager from '../../components/admin/SourcesManager';
 
 // var SourcesManager = require('./SourcesManager.react');
 
@@ -72,11 +73,8 @@ const tabTitle = (text, unsaved) => {
   return text;
 };
 
-const ExerciseEditor = ({currentTab, isChanged, properties, feedback, selectTab, exerciseUpdate, saveExercise}) => (
+const ExerciseEditor = ({currentTab, isChanged, properties, feedback, sourceFiles, currentSourceFile, selectTab, exerciseUpdate, saveExercise, selectSourceFile}) => (
   <Row>
-    <Row>
-      <Col lg={3}><Button><Glyphicon glyph='arrow-left'/> Back</Button></Col>
-    </Row>
     <Row>
       <Tab.Container id='tabs' activeKey={currentTab} onSelect={selectTab}>
         <Row className="clearfix">
@@ -98,7 +96,7 @@ const ExerciseEditor = ({currentTab, isChanged, properties, feedback, selectTab,
                 />
               </Tab.Pane>
               <Tab.Pane eventKey='sources'>
-                <div>heisannn</div>
+                <SourcesManager currentFile={currentSourceFile} files={sourceFiles} selectSourceFile={selectSourceFile}/>
               </Tab.Pane>
             </Tab.Content>
           </Col>
@@ -112,9 +110,12 @@ ExerciseEditor.propTypes = {
   isChanged: PropTypes.bool.isRequired,
   properties: PropTypes.object.isRequired,
   feedback: PropTypes.object.isRequired,
+  sourceFiles: PropTypes.array.isRequired,
+  currentSourceFile: PropTypes.object,
   selectTab: PropTypes.func.isRequired,
   exerciseUpdate: PropTypes.func.isRequired,
   saveExercise: PropTypes.func.isRequired,
+  selectSourceFile: PropTypes.func.isRequired,
 };
 
 export default compose(
@@ -124,10 +125,13 @@ connect(state => (
   isChanged: SELECTORS.exerciseEditor.isCurrentExerciseChanged(state),
   properties: SELECTORS.exerciseEditor.getCurrentExerciseProperties(state),
   feedback: SELECTORS.exerciseEditor.getCurrentExerciseFeedback(state),
+  sourceFiles: SELECTORS.exerciseEditor.getCurrentExerciseSourceFiles(state),
+  currentSourceFile: SELECTORS.exerciseEditor.getCurrentSourceFile(state),
 }),{
   selectTab: Action.selectTab,
   exerciseUpdate: Action.exerciseUpdate,
   saveExercise: Action.saveExercise,
+  selectSourceFile: Action.selectSourceFile,
 }
 )
 )(ExerciseEditor);

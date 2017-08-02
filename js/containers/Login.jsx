@@ -18,7 +18,7 @@ Login.propTypes = {
 
 export default compose(
   connect(
-    state => ({}),
+    () => ({}),
     {
       doLogin: SessionAction.login,
     }

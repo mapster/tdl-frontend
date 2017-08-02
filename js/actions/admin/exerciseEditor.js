@@ -35,3 +35,20 @@ export function saveExercise(exercise = {}) {
     data: exercise,
   };
 }
+
+export function exerciseSourceFilesUpdate(exerciseId, sourceFiles) {
+  return {
+    type: type.EXERCISE_EDITOR_SOURCE_FILES_UPDATE,
+    data: {
+      exerciseId,
+      sourceFiles
+    },
+  };
+}
+
+export function selectSourceFile(sourceFileId) {
+  return {
+    type: type.EXERCISE_EDITOR_SET_CURRENT_FILE,
+    data: {sourceFileId},
+  }
+}

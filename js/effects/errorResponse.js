@@ -1,6 +1,6 @@
 import {put} from 'redux-saga/effects';
 
-export default function handleErrorResponse(status, data) {
+export default function handleErrorResponse(status) {
   switch (status) {
     case 401: return put(Notification.error('Not logged in'));
     case 403: return put(Notification.error('Forbidden'));
