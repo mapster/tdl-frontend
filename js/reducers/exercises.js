@@ -1,14 +1,16 @@
 import * as type from '../constants/actionTypes';
+import createReducer from './createReducer';
 
 const initialState = {};
 
-export const getExercises = (state) => state.exercises;
+const exercisesUpdate = (state, {data: exercises}) => exercises;
 
-export default function reducer(state = initialState, action) {
-  switch (action.type) {
-    case type.EXERCISES_UPDATE:
-      return action.data;
-    default:
-      return state;
-  }
-}
+const reducers = {
+  [type.EXERCISES_UPDATE]: exercisesUpdate,
+};
+
+export const SELECTORS = {
+  getExercises: (state) => state.exercises,
+};
+
+export default createReducer(initialState, reducers);

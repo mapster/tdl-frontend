@@ -16,10 +16,6 @@ const initialState = {
   redirectFrom: {pathname: ROUTE.home},
 };
 
-export const getSession = (state) => state.session.user;
-export const getAuth = (state) => state.session.auth;
-export const getRedirectFrom = (state) => state.session.redirectFrom;
-
 const sessionUpdate = (state, action) => ({
   ...state,
   user: action.data,
@@ -45,5 +41,11 @@ const reducers = {
   [type.SESSION_AUTH_UPDATE]: authUpdate,
   [type.SESSION_REDIRECT_TO_LOGIN]: redirectToLogin,
 };
+
+export const SELECTORS = {
+ getSession: (state) => state.session.user,
+ getAuth: (state) => state.session.auth,
+ getRedirectFrom: (state) => state.session.redirectFrom,
+}
 
 export default createReducer(initialState, reducers);

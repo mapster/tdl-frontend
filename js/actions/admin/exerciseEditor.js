@@ -7,43 +7,46 @@ export function selectTab(key) {
   };
 }
 
-export function exerciseUpdate(exercise, isChanged = false) {
+export function exercisePropertiesUpdate(exercise) {
   return {
-    type: type.EXERCISE_EDITOR_UPDATE,
+    type: type.EXERCISE_EDITOR_PROPERTIES_UPDATE,
     data: exercise,
-    isChanged,
   };
 }
 
-export function setCurrentExercise(id) {
+export function exercisePropertiesUpdateFromServer(exercise) {
   return {
-    type: type.EXERCISE_EDITOR_SET_CURRENT,
-    data: {id},
-  };
+    type: type.EXERCISE_EDITOR_PROPERTIES_UPDATE_FROM_SERVER,
+    data: exercise,
+  }
 }
 
-export function setCurrentExerciseFeedback(feedback) {
+export function setExerciseFeedback(feedback) {
   return {
-    type: type.EXERCISE_EDITOR_SET_CURRENT_FEEDBACK,
+    type: type.EXERCISE_EDITOR_SET_PROPERTIES_FEEDBACK,
     data: feedback,
   };
 }
 
 export function saveExercise(exercise = {}) {
   return {
-    type: type.EXERCISE_EDITOR_SAVE,
+    type: type.EXERCISE_EDITOR_SAVE_PROPERTIES,
     data: exercise,
   };
 }
 
-export function exerciseSourceFilesUpdate(exerciseId, sourceFiles) {
+export function exerciseSourceFilesUpdateFromServer(exerciseId, sourceFiles) {
   return {
-    type: type.EXERCISE_EDITOR_SOURCE_FILES_UPDATE,
-    data: {
-      exerciseId,
-      sourceFiles
-    },
+    type: type.EXERCISE_EDITOR_SOURCE_FILES_UPDATE_FROM_SERVER,
+    data: sourceFiles,
   };
+}
+
+export function sourceFileUpdate(data) {
+  return {
+    type: type.EXERCISE_EDITOR_SOURCE_FILE_UPDATE,
+    data: data,
+  }
 }
 
 export function selectSourceFile(sourceFileId) {

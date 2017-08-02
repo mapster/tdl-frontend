@@ -8,7 +8,7 @@ import * as Api from '../../api/exercises';
 import {SELECTORS} from '../../reducers';
 import handleErrorResponse from '../errorResponse';
 
-const ADMIN_EXERCISE_EDIT = {
+const ADMIN_EXERCISE_EDIT_PATH = {
   path: ROUTE.admin_exercises_edit,
   exact: true,
   strict: false,
@@ -17,7 +17,7 @@ const ADMIN_EXERCISE_EDIT = {
 function* getExercise(id) {
   try {
     const {data: exercise} = yield call(Api.getExercise, id);
-    yield put(Action.exerciseUpdate(exercise));
+    yield put(Action.exercisePropertiesUpdateFromServer(exercise));
   } catch (e) {
     handleErrorResponse(e.response.status);
   }
@@ -26,7 +26,7 @@ function* getExercise(id) {
 function* getExerciseSourceFiles(id) {
   try {
     const {data: files} = yield call(Api.getExerciseSourceFiles, id);
-    yield put(Action.exerciseSourceFilesUpdate(id, files));
+    yield put(Action.exerciseSourceFilesUpdateFromServer(id, files));
   } catch (e) {
     const {data, status} = e.response;
     handleErrorResponse(status, data);
@@ -34,13 +34,12 @@ function* getExerciseSourceFiles(id) {
 }
 
 function* navigateToExerciseEditor({payload: {location: {pathname}}}) {
-  const path = matchPath(pathname, ADMIN_EXERCISE_EDIT);
+  const path = matchPath(pathname, ADMIN_EXERCISE_EDIT_PATH);
   if (path) {
     const id = path.params.id;
-    yield put(Action.setCurrentExercise(id));
     // Check if the exercise should be fetched from API, i.e. we don't have it yet or if it has noChanges (to make sure we have a fresh copy)
-    const currentExerciseState = yield select(SELECTORS.exerciseEditor.getCurrentExercise);
-    if (!currentExerciseState || !currentExerciseState.isChanged) {
+    const isChanged = yield select(SELECTORS.exerciseEditor.isExercisePropertiesChanged);
+    if (!isChanged) {
       yield fork(getExercise, id);
     }
     yield fork(getExerciseSourceFiles, id);
@@ -50,11 +49,11 @@ function* navigateToExerciseEditor({payload: {location: {pathname}}}) {
 function* saveExercise({data: exercise}) {
   try {
     const response = yield call(Api.putExercise, exercise);
-    yield put(Action.exerciseUpdate(response.data));
+    yield put(Action.exercisePropertiesUpdateFromServer(response.data));
   } catch (e) {
     const {data, status} = e.response;
     if (status === 400) {
-      yield put(Action.setCurrentExerciseFeedback(data));
+      yield put(Action.setExerciseFeedback(data));
     } else {
       yield handleErrorResponse(status, data);
     }
@@ -63,5 +62,5 @@ function* saveExercise({data: exercise}) {
 
 export default function* exerciseEditorSaga() {
   yield takeEvery([type.LOCATION_CHANGE, type.INIT], navigateToExerciseEditor);
-  yield takeLatest(type.EXERCISE_EDITOR_SAVE, saveExercise);
+  yield takeLatest(type.EXERCISE_EDITOR_SAVE_PROPERTIES, saveExercise);
 }

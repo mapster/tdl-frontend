@@ -80,7 +80,15 @@ _saveRename: function (name) {
 
 const tabTitle = (file) => file.data.name + (file.isChanged ? '*' : '');
 
-const SourcesManager = ({files, currentFile, readOnly = false, selectSourceFile}) => {
+const SourcesManager = ({files, currentFile, readOnly = false, selectSourceFile, sourceFileUpdate}) => {
+  const onFileContentsChange = (contents) => {
+    if (!readOnly) {
+      sourceFileUpdate({
+        ...currentFile.data,
+        contents,
+      });
+    }
+  };
   return (
     <Row>
       <Col lg={10}>
@@ -92,11 +100,10 @@ const SourcesManager = ({files, currentFile, readOnly = false, selectSourceFile}
           ))}
           {currentFile && (
             <AceEditor
-              readOnly={readOnly || currentFile.readOnly}
+              readOnly={readOnly}
               name={'ace-editor-' + currentFile.id}
               value={currentFile.data.contents}
-              onChange={() => {
-              }}
+              onChange={onFileContentsChange}
               mode='java'
               theme="github"
               width='100%'
@@ -122,6 +129,7 @@ SourcesManager.propTypes = {
   currentFile: PropTypes.object,
   readOnly: PropTypes.bool,
   selectSourceFile: PropTypes.func.isRequired,
+  sourceFileUpdate: PropTypes.func.isRequired,
 };
 
 export default SourcesManager;

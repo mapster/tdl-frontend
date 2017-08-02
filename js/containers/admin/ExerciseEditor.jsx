@@ -73,7 +73,7 @@ const tabTitle = (text, unsaved) => {
   return text;
 };
 
-const ExerciseEditor = ({currentTab, isChanged, properties, feedback, sourceFiles, currentSourceFile, selectTab, exerciseUpdate, saveExercise, selectSourceFile}) => (
+const ExerciseEditor = ({currentTab, isChanged, properties, feedback, sourceFiles, currentSourceFile, selectTab, exerciseUpdate, saveExercise, selectSourceFile, sourceFileUpdate}) => (
   <Row>
     <Row>
       <Tab.Container id='tabs' activeKey={currentTab} onSelect={selectTab}>
@@ -81,7 +81,7 @@ const ExerciseEditor = ({currentTab, isChanged, properties, feedback, sourceFile
           <Col sm={4}>
             <Nav bsStyle="pills" stacked>
               <NavItem eventKey="properties">{tabTitle('Properties', isChanged)}</NavItem>
-              <NavItem eventKey="sources">{tabTitle('Sources', true)}</NavItem>
+              <NavItem eventKey="sources">{tabTitle('Sources', sourceFiles.some(file => file.isChanged))}</NavItem>
             </Nav>
           </Col>
           <Col sm={8}>
@@ -96,7 +96,10 @@ const ExerciseEditor = ({currentTab, isChanged, properties, feedback, sourceFile
                 />
               </Tab.Pane>
               <Tab.Pane eventKey='sources'>
-                <SourcesManager currentFile={currentSourceFile} files={sourceFiles} selectSourceFile={selectSourceFile}/>
+                <SourcesManager currentFile={currentSourceFile}
+                                files={sourceFiles}
+                                selectSourceFile={selectSourceFile}
+                                sourceFileUpdate={sourceFileUpdate}/>
               </Tab.Pane>
             </Tab.Content>
           </Col>
@@ -116,22 +119,24 @@ ExerciseEditor.propTypes = {
   exerciseUpdate: PropTypes.func.isRequired,
   saveExercise: PropTypes.func.isRequired,
   selectSourceFile: PropTypes.func.isRequired,
+  sourceFileUpdate: PropTypes.func.isRequired,
 };
 
 export default compose(
-connect(state => (
-{
-  currentTab: SELECTORS.exerciseEditor.getCurrentTab(state),
-  isChanged: SELECTORS.exerciseEditor.isCurrentExerciseChanged(state),
-  properties: SELECTORS.exerciseEditor.getCurrentExerciseProperties(state),
-  feedback: SELECTORS.exerciseEditor.getCurrentExerciseFeedback(state),
-  sourceFiles: SELECTORS.exerciseEditor.getCurrentExerciseSourceFiles(state),
-  currentSourceFile: SELECTORS.exerciseEditor.getCurrentSourceFile(state),
-}),{
-  selectTab: Action.selectTab,
-  exerciseUpdate: Action.exerciseUpdate,
-  saveExercise: Action.saveExercise,
-  selectSourceFile: Action.selectSourceFile,
-}
-)
+  connect(state => (
+      {
+        currentTab: SELECTORS.exerciseEditor.getCurrentTab(state),
+        isChanged: SELECTORS.exerciseEditor.isExercisePropertiesChanged(state),
+        properties: SELECTORS.exerciseEditor.getExerciseProperties(state),
+        feedback: SELECTORS.exerciseEditor.getExercisePropertiesFeedback(state),
+        sourceFiles: SELECTORS.exerciseEditor.getSourceFiles(state),
+        currentSourceFile: SELECTORS.exerciseEditor.getCurrentSourceFile(state),
+      }), {
+      selectTab: Action.selectTab,
+      exerciseUpdate: Action.exercisePropertiesUpdate,
+      saveExercise: Action.saveExercise,
+      selectSourceFile: Action.selectSourceFile,
+      sourceFileUpdate: Action.sourceFileUpdate,
+    }
+  )
 )(ExerciseEditor);

@@ -9,4 +9,6 @@ const reducers = {
   [type.NOTIFICATION]: addNotification,
 };
 
+export const SELECTORS = {};
+
 export default createReducer(initialState, reducers);

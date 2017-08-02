@@ -13,7 +13,7 @@ export function getExercise(id) {
 
 export function putExercise(exercise) {
 // eslint-disable-next-line no-unused-vars
-  const {id, ...payload} = exercise;
+  const {id, created_at, updated_at, ...payload} = exercise;
   return axios.put(EXERCISES_RESOURCE_URL + '/' + exercise.id, payload);
 }
 
