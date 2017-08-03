@@ -10,7 +10,7 @@ const TDL_EDITOR_PATH = TDL_PATH + '/editor';
 const ADMIN_PATH = '/admin';
 const ADMIN_EXERCISES_PATH = ADMIN_PATH + '/exercises';
 const ADMIN_EXERCISES_EDIT_PATH = ADMIN_EXERCISES_PATH + '/:id';
-const ADMIN_USERS_PATH = admin + '/users';
+const ADMIN_USERS_PATH = ADMIN_PATH + '/users';
 
 const resolveParams = (path, params = {}) => {
   return Object.keys(params).reduce(

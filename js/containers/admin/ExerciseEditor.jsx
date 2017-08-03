@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {Button, Col, Glyphicon, Nav, NavItem, Row, Tab, Tabs} from 'react-bootstrap';
+import {Col, Nav, NavItem, Row, Tab} from 'react-bootstrap';
 import {connect} from 'react-redux';
 import {compose} from 'redux';
 

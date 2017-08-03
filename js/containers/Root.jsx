@@ -9,11 +9,8 @@ import UserApp from './UserApp';
 import AdminApp from './admin/AdminApp';
 import NotFound from '../components/NotFound';
 import Login from './Login';
+import Notifications from './Notifications';
 
-// TODO: fix the remaining connectToStore
-// mixins: [
-//   ConnectToStore('confirmation', ConfirmationStore, (store) => store.getState()),
-// ],
 // TODO: fix confirmation modal
 /*
   <ConfirmationModal
@@ -25,13 +22,6 @@ import Login from './Login';
 
 // TODO: add notification view
 
-//   <Row>
-//   <Col lg={12}>
-//  {this.props.children}
-// </Col>
-//  </Row>
-
-//<Route path="exercises" component={ExerciseManager}/>
 const Root = ({store, history}) => {
   return (
     <Provider store={store}>
@@ -46,6 +36,7 @@ const Root = ({store, history}) => {
             </Route>
             <Route component={NotFound}/>
           </Switch>
+          <Notifications/>
         </div>
       </ConnectedRouter>
     </Provider>

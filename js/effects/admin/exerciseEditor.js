@@ -1,6 +1,6 @@
 import * as ROUTE from '../../routes';
 import {matchPath} from 'react-router-dom';
-import {put, call, takeLatest, takeEvery, select, fork} from 'redux-saga/effects';
+import {put, call, takeLatest, takeEvery, select} from 'redux-saga/effects';
 
 import * as type from '../../constants/actionTypes';
 import * as Action from '../../actions/admin/exerciseEditor';
@@ -8,13 +8,22 @@ import * as Notification from '../../actions/notification';
 import * as Api from '../../api/exercises';
 import {SELECTORS} from '../../reducers';
 import handleErrorResponse from '../errorResponse';
+import {push} from 'connected-react-router';
 
 function* getExercise(id) {
   try {
     const {data: exercise} = yield call(Api.getExercise, id);
     yield put(Action.exercisePropertiesUpdateFromServer(exercise));
+    return true;
   } catch (e) {
-    handleErrorResponse(e.response.status);
+    const {status, data} = e.response;
+    if (status === 404) {
+      yield put(Notification.error('No such exercise: ' + id));
+      return false;
+    } else {
+      handleErrorResponse(status, data);
+      return false
+    }
   }
 }
 
@@ -22,9 +31,16 @@ function* getExerciseSourceFiles(id) {
   try {
     const {data: files} = yield call(Api.getExerciseSourceFiles, id);
     yield put(Action.exerciseSourceFilesUpdateFromServer(id, files));
+    return true;
   } catch (e) {
-    const {data, status} = e.response;
-    handleErrorResponse(status, data);
+    const {status, data} = e.response;
+    if (status === 404) {
+      yield put(Notification.error('No such exercise: ' + id));
+      return false;
+    } else {
+      handleErrorResponse(status, data);
+      return false;
+    }
   }
 }
 
@@ -39,11 +55,18 @@ function* navigateToExerciseEditor({payload: {location: {pathname}}}) {
   if (path) {
     const id = path.params.id;
     // Check if the exercise should be fetched from API
-    const isSafeToUpdate = yield select(SELECTORS.exerciseEditor.isSafeToUpdateExercise);
-    if (isSafeToUpdate) {
-      yield fork(getExercise, id);
+    const isNotChangedAndNotNew = yield select(SELECTORS.exerciseEditor.isNotChangedAndNotNew);
+    if (isNotChangedAndNotNew) {
+      const success = yield call(getExercise, id);
+      if (!success) {
+        yield put(push(ROUTE.admin_exercises()));
+        return;
+      }
     }
-    yield fork(getExerciseSourceFiles, id);
+    const success = yield call(getExerciseSourceFiles, id);
+    if (!success) {
+      yield put(push(ROUTE.admin_exercises()));
+    }
   }
 }
 

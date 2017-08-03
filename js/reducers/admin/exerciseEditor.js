@@ -44,7 +44,7 @@ const setFeedback = (state, {data: feedback}) => ({
 
 const newFile = (data, isChanged = false, isNew = false) => ({
   id: data.id,
-  data,
+  data: {contents: '', ...data},
   isChanged,
   isNew,
 });
@@ -137,7 +137,10 @@ const updateRenameCurrentFile = (state, {data}) => ({
 
 const okRenameCurrentFile = (state) => {
   const index = state.sourceFiles.findIndex(file => file.id === state.currentSourceFileId);
-  const sourceFiles = reduceExistingSourceFile(state.sourceFiles, {...state.sourceFiles[index].data, name: state.renameCurrentFile.value}, true, false, index);
+  const sourceFiles = reduceExistingSourceFile(state.sourceFiles, {
+    ...state.sourceFiles[index].data,
+    name: state.renameCurrentFile.value
+  }, true, false, index);
   return {
     ...state,
     sourceFiles,
@@ -174,7 +177,7 @@ export const SELECTORS = {
   getExerciseProperties: (state) => state.exerciseEditor.exercise,
   isExercisePropertiesChanged: (state) => state.exerciseEditor.isChanged,
   isExerciseNew: (state) => state.exerciseEditor.isNew,
-  isSafeToUpdateExercise: ({exerciseEditor: {isChanged, isNew}}) => !isChanged || isNew,
+  isNotChangedAndNotNew: ({exerciseEditor: {isChanged, isNew}}) => !isChanged && !isNew,
   getExercisePropertiesFeedback: (state) => state.exerciseEditor.feedback,
   getSourceFiles: getSourceFiles,
   getCurrentSourceFile: (state) => getSourceFiles(state).find(file => file.id === state.exerciseEditor.currentSourceFileId) || getSourceFiles(state)[0],

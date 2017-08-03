@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {Accordion, Button, Label, Panel} from 'react-bootstrap';
+import {Accordion, Button, Panel} from 'react-bootstrap';
 
 // var TestCase = React.createClass({
 //   render: function() {

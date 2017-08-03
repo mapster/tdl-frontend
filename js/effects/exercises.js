@@ -4,13 +4,15 @@ import * as Api from '../api/exercises';
 import * as Action from '../actions/exercises';
 import * as ROUTE from '../routes';
 import {matchPath} from 'react-router-dom';
+import handleErrorResponse from './errorResponse';
 
 function* getExercises() {
   try {
     const exercises = yield call(Api.getExercises);
     yield put(Action.exercisesUpdate(exercises.data));
   } catch (e) {
-    // TODO: Handle errors
+    const {status, data} = e.response;
+    yield handleErrorResponse(status, data);
   }
 }
 

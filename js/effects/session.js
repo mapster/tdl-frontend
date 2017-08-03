@@ -69,7 +69,7 @@ function* sessionUpdate({data: session}) {
 }
 
 function* redirectToLogin() {
-  yield put(push(ROUTE.login));
+  yield put(push(ROUTE.login()));
 }
 
 // TODO: the store had a refreshSession trigger for UserConstants.SAVE_USER

@@ -1,24 +1,24 @@
 @import url("../../node_modules/bootstrap/dist/css/bootstrap.css");
-
 @import url("pages/app.css");
 @import url("pages/stopwatch.css");
 @import url("components/admin/sources-manager.css");
 @import url("components/timer.css");
 @import url("components/exercise.css");
 @import url("components/edit-user-modal.css");
+@import url("notification.css");
 
 /*@import url("bs-grid-highlight.css");*/
 
 .right {
-  text-align: right;
+    text-align: right;
 }
 
 .vcenter {
-  display: inline-block;
-  vertical-align: middle;
-  float: none;
+    display: inline-block;
+    vertical-align: middle;
+    float: none;
 }
 
 .inline {
-  display: inline;
+    display: inline;
 }
