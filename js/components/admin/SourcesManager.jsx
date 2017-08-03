@@ -34,6 +34,7 @@ const SourcesManager = ({
       });
     }
   });
+
   if (files.length === 0) {
     if (createNewFile) {
       return (<Button onClick={createNewFile}>New file</Button>);
@@ -41,6 +42,9 @@ const SourcesManager = ({
     else {
       return false;
     }
+  }
+  if (!currentFile) {
+    return false;
   }
   return (
     <Row>

@@ -14,6 +14,28 @@ const initialState = {
   renameCurrentFile: {show: false, value: ''},
 };
 
+function findSourceFileIndex(sourceFiles, id) {
+  return sourceFiles.findIndex(file => file.id === id);
+}
+
+
+function getNewCurrentSourceFileId(sourceFiles, index) {
+  if (sourceFiles.length === 1) {
+    return null;
+  } else if (index === sourceFiles.length-1) {
+    return sourceFiles[index-1].id;
+  } else {
+    return sourceFiles[index+1].id;
+  }
+}
+
+const newFile = (data, isChanged = false, isNew = false) => ({
+  id: data.id,
+  data: {contents: '', ...data},
+  isChanged,
+  isNew,
+});
+
 const changeTab = (state, {data: {key}}) => ({
   ...state,
   currentTab: key,
@@ -42,13 +64,6 @@ const setFeedback = (state, {data: feedback}) => ({
   feedback
 });
 
-const newFile = (data, isChanged = false, isNew = false) => ({
-  id: data.id,
-  data: {contents: '', ...data},
-  isChanged,
-  isNew,
-});
-
 const sourceFilesUpdateFromServer = (state, {data: sourceFiles}) => {
   const keepFiles = state.sourceFiles.filter(file => file.isChanged && !file.isDelete);
   const fileUpdates = Object.keys(sourceFiles)
@@ -70,7 +85,7 @@ const sourceFilesUpdateFromServer = (state, {data: sourceFiles}) => {
 
 const reduceExistingSourceFile = (sourceFiles, data, isChanged, isDelete, index = -1) => {
   if (index < 0) {
-    index = sourceFiles.findIndex(file => file.id === data.id);
+    index = findSourceFileIndex(sourceFiles, data.id);
   }
   const reducedSourceFiles = [...sourceFiles];
   reducedSourceFiles[index] = {
@@ -83,7 +98,7 @@ const reduceExistingSourceFile = (sourceFiles, data, isChanged, isDelete, index 
 };
 
 const sourceFileUpdate = (state, {data}) => {
-  const index = state.sourceFiles.findIndex(file => file.id === data.id);
+  const index = findSourceFileIndex(state.sourceFiles, data.id);
   const sourceFiles = reduceExistingSourceFile(state.sourceFiles, data, true, false, index);
   return {
     ...state,
@@ -92,7 +107,7 @@ const sourceFileUpdate = (state, {data}) => {
 };
 
 const sourceFileUpdateFromServer = (state, {data}) => {
-  const index = state.sourceFiles.findIndex(file => file.id === data.id);
+  const index = findSourceFileIndex(state.sourceFiles, data.id);
   let sourceFiles = [];
   if (index >= 0) {
     sourceFiles = reduceExistingSourceFile(state.sourceFiles, data, false, false, index);
@@ -118,15 +133,19 @@ const createNewSourceFile = (state) => {
 };
 
 const deleteSourceFile = (state, {data: sourceFile}) => {
+  const index = findSourceFileIndex(state.sourceFiles, sourceFile.id);
+  const newCurrentSourceFileId = getNewCurrentSourceFileId(state.sourceFiles, index);
   if (sourceFile.isNew) {
     return {
       ...state,
       sourceFiles: state.sourceFiles.filter(file => file.id !== sourceFile.id),
+      currentSourceFileId: newCurrentSourceFileId,
     };
   }
   return {
     ...state,
     sourceFiles: reduceExistingSourceFile(state.sourceFiles, sourceFile.data, sourceFile.isChanged, true),
+    currentSourceFileId: newCurrentSourceFileId,
   };
 };
 
@@ -136,7 +155,7 @@ const updateRenameCurrentFile = (state, {data}) => ({
 });
 
 const okRenameCurrentFile = (state) => {
-  const index = state.sourceFiles.findIndex(file => file.id === state.currentSourceFileId);
+  const index = findSourceFileIndex(state.sourceFiles, state.currentSourceFileId);
   const sourceFiles = reduceExistingSourceFile(state.sourceFiles, {
     ...state.sourceFiles[index].data,
     name: state.renameCurrentFile.value
@@ -180,7 +199,7 @@ export const SELECTORS = {
   isNotChangedAndNotNew: ({exerciseEditor: {isChanged, isNew}}) => !isChanged && !isNew,
   getExercisePropertiesFeedback: (state) => state.exerciseEditor.feedback,
   getSourceFiles: getSourceFiles,
-  getCurrentSourceFile: (state) => getSourceFiles(state).find(file => file.id === state.exerciseEditor.currentSourceFileId) || getSourceFiles(state)[0],
+  getCurrentSourceFile: (state) => getSourceFiles(state).find(file => file.id === state.exerciseEditor.currentSourceFileId),
   getRenameCurrentFile: (state) => state.exerciseEditor.renameCurrentFile,
 };
 

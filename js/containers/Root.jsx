@@ -10,17 +10,8 @@ import AdminApp from './admin/AdminApp';
 import NotFound from '../components/NotFound';
 import Login from './Login';
 import Notifications from './Notifications';
-
-// TODO: fix confirmation modal
-/*
-  <ConfirmationModal
-  {...this.state.confirmation}
-  doCancel={ConfirmationActions.cancel}
-  doOk={() => ConfirmationActions.confirm(this.state.confirmation)}
-  />
-*/
-
-// TODO: add notification view
+import ConfirmationModal from '../components/ConfirmationModal';
+import Confirmation from './Confirmation';
 
 const Root = ({store, history}) => {
   return (
@@ -37,6 +28,7 @@ const Root = ({store, history}) => {
             <Route component={NotFound}/>
           </Switch>
           <Notifications/>
+          <Confirmation/>
         </div>
       </ConnectedRouter>
     </Provider>

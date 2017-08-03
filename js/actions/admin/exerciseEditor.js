@@ -1,4 +1,5 @@
 import * as type from '../../constants/actionTypes';
+import * as Confirmation from '../confirmation';
 
 export const createNewExercise = () => ({type: type.EXERCISE_EDITOR_NEW});
 
@@ -78,10 +79,20 @@ export function createNewSourceFile() {
   };
 }
 
-export const deleteSourceFile = (sourceFile) => ({
-  type: type.EXERCISE_EDITOR_SOURCE_FILE_DELETE,
-  data: sourceFile,
-});
+export const deleteSourceFile = (sourceFile, confirm = false) => {
+  const action = {
+    type: type.EXERCISE_EDITOR_SOURCE_FILE_DELETE,
+    data: sourceFile,
+  };
+  if (confirm) {
+    const description = {
+      title: 'Delete source file?',
+      text: 'Delete file: "' + sourceFile.data.name + '"?',
+    };
+    return Confirmation.request(description, action);
+  }
+  return action;
+};
 
 export const updateRenameCurrentFile = (show = false, value) => ({
   type: type.EXERCISE_EDITOR_RENAME_CURRENT_FILE_UPDATE,

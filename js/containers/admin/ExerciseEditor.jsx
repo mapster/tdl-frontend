@@ -39,13 +39,13 @@ const ExerciseEditor = ({
     <Row>
       <Tab.Container id='tabs' activeKey={currentTab} onSelect={selectTab}>
         <Row className="clearfix">
-          <Col lg={4}>
+          <Col lg={2}>
             <Nav bsStyle="pills" stacked>
               <NavItem eventKey="properties">{tabTitle('Properties', isChanged)}</NavItem>
               <NavItem eventKey="sources">{tabTitle('Sources', sourceFiles.some(file => file.isChanged))}</NavItem>
             </Nav>
           </Col>
-          <Col lg={8}>
+          <Col lg={10}>
             <Tab.Content>
               <Tab.Pane eventKey='properties'>
                 <ExercisePropertyEditor
@@ -64,7 +64,7 @@ const ExerciseEditor = ({
                                 sourceFileUpdate={sourceFileUpdate}
                                 createNewFile={createNewSourceFile}
                                 saveSourceFile={saveSourceFile}
-                                deleteSourceFile={deleteSourceFile}
+                                deleteSourceFile={sourceFile => deleteSourceFile(sourceFile, true)}
                                 updateRenameCurrentFile={updateRenameCurrentFile}
                                 okRenameCurrentFile={okRenameCurrentFile}/>
               </Tab.Pane>
