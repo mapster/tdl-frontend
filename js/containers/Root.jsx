@@ -38,11 +38,11 @@ const Root = ({store, history}) => {
       <ConnectedRouter history={history}>
         <div className='container'>
           <Switch>
-            <Route path={ROUTE.admin} component={AdminApp}/>
-            <Route path={ROUTE.tdl} component={UserApp}/>
-            <Route path={ROUTE.login} component={Login}/>
-            <Route path={ROUTE.home} exact={true}>
-              <Redirect to={ROUTE.tdl_exercises}/>
+            <Route path={ROUTE.admin()} component={AdminApp}/>
+            <Route path={ROUTE.tdl()} component={UserApp}/>
+            <Route path={ROUTE.login()} component={Login}/>
+            <Route path={ROUTE.home()} exact={true}>
+              <Redirect to={ROUTE.tdl_exercises()}/>
             </Route>
             <Route component={NotFound}/>
           </Switch>

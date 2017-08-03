@@ -52,18 +52,13 @@ function* getAuth() {
   }
 }
 
-const LOGIN_PATH = {
-  path: ROUTE.login,
-  exact: true,
-  strict: false,
-};
 function* sessionUpdate({data: session}) {
   if (session && session.name) {
     yield fork(getAuth);
 
     // redirect if current location is ROUTE.login
     const currentLocation = yield select(SELECTORS.router.getLocation);
-    if (matchPath(currentLocation.pathname, LOGIN_PATH)) {
+    if (matchPath(currentLocation.pathname, ROUTE.login.matcher)) {
       const redirectFrom = yield select(SELECTORS.session.getRedirectFrom);
       yield put(push(redirectFrom.pathname));
     }

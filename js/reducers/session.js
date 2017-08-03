@@ -4,16 +4,10 @@ import * as type from '../constants/actionTypes';
 import createReducer from './createReducer';
 import * as ROUTE from '../routes';
 
-const LOGIN_PATH = {
-  path: ROUTE.login,
-  exact: true,
-  strict: false,
-};
-
 const initialState = {
   user: null,
   auth: null,
-  redirectFrom: {pathname: ROUTE.home},
+  redirectFrom: {pathname: ROUTE.home()},
 };
 
 const sessionUpdate = (state, action) => ({
@@ -27,7 +21,7 @@ const authUpdate = (state, action) => ({
 });
 
 const redirectToLogin = (state, {data: from}) => {
-  if (matchPath(from.pathname, LOGIN_PATH)) {
+  if (matchPath(from.pathname, ROUTE.login.matcher)) {
     from = initialState.redirectFrom;
   }
   return {

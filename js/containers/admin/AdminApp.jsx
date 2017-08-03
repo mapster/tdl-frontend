@@ -11,7 +11,7 @@ import ExerciseManager from './ExerciseManager';
 import {Route} from 'react-router-dom';
 
 const authorizedMenuItems = {
-  'manage_exercises': {href: ROUTE.admin_exercises, text: 'Exercises'},
+  'manage_exercises': {href: ROUTE.admin_exercises(), text: 'Exercises'},
   'manage_users': {href: ROUTE.admin_users, text: 'Users'},
 };
 
@@ -35,7 +35,7 @@ const AdminApp = ({auth}) => (
       </Row>
       <Row>
         <Col lg={12}>
-          <Route path={ROUTE.admin_exercises} component={ExerciseManager} />
+          <Route path={ROUTE.admin_exercises()} component={ExerciseManager} />
         </Col>
       </Row>
     </Grid>

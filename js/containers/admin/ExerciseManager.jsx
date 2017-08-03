@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {Button, Col, Glyphicon, Row} from 'react-bootstrap';
+import {Col, Row} from 'react-bootstrap';
 import {compose} from 'redux';
 import {connect} from 'react-redux';
 import {Route, Switch} from 'react-router-dom';
@@ -22,13 +22,12 @@ const ExerciseManager = ({auth, exercises, deleteExercise, editExercise, createN
     <Row>
       <Col lg={12}>
         <Switch>
-          <Route path={ROUTE.admin_exercises_edit} component={ExerciseEditor}/>
-          <Route path={ROUTE.admin_exercises} render={props => (
+          <Route path={ROUTE.admin_exercises_edit()} component={ExerciseEditor}/>
+          <Route path={ROUTE.admin_exercises()} render={props => (
             <ExerciseList {...props}
                           deleteExercise={deleteExercise}
                           editExercise={editExercise}
-                          createNewExercise={() => {
-                          }}
+                          createNewExercise={createNewExercise}
                           exercises={exercises}/>)
           }/>
         </Switch>

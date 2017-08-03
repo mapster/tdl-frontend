@@ -10,11 +10,9 @@ export function deleteExercise(id) {
 }
 
 export function editExercise(id) {
-  return push(ROUTE.admin_exercises + '/' + id);
+  return push(ROUTE.admin_exercises_edit({id}));
 }
 
 export function createNewExercise() {
-  return {
-    type: type.EXERCISE_MANAGER_NEW,
-  }
+  return push(ROUTE.admin_exercises_edit_new())
 }

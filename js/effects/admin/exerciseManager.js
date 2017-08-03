@@ -4,14 +4,8 @@ import * as ExercisesAction from '../../actions/exercises';
 import * as ROUTE from '../../routes';
 import {matchPath} from 'react-router-dom';
 
-const ADMIN_EXERCISES_PATH = {
-  path: ROUTE.admin_exercises,
-  exact: true,
-  strict: false,
-};
-
 function* navigateToExerciseManager({payload: {location: {pathname}}}) {
-  if (matchPath(pathname, ADMIN_EXERCISES_PATH)) {
+  if (matchPath(pathname, ROUTE.admin_exercises())) {
     yield put(ExercisesAction.getExercises());
   }
 }

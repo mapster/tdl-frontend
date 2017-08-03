@@ -15,7 +15,7 @@ const LoggedInNavigation = ({show = true, userName = '', isAdmin = false, doLogo
     return (
       <Nav pullRight>
         <NavDropdown title={userName || ''} id="session-nav">
-          {isAdmin && <MenuItem onClick={() => navigateTo(ROUTE.admin)}>Admin</MenuItem>}
+          {isAdmin && <MenuItem onClick={() => navigateTo(ROUTE.admin())}>Admin</MenuItem>}
           <MenuItem onSelect={doLogout}>Logout</MenuItem>
         </NavDropdown>
       </Nav>
@@ -43,7 +43,7 @@ const Header = ({auth, menu = [], session = false, title = '', doLogout, navigat
       <Row>
         <Col lg={12}>
           <Navbar>
-            <Navbar.Brand><Link to={ROUTE.tdl}>{title}</Link></Navbar.Brand>
+            <Navbar.Brand><Link to={ROUTE.tdl()}>{title}</Link></Navbar.Brand>
             <Nav>
               {menu.map(function(item, index) {
                 return <NavItem key={index} onClick={() => navigateTo(item.href)}>{item.text}</NavItem>;

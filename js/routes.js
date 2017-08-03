@@ -1,13 +1,41 @@
-export const login = '/login';
-export const home = '/';
+const LOGIN_PATH = '/login';
+const HOME_PATH = '/';
 
 // User
-export const tdl = '/tdl';
-export const tdl_exercises = tdl + '/exercises';
-export const tdl_editor = tdl + '/editor';
+const TDL_PATH = '/tdl';
+const TDL_EXERCISES_PATH = TDL_PATH + '/exercises';
+const TDL_EDITOR_PATH = TDL_PATH + '/editor';
 
 // Admin
-export const admin = '/admin';
-export const admin_exercises = admin + '/exercises';
-export const admin_exercises_edit = admin_exercises + '/:id';
-export const admin_users = admin + '/users';
+const ADMIN_PATH = '/admin';
+const ADMIN_EXERCISES_PATH = ADMIN_PATH + '/exercises';
+const ADMIN_EXERCISES_EDIT_PATH = ADMIN_EXERCISES_PATH + '/:id';
+const ADMIN_USERS_PATH = admin + '/users';
+
+const resolveParams = (path, params = {}) => {
+  return Object.keys(params).reduce(
+    (reduced, param) => reduced.replace(':' + param, params[param]),
+    path
+  );
+};
+const exactMatcher = (path) => ({ path, exact: true, strict: false });
+const exactRoute = (path) => {
+  const route = (params) => resolveParams(path, params);
+  route.matcher = exactMatcher(path);
+  return route;
+};
+
+// App
+export const login = exactRoute(LOGIN_PATH);
+export const home = exactRoute(HOME_PATH);
+
+// User
+export const tdl = exactRoute(TDL_PATH);
+export const tdl_exercises = exactRoute(TDL_EXERCISES_PATH);
+export const tdl_editor = exactRoute(TDL_EDITOR_PATH);
+
+// Admin
+export const admin = exactRoute(ADMIN_PATH);
+export const admin_exercises = exactRoute(ADMIN_EXERCISES_PATH);
+export const admin_exercises_edit = exactRoute(ADMIN_EXERCISES_EDIT_PATH);
+export const admin_users = exactRoute(ADMIN_USERS_PATH);

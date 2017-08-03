@@ -9,12 +9,6 @@ import * as Api from '../../api/exercises';
 import {SELECTORS} from '../../reducers';
 import handleErrorResponse from '../errorResponse';
 
-const ADMIN_EXERCISE_EDIT_PATH = {
-  path: ROUTE.admin_exercises_edit,
-  exact: true,
-  strict: false,
-};
-
 function* getExercise(id) {
   try {
     const {data: exercise} = yield call(Api.getExercise, id);
@@ -35,7 +29,7 @@ function* getExerciseSourceFiles(id) {
 }
 
 function* navigateToExerciseEditor({payload: {location: {pathname}}}) {
-  const path = matchPath(pathname, ADMIN_EXERCISE_EDIT_PATH);
+  const path = matchPath(pathname, ROUTE.admin_exercises_edit.matcher);
   if (path) {
     const id = path.params.id;
     // Check if the exercise should be fetched from API, i.e. we don't have it yet or if it has noChanges (to make sure we have a fresh copy)

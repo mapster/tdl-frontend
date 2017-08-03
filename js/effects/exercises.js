@@ -14,14 +14,8 @@ function* getExercises() {
   }
 }
 
-const TDL_EXERCISES_PATH = {
-  path: ROUTE.tdl_exercises,
-  exact: true,
-  strict: false,
-};
-
 function* navigateToExercises({payload: {location: {pathname}}}) {
-  if (matchPath(pathname, TDL_EXERCISES_PATH)) {
+  if (matchPath(pathname, ROUTE.tdl_exercises.matcher)) {
     yield put(Action.getExercises());
   }
 }
