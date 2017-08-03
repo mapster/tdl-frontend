@@ -8,6 +8,7 @@ const initialState = {
   sourceFiles: [],
   feedback: {},
   isChanged: false,
+  isNew: false,
   currentTab: 'properties',
   currentSourceFileId: null,
   renameCurrentFile: {show: false, value: ''},
@@ -144,6 +145,12 @@ const okRenameCurrentFile = (state) => {
   };
 };
 
+const newExercise = () => ({
+  ...initialState,
+  isNew: true,
+  isChanged: true,
+});
+
 const reducers = {
   [type.EXERCISE_EDITOR_CHANGE_TAB]: changeTab,
   [type.EXERCISE_EDITOR_SET_CURRENT_FILE]: setCurrentSourceFile,
@@ -157,6 +164,7 @@ const reducers = {
   [type.EXERCISE_EDITOR_SOURCE_FILE_DELETE]: deleteSourceFile,
   [type.EXERCISE_EDITOR_RENAME_CURRENT_FILE_UPDATE]: updateRenameCurrentFile,
   [type.EXERCISE_EDITOR_RENAME_CURRENT_FILE_OK]: okRenameCurrentFile,
+  [type.EXERCISE_EDITOR_NEW]: newExercise,
 };
 
 const getSourceFiles = (state) => state.exerciseEditor.sourceFiles;
@@ -165,6 +173,8 @@ export const SELECTORS = {
   getCurrentTab: (state) => state.exerciseEditor.currentTab,
   getExerciseProperties: (state) => state.exerciseEditor.exercise,
   isExercisePropertiesChanged: (state) => state.exerciseEditor.isChanged,
+  isExerciseNew: (state) => state.exerciseEditor.isNew,
+  isSafeToUpdateExercise: ({exerciseEditor: {isChanged, isNew}}) => !isChanged || isNew,
   getExercisePropertiesFeedback: (state) => state.exerciseEditor.feedback,
   getSourceFiles: getSourceFiles,
   getCurrentSourceFile: (state) => getSourceFiles(state).find(file => file.id === state.exerciseEditor.currentSourceFileId) || getSourceFiles(state)[0],

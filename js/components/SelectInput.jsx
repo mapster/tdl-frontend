@@ -4,10 +4,10 @@ import {ControlLabel, FormControl, FormGroup, HelpBlock} from 'react-bootstrap';
 
 const validationStyle = (feedback) => feedback ? 'error' : null;
 
-const SelectInput = ({id, label, feedback, options, ...props}) => (
+const SelectInput = ({id, label, feedback, options, onChange, ...props}) => (
   <FormGroup controlId={id} validationState={validationStyle(feedback)}>
     <ControlLabel>{label}</ControlLabel>
-    <FormControl componentClass="select" {...props}>
+    <FormControl componentClass="select" onChange={event => onChange(event.target.value)} {...props}>
       {options.map(option => <option key={option.value} value={option.value}>{option.label}</option>)}
     </FormControl>
     {feedback && <HelpBlock>{feedback}</HelpBlock>}
@@ -18,6 +18,7 @@ SelectInput.propTypes = {
   label: PropTypes.node.isRequired,
   feedback: PropTypes.string.isRequired,
   options: PropTypes.arrayOf(PropTypes.object).isRequired,
+  onChange: PropTypes.func.isRequired,
 };
 
 export default SelectInput

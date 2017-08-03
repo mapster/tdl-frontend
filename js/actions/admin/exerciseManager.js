@@ -4,7 +4,7 @@ import * as ROUTE from '../../routes';
 
 export function deleteExercise(id) {
   return {
-    type: type.EXERCISE_MANAGER_DELETE,
+    type: type.EXERCISE_MANAGER_DELETE_EXERCISE,
     data: { id },
   }
 }

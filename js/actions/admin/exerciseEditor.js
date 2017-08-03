@@ -1,5 +1,7 @@
 import * as type from '../../constants/actionTypes';
 
+export const createNewExercise = () => ({type: type.EXERCISE_EDITOR_NEW});
+
 export function selectTab(key) {
   return {
     type: type.EXERCISE_EDITOR_CHANGE_TAB,

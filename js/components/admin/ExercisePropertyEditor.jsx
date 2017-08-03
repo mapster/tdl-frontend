@@ -7,6 +7,7 @@ import TextInput from '../TextInput';
 import SelectInput from '../SelectInput';
 
 const KIND_OPTIONS = [
+  {value: null, label: ''},
   {value: 'expectation', label: 'Expectation'},
   {value: 'error', label: 'Error'},
   {value: 'implementation', label: 'Implementation'},

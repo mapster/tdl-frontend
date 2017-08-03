@@ -38,4 +38,6 @@ export const tdl_editor = exactRoute(TDL_EDITOR_PATH);
 export const admin = exactRoute(ADMIN_PATH);
 export const admin_exercises = exactRoute(ADMIN_EXERCISES_PATH);
 export const admin_exercises_edit = exactRoute(ADMIN_EXERCISES_EDIT_PATH);
+export const admin_exercises_edit_new = () => admin_exercises_edit({id: 'new'});
+admin_exercises_edit_new.matcher = exactMatcher(admin_exercises_edit_new());
 export const admin_users = exactRoute(ADMIN_USERS_PATH);

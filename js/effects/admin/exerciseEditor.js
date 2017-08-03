@@ -29,12 +29,18 @@ function* getExerciseSourceFiles(id) {
 }
 
 function* navigateToExerciseEditor({payload: {location: {pathname}}}) {
+  // skip if the location is to new exercise
+  if (matchPath(pathname, ROUTE.admin_exercises_edit_new.matcher)) {
+    yield put(Action.createNewExercise());
+    return;
+  }
+
   const path = matchPath(pathname, ROUTE.admin_exercises_edit.matcher);
   if (path) {
     const id = path.params.id;
-    // Check if the exercise should be fetched from API, i.e. we don't have it yet or if it has noChanges (to make sure we have a fresh copy)
-    const isChanged = yield select(SELECTORS.exerciseEditor.isExercisePropertiesChanged);
-    if (!isChanged) {
+    // Check if the exercise should be fetched from API
+    const isSafeToUpdate = yield select(SELECTORS.exerciseEditor.isSafeToUpdateExercise);
+    if (isSafeToUpdate) {
       yield fork(getExercise, id);
     }
     yield fork(getExerciseSourceFiles, id);
@@ -43,7 +49,9 @@ function* navigateToExerciseEditor({payload: {location: {pathname}}}) {
 
 function* saveExercise({data: exercise}) {
   try {
-    const response = yield call(Api.putExercise, exercise);
+    const isNew = yield select(SELECTORS.exerciseEditor.isExerciseNew);
+    const request = isNew ? Api.postExercise : Api.putExercise;
+    const response = yield call(request, exercise);
     yield put(Action.exercisePropertiesUpdateFromServer(response.data));
   } catch (e) {
     const {data, status} = e.response;

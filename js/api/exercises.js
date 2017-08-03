@@ -3,6 +3,8 @@ import {Host} from '../appconfig';
 
 const EXERCISES_RESOURCE_URL = Host + '/exercises';
 
+const onlyModifiableExerciseFields = ({name, kind, difficulty, description }) => ({name, kind, difficulty, description});
+
 export function getExercises() {
   return axios.get(EXERCISES_RESOURCE_URL);
 }
@@ -11,15 +13,25 @@ export function getExercise(id) {
   return axios.get(EXERCISES_RESOURCE_URL + '/' + id);
 }
 
-export function putExercise(exercise) {
-// eslint-disable-next-line no-unused-vars
-  const {id, created_at, updated_at, ...payload} = exercise;
-  return axios.put(EXERCISES_RESOURCE_URL + '/' + exercise.id, payload);
+export function postExercise(exercise) {
+  return axios.post(EXERCISES_RESOURCE_URL, onlyModifiableExerciseFields(exercise));
 }
+
+export function putExercise(exercise) {
+  return axios.put(EXERCISES_RESOURCE_URL + '/' + exercise.id, onlyModifiableExerciseFields(exercise));
+}
+export function deleteExercise(id) {
+  return axios.delete(EXERCISES_RESOURCE_URL + '/' + id);
+}
+
+// source_file sub-resource
+//
+//
 
 export function getExerciseSourceFiles(id) {
   return axios.get(EXERCISES_RESOURCE_URL + '/' + id + '/source_files');
 }
+
 
 const onlyModifiableSourceFileFields = ({name, contents}) => ({name, contents});
 
