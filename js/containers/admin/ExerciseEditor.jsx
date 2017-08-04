@@ -7,7 +7,7 @@ import {compose} from 'redux';
 import {SELECTORS} from '../../reducers';
 import * as Action from '../../actions/admin/exerciseEditor';
 import ExercisePropertyEditor from '../../components/admin/ExercisePropertyEditor';
-import SourcesManager from '../../components/admin/SourcesManager';
+import SourcesManager from '../../components/SourcesManager';
 
 const tabTitle = (text, unsaved) => {
   if (unsaved) {
@@ -23,7 +23,6 @@ const ExerciseEditor = ({
                           feedback,
                           sourceFiles,
                           currentSourceFile,
-                          renameCurrentFile,
                           selectTab,
                           exerciseUpdate,
                           saveExercise,
@@ -32,8 +31,6 @@ const ExerciseEditor = ({
                           createNewSourceFile,
                           saveSourceFile,
                           deleteSourceFile,
-                          updateRenameCurrentFile,
-                          okRenameCurrentFile,
                         }) => (
   <Row>
     <Row>
@@ -59,14 +56,11 @@ const ExerciseEditor = ({
               <Tab.Pane eventKey='sources'>
                 <SourcesManager currentFile={currentSourceFile}
                                 files={sourceFiles}
-                                renameCurrentFile={renameCurrentFile}
                                 selectSourceFile={selectSourceFile}
                                 sourceFileUpdate={sourceFileUpdate}
                                 createNewFile={createNewSourceFile}
                                 saveSourceFile={saveSourceFile}
-                                deleteSourceFile={sourceFile => deleteSourceFile(sourceFile, true)}
-                                updateRenameCurrentFile={updateRenameCurrentFile}
-                                okRenameCurrentFile={okRenameCurrentFile}/>
+                                deleteSourceFile={sourceFile => deleteSourceFile(sourceFile, true)}/>
               </Tab.Pane>
             </Tab.Content>
           </Col>
@@ -82,7 +76,6 @@ ExerciseEditor.propTypes = {
   feedback: PropTypes.object.isRequired,
   sourceFiles: PropTypes.array.isRequired,
   currentSourceFile: PropTypes.object,
-  renameCurrentFile: PropTypes.object.isRequired,
   selectTab: PropTypes.func.isRequired,
   exerciseUpdate: PropTypes.func.isRequired,
   saveExercise: PropTypes.func.isRequired,
@@ -91,8 +84,6 @@ ExerciseEditor.propTypes = {
   createNewSourceFile: PropTypes.func.isRequired,
   saveSourceFile: PropTypes.func.isRequired,
   deleteSourceFile: PropTypes.func.isRequired,
-  updateRenameCurrentFile: PropTypes.func,
-  okRenameCurrentFile: PropTypes.func,
 };
 
 export default compose(
@@ -104,7 +95,6 @@ export default compose(
         feedback: SELECTORS.exerciseEditor.getExercisePropertiesFeedback(state),
         sourceFiles: SELECTORS.exerciseEditor.getSourceFiles(state),
         currentSourceFile: SELECTORS.exerciseEditor.getCurrentSourceFile(state),
-        renameCurrentFile: SELECTORS.exerciseEditor.getRenameCurrentFile(state),
       }), {
       selectTab: Action.selectTab,
       exerciseUpdate: Action.exercisePropertiesUpdate,
@@ -114,8 +104,6 @@ export default compose(
       createNewSourceFile: Action.createNewSourceFile,
       saveSourceFile: Action.saveSourceFile,
       deleteSourceFile: Action.deleteSourceFile,
-      updateRenameCurrentFile: Action.updateRenameCurrentFile,
-      okRenameCurrentFile: Action.okRenameCurrentFile,
     }
   )
 )(ExerciseEditor);

@@ -1,5 +1,5 @@
 import * as type from '../constants/actionTypes';
-import createReducer from './createReducer';
+import createReducer from './lib/createReducer';
 
 const initialState = [];
 

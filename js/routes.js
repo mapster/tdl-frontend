@@ -4,6 +4,7 @@ const HOME_PATH = '/';
 // User
 const TDL_PATH = '/tdl';
 const TDL_EXERCISES_PATH = TDL_PATH + '/exercises';
+const TDL_EXERCISES_SOLVE_PATH = TDL_EXERCISES_PATH + '/:exerciseId';
 const TDL_EDITOR_PATH = TDL_PATH + '/editor';
 
 // Admin
@@ -12,7 +13,7 @@ const ADMIN_EXERCISES_PATH = ADMIN_PATH + '/exercises';
 const ADMIN_EXERCISES_EDIT_PATH = ADMIN_EXERCISES_PATH + '/:id';
 const ADMIN_USERS_PATH = ADMIN_PATH + '/users';
 
-const resolveParams = (path, params = {}) => {
+export const resolveParams = (path, params = {}) => {
   return Object.keys(params).reduce(
     (reduced, param) => reduced.replace(':' + param, params[param]),
     path
@@ -32,6 +33,7 @@ export const home = exactRoute(HOME_PATH);
 // User
 export const tdl = exactRoute(TDL_PATH);
 export const tdl_exercises = exactRoute(TDL_EXERCISES_PATH);
+export const tdl_exercises_solve = exactRoute(TDL_EXERCISES_SOLVE_PATH);
 export const tdl_editor = exactRoute(TDL_EDITOR_PATH);
 
 // Admin

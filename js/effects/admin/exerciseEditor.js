@@ -30,7 +30,7 @@ function* getExercise(id) {
 function* getExerciseSourceFiles(id) {
   try {
     const {data: files} = yield call(Api.getExerciseSourceFiles, id);
-    yield put(Action.exerciseSourceFilesUpdateFromServer(id, files));
+    yield put(Action.exerciseSourceFilesUpdateFromServer(files));
     return true;
   } catch (e) {
     const {status, data} = e.response;
@@ -91,7 +91,9 @@ function* saveSourceFile({data: sourceFile}) {
     const {id: exerciseId} = yield select(SELECTORS.exerciseEditor.getExerciseProperties);
     const request = sourceFile.isNew ? Api.postSourceFile : Api.putSourceFile;
     const {data: savedFile} = yield call(request, exerciseId, sourceFile.data);
-    yield put(Action.deleteSourceFile(sourceFile));
+    if (sourceFile.isNew) {
+      yield put(Action.deleteSourceFile(sourceFile));
+    }
     yield put(Action.sourceFileUpdateFromServer(savedFile));
     yield put(Action.selectSourceFile(savedFile.id));
   } catch (e) {

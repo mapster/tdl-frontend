@@ -5,6 +5,12 @@ import {connect} from 'react-redux';
 
 import {SELECTORS} from '../reducers';
 import ExerciseListItem from '../components/ExerciseListItem';
+import {Route, Switch} from 'react-router-dom';
+import ExerciseList from '../components/ExerciseList';
+import * as ROUTE from '../routes';
+import SolutionEditor from './SolutionEditor';
+import NotFound from '../components/NotFound';
+import * as Action from '../actions/exercises';
 // var Exercise = require('../components/Exercise.react');
 
 // var Actions = require('../actions/SolutionActions');
@@ -36,24 +42,27 @@ import ExerciseListItem from '../components/ExerciseListItem';
  */
 // Actions.editExercise(exercises[exID])
 
-const Exercises = ({exercises}) => {
+const Exercises = ({exercises, goToSolution}) => {
   return (
-    <div>
-      <h1>Exercises</h1>
-      {Object.keys(exercises).map((exID) => (
-        <ExerciseListItem key={exID} exercise={exercises[exID]} doEditExercise={() => {}}/>
-      ))}
-    </div>
+    <Switch>
+      <Route path={ROUTE.tdl_exercises()} exact render={props => (
+        <ExerciseList {...props} exercises={exercises} deleteExercise={() => {}} editExercise={goToSolution} createNewExercise={() => {}}/>
+      )}/>
+      <Route path={ROUTE.tdl_exercises_solve()} component={SolutionEditor}/>
+      <Route component={NotFound} />
+    </Switch>
   );
 };
 
 Exercises.propTypes = {
   exercises: PropTypes.object.isRequired,
+  goToSolution: PropTypes.func.isRequired,
 };
 
 export default compose(
   connect(state => ({
     exercises: SELECTORS.exercises.getExercises(state),
   }), {
+    goToSolution: Action.goToSolution,
   })
 )(Exercises);

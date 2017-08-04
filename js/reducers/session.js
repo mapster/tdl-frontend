@@ -1,7 +1,7 @@
 import {matchPath} from 'react-router-dom';
 
 import * as type from '../constants/actionTypes';
-import createReducer from './createReducer';
+import createReducer from './lib/createReducer';
 import * as ROUTE from '../routes';
 
 const initialState = {

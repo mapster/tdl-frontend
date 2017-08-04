@@ -10,7 +10,6 @@ import AdminApp from './admin/AdminApp';
 import NotFound from '../components/NotFound';
 import Login from './Login';
 import Notifications from './Notifications';
-import ConfirmationModal from '../components/ConfirmationModal';
 import Confirmation from './Confirmation';
 
 const Root = ({store, history}) => {

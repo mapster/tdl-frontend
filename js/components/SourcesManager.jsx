@@ -9,31 +9,40 @@ import brace012 from 'brace/ext/language_tools';
 /* eslint-enable no-unused-vars */
 
 import {Button, ButtonGroup, Col, Nav, NavItem, Row} from 'react-bootstrap';
-import SingleFieldModal from '../SingleFieldModal';
+import SingleFieldModal from './SingleFieldModal';
 
 const tabTitle = (file) => file.data.name + (file.isChanged ? '*' : '');
 
 const SourcesManager = ({
                           files,
-                          currentFile,
+                          currentFile = {data: {}},
                           readOnly = false,
-                          renameCurrentFile,
                           selectSourceFile,
                           sourceFileUpdate,
                           createNewFile,
                           deleteSourceFile,
                           saveSourceFile,
-                          updateRenameCurrentFile,
-                          okRenameCurrentFile,
                         }) => {
-  const onFileContentsChange = sourceFileUpdate && ((contents) => {
+  const onFileChange = sourceFileUpdate && ((field, value) => {
     if (!readOnly) {
       sourceFileUpdate({
         ...currentFile.data,
-        contents,
+        [field]: value,
       });
     }
   });
+
+  const openRenameModal = () => onFileChange('rename', currentFile.data.name);
+  const closeRename = () => onFileChange('rename', null);
+  const confirmRename = () => {
+    if (!readOnly) {
+      sourceFileUpdate({
+        ...currentFile.data,
+        name: currentFile.data.rename,
+        rename: null,
+      })
+    }
+  };
 
   if (files.length === 0) {
     if (createNewFile) {
@@ -42,9 +51,6 @@ const SourcesManager = ({
     else {
       return false;
     }
-  }
-  if (!currentFile) {
-    return false;
   }
   return (
     <Row>
@@ -55,12 +61,12 @@ const SourcesManager = ({
               {tabTitle(file)}
             </NavItem>
           ))}
-          {currentFile && (
+          {currentFile.data && (
             <AceEditor
               readOnly={readOnly}
               name={'ace-editor-' + currentFile.id}
               value={currentFile.data.contents}
-              onChange={onFileContentsChange}
+              onChange={(value) => onFileChange('contents', value)}
               mode='java'
               theme="github"
               width='100%'
@@ -73,20 +79,21 @@ const SourcesManager = ({
       <Col lg={2}>
         <ButtonGroup vertical>
           {createNewFile && (<Button onClick={createNewFile}>New file</Button>)}
-          {updateRenameCurrentFile && (<Button onClick={() => updateRenameCurrentFile(true, currentFile.data.name)}>Rename</Button>)}
+          {onFileChange && (<Button onClick={openRenameModal}>Rename</Button>)}
           {saveSourceFile && (<Button onClick={() => saveSourceFile(currentFile)}>Save</Button>)}
           {deleteSourceFile && (<Button onClick={() => deleteSourceFile(currentFile)}>Delete</Button>)}
         </ButtonGroup>
       </Col>
       }
+      {currentFile.data.rename &&
       <SingleFieldModal
-        doCancel={() => updateRenameCurrentFile(false)}
-        doOk={okRenameCurrentFile}
-        doUpdate={(value) => updateRenameCurrentFile(true, value)}
+        doCancel={closeRename}
+        doOk={confirmRename}
+        doUpdate={(value) => onFileChange('rename', value)}
         label={currentFile.data.name + ' => '}
-        show={renameCurrentFile.show}
+        show={!!currentFile.data.rename}
         title='Rename'
-        value={renameCurrentFile.value}/>
+        value={currentFile.data.rename}/>}
     </Row>
   );
 };
@@ -95,14 +102,11 @@ SourcesManager.propTypes = {
   files: PropTypes.array.isRequired,
   currentFile: PropTypes.object,
   readOnly: PropTypes.bool,
-  renameCurrentFile: PropTypes.object.isRequired,
   selectSourceFile: PropTypes.func.isRequired,
   sourceFileUpdate: PropTypes.func,
   createNewFile: PropTypes.func,
   deleteSourceFile: PropTypes.func,
   saveSourceFile: PropTypes.func,
-  updateRenameCurrentFile: PropTypes.func,
-  okRenameCurrentFile: PropTypes.func,
 };
 
 export default SourcesManager;

@@ -5,6 +5,7 @@ import session, {SELECTORS as sessionSelectors} from './session';
 import exerciseEditor, {SELECTORS as exerciseEditorSelectors} from './admin/exerciseEditor';
 import notifications, {SELECTORS as notificationSelectors} from './notifications';
 import confirmation, {SELECTORS as confirmationSelectors} from './confirmation';
+import solutionEditor, {SELECTORS as solutionEditorSelectors} from './solutionEditor';
 
 const getLocation = (state) => state.router.location;
 
@@ -14,6 +15,7 @@ export const SELECTORS = {
   exerciseEditor: exerciseEditorSelectors,
   notifications: notificationSelectors,
   confirmation: confirmationSelectors,
+  solutionEditor: solutionEditorSelectors,
   router: {getLocation},
 };
 
@@ -22,5 +24,6 @@ export default combineReducers({
   exercises,
   exerciseEditor,
   notifications,
-  confirmation
+  confirmation,
+  solutionEditor,
 });

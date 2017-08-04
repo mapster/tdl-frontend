@@ -38,7 +38,7 @@ export function saveExercise(exercise = {}) {
   };
 }
 
-export function exerciseSourceFilesUpdateFromServer(exerciseId, sourceFiles) {
+export function exerciseSourceFilesUpdateFromServer(sourceFiles) {
   return {
     type: type.EXERCISE_EDITOR_SOURCE_FILES_UPDATE_FROM_SERVER,
     data: sourceFiles,
@@ -93,9 +93,3 @@ export const deleteSourceFile = (sourceFile, confirm = false) => {
   }
   return action;
 };
-
-export const updateRenameCurrentFile = (show = false, value) => ({
-  type: type.EXERCISE_EDITOR_RENAME_CURRENT_FILE_UPDATE,
-  data: {show, value},
-});
-export const okRenameCurrentFile = () => ({type: type.EXERCISE_EDITOR_RENAME_CURRENT_FILE_OK});
