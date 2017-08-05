@@ -7,8 +7,8 @@ export const selectTab = (key) => ({
 });
 
 export const selectExerciseFile = (sourceFileId) => ({
-    type: type.SOLUTION_EDITOR_SET_CURRENT_EXERCISE_FILE,
-    data: {sourceFileId},
+  type: type.SOLUTION_EDITOR_SET_CURRENT_EXERCISE_FILE,
+  data: {sourceFileId},
 });
 
 export const selectSolutionFile = (sourceFileId) => ({
@@ -36,20 +36,21 @@ export const solutionFileUpdateFromServer = (sourceFile) => ({
   data: sourceFile,
 });
 
-export const solutionFileUpdate = (data) => ({
-    type: type.SOLUTION_EDITOR_SOLUTION_FILE_UPDATE,
-    data: data,
+export const solutionFileUpdate = (data, isChanged = true) => ({
+  type: type.SOLUTION_EDITOR_SOLUTION_FILE_UPDATE,
+  data: data,
+  isChanged,
 });
 
 export function saveSolutionFile(sourceFile) {
   return {
     type: type.SOLUTION_EDITOR_SOLUTION_FILE_SAVE,
     data: sourceFile,
-  }
+  };
 }
 
 export const createNewSolutionFile = () => ({
-    type: type.SOLUTION_EDITOR_SOLUTION_FILE_NEW,
+  type: type.SOLUTION_EDITOR_SOLUTION_FILE_NEW,
 });
 
 

@@ -32,15 +32,22 @@ const SourcesManager = ({
     }
   });
 
-  const openRenameModal = () => onFileChange('rename', currentFile.data.name);
-  const closeRename = () => onFileChange('rename', null);
+  const onRenameChange = (value, isChanged = true) => {
+    if (!readOnly) {
+      sourceFileUpdate({...currentFile.data, rename: value}, isChanged);
+    }
+  };
+  const openRenameModal = () => onRenameChange(currentFile.data.name, false);
+  const closeRename = () => onRenameChange(null, false);
   const confirmRename = () => {
     if (!readOnly) {
       sourceFileUpdate({
-        ...currentFile.data,
-        name: currentFile.data.rename,
-        rename: null,
-      })
+          ...currentFile.data,
+          name: currentFile.data.rename,
+          rename: null,
+        },
+        currentFile.data.name !== currentFile.data.rename
+      );
     }
   };
 
@@ -89,7 +96,7 @@ const SourcesManager = ({
       <SingleFieldModal
         doCancel={closeRename}
         doOk={confirmRename}
-        doUpdate={(value) => onFileChange('rename', value)}
+        doUpdate={onRenameChange}
         label={currentFile.data.name + ' => '}
         show={!!currentFile.data.rename}
         title='Rename'

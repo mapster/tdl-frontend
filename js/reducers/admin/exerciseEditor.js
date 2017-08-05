@@ -52,9 +52,11 @@ const sourceFilesUpdateFromServer = (state, {data: sourceFiles}) => {
   };
 };
 
-const sourceFileUpdate = (state, {data}) => {
+const sourceFileUpdate = (state, {data, isChanged}) => {
   const index = SourceFile.findSourceFileIndex(state.sourceFiles, data.id);
-  const sourceFiles = SourceFile.reduceExistingSourceFile(state.sourceFiles, data, true, false, index);
+  // If the incoming update is an update or the file already is changed
+  const actuallyChanged = state.sourceFiles[index].isChanged || isChanged;
+  const sourceFiles = SourceFile.reduceExistingSourceFile(state.sourceFiles, data, actuallyChanged, false, index);
   return {
     ...state,
     sourceFiles,

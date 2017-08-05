@@ -45,10 +45,11 @@ export function exerciseSourceFilesUpdateFromServer(sourceFiles) {
   };
 }
 
-export function sourceFileUpdate(data) {
+export function sourceFileUpdate(data, isChanged) {
   return {
     type: type.EXERCISE_EDITOR_SOURCE_FILE_UPDATE,
     data: data,
+    isChanged,
   }
 }
 
