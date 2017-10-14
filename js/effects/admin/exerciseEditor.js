@@ -55,8 +55,9 @@ function* navigateToExerciseEditor({payload: {location: {pathname}}}) {
   if (path) {
     const id = path.params.id;
     // Check if the exercise should be fetched from API
-    const isNotChangedAndNotNew = yield select(SELECTORS.exerciseEditor.isNotChangedAndNotNew);
-    if (isNotChangedAndNotNew) {
+    const {id: currentId} = yield select(SELECTORS.exerciseEditor.getExerciseProperties);
+    const isNotChangedAndNotNew = yield select(SELECTORS.exerciseEditor.isNotChangedAndNotNew, id);
+    if (currentId !== id || isNotChangedAndNotNew) {
       const success = yield call(getExercise, id);
       if (!success) {
         yield put(push(ROUTE.admin_exercises()));

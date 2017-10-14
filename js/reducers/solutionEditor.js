@@ -8,15 +8,24 @@ const initialState = {
   solution: {},
   solutionFiles: [],
   exerciseFiles: [],
+  solveAttempts: [],
   currentTab: 'solution_sources',
   currentExerciseFileId: null,
   currentSolutionFileId: null,
 };
 
-const solutionUpdateFromServer = (state, {data: solution}) => ({
-  ...state,
-  solution,
-});
+const solutionUpdateFromServer = (state, {data: solution}) => {
+  if (state.solution.id !== solution.id) {
+    return {
+      ...initialState,
+      solution,
+    }
+  }
+  return {
+    ...state,
+    solution,
+  };
+};
 
 const changeTab = (state, {data: {key}}) => ({
   ...state,
@@ -42,7 +51,7 @@ const solutionSourceFilesUpdateFromServer = (state, {data: sourceFiles}) => {
   };
 };
 
-const solutionFileUpdateFromServer = (state, {data: sourceFile}) => {
+const solutionSourceFileUpdateFromServer = (state, {data: sourceFile}) => {
   const index = SourceFile.findSourceFileIndex(state.solutionFiles, sourceFile.id);
   let solutionFiles = [];
   if (index >= 0) {
@@ -74,11 +83,11 @@ const exerciseSourceFilesUpdateFromServer = (state, {data: sourceFiles}) => {
   return {
     ...state,
     exerciseFiles,
-    currentExerciseFileId: SourceFile.getNewCurrentSourceFileId(exerciseFiles, SourceFile.findSourceFileIndex(exerciseFiles, state.currentExerciseFileId)),
+    currentExerciseFileId: SourceFile.getValidSourceFileId(exerciseFiles, state.currentExerciseFileId),
   };
 };
 
-const createNewSourceFile = (state) => {
+const createNewSolutionFile = (state) => {
   const id = uuid();
   return {
     ...state,
@@ -107,6 +116,16 @@ const deleteSolutionFile = (state, {data: sourceFile}) => {
   };
 };
 
+const solveAttemptsUpdateFromServer = (state, {data: solveAttempts}) => ({
+  ...state,
+  solveAttempts,
+});
+
+const newSolveAttempt = (state, {data: solveAttempt}) => ({
+  ...state,
+  solveAttempts: [...state.solveAttempts.slice(-9), solveAttempt],
+});
+
 const reducers = {
   [type.SOLUTION_EDITOR_SOLUTION_UPDATE_FROM_SERVER]: solutionUpdateFromServer,
   [type.SOLUTION_EDITOR_CHANGE_TAB]: changeTab,
@@ -114,10 +133,12 @@ const reducers = {
   [type.SOLUTION_EDITOR_SET_CURRENT_SOLUTION_FILE]: setCurrentSolutionFile,
   [type.SOLUTION_EDITOR_SOLUTION_SOURCE_FILES_UPDATE_FROM_SERVER]: solutionSourceFilesUpdateFromServer,
   [type.SOLUTION_EDITOR_EXERCISE_SOURCE_FILES_UPDATE_FROM_SERVER]: exerciseSourceFilesUpdateFromServer,
-  [type.SOLUTION_EDITOR_SOLUTION_FILE_UPDATE_FROM_SERVER]: solutionFileUpdateFromServer,
-  [type.SOLUTION_EDITOR_SOLUTION_FILE_UPDATE]: solutionFileUpdate,
-  [type.SOLUTION_EDITOR_SOLUTION_FILE_NEW]: createNewSourceFile,
-  [type.SOLUTION_EDITOR_SOLUTION_FILE_DELETE]: deleteSolutionFile,
+  [type.SOLUTION_EDITOR_SOLUTION_SOURCE_FILE_UPDATE_FROM_SERVER]: solutionSourceFileUpdateFromServer,
+  [type.SOLUTION_EDITOR_SOLUTION_SOURCE_FILE_UPDATE]: solutionFileUpdate,
+  [type.SOLUTION_EDITOR_SOLUTION_SOURCE_FILE_NEW]: createNewSolutionFile,
+  [type.SOLUTION_EDITOR_SOLUTION_SOURCE_FILE_DELETE]: deleteSolutionFile,
+  [type.SOLUTION_EDITOR_SOLVE_ATTEMPTS_UPDATE_FROM_SERVER]: solveAttemptsUpdateFromServer,
+  [type.SOLUTION_EDITOR_SOLVE_ATTEMPT_NEW]: newSolveAttempt,
 };
 
 const getExerciseFiles = (state) => state.solutionEditor.exerciseFiles;
@@ -130,6 +151,8 @@ export const SELECTORS = {
   getCurrentSolutionFile: state => SourceFile.findSourceFile(getSolutionFiles(state), state.solutionEditor.currentSolutionFileId),
   getSolutionFiles: getSolutionFiles,
   getExerciseFiles: getExerciseFiles,
+  getSolutionSourceFiles: state => getSolutionFiles(state).map(file => file.data),
+  getSolveAttempts: state => state.solutionEditor.solveAttempts,
 };
 
 export default createReducer(initialState, reducers);

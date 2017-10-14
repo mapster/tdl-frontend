@@ -7,51 +7,19 @@ import {Button, Col, Glyphicon, Media, Nav, NavItem, Row, Tab, Tabs} from 'react
 import * as Action from '../actions/solutionEditor';
 import SourcesManager from '../components/SourcesManager';
 import {SELECTORS} from '../reducers';
+import SolveAttempts from '../components/SolveAttempts';
 // var FailureList = require('../components/FailureList.react');
 // var SolveAttempts = require('../components/SolveAttempts.react');
-// var SolutionConstants = require('../constants/SolutionEditor');
+
+      //
+      // <Row>
+      //   <Col lg={12}>
+      //     <FailureList attempt={lastAttempt}/>
+      //   </Col>
+      // </Row>
 
 
-// _tabTitle: function (text, unsaved) {
-//   if (unsaved) {
-//     text += '*';
-//   }
-//   return text;
-// }
-// ,
-// _anyUnsavedFiles: function () {
-//   var files = this.props.sourceFiles;
-//   return Object.keys(files).some((f) => files[f]['@unsaved']);
-// }
-/*
 
-      <Row>
-        <Col lg={3}><Button onClick={() => this.props.doClose(this.props.sourceFiles)}><Glyphicon glyph='arrow-left'/>
-          Back</Button></Col>
-        <Col lg={3}><Button
-          onClick={() => this.props.doTestSolution(this.props.properties.id, this.props.sourceFiles)}>Run
-          tests</Button></Col>
-      </Row>
-
-      <Row>
-        <Col lg={12}>
-          <FailureList attempt={lastAttempt}/>
-        </Col>
-      </Row>
-
-
-      <Row>
-        <Col lg={12}>
-          <Media>
-            <Media.Body>
-              <Media.Heading>Solve Attempts</Media.Heading>
-              <SolveAttempts attempts={solveAttempts}/>
-            </Media.Body>
-          </Media>
-        </Col>
-      </Row>
-    </div>
- */
 const tabTitle = (text, unsaved = false) => {
   if (unsaved) {
     text += '*';
@@ -65,6 +33,7 @@ const SolutionEditor = ({
                           currentSolutionFile,
                           solutionFiles,
                           exerciseFiles,
+                          solveAttempts,
 
                           selectTab,
                           selectExerciseFile,
@@ -73,12 +42,9 @@ const SolutionEditor = ({
                           deleteSolutionFile,
                           solutionFileUpdate,
                           saveSolutionFile,
-                        }) => {
-  // var exerciseId = this.props.properties.id;
-  // var exerciseSources = this.props.exercises[exerciseId].sourceFiles || {};
-  // var solveAttempts = this.props.solutions[exerciseId].solve_attempts || [];
-  // var lastAttempt = solveAttempts[solveAttempts.length - 1] || {};
-  return (
+                          createSolveAttempt,
+                        }) => (
+  <div>
     <Tab.Container id='tabs' activeKey={currentTab} onSelect={selectTab}>
       <Row className="clearfix">
         <Col lg={2}>
@@ -102,7 +68,7 @@ const SolutionEditor = ({
                 sourceFileUpdate={solutionFileUpdate}
               />
             </Tab.Pane>
-            <Tab.Pane eventKey='exercise_sources' title='Exercise sources'>
+            <Tab.Pane eventKey='exercise_sources'>
               <SourcesManager
                 files={exerciseFiles}
                 currentFile={currentExerciseFile}
@@ -114,15 +80,29 @@ const SolutionEditor = ({
         </Col>
       </Row>
     </Tab.Container>
-  );
-};
+    <Row>
+      <Col lg={11}>
+        <Media>
+          <Media.Body>
+            <Media.Heading>Solve Attempts</Media.Heading>
+            <SolveAttempts attempts={solveAttempts}/>
+          </Media.Body>
+        </Media>
+      </Col>
+      <Col lg={1}>
+        <Button bsStyle="success" onClick={createSolveAttempt}>Run</Button>
+      </Col>
+    </Row>
+  </div>
+);
+
 SolutionEditor.propTypes = {
-  // doTestSolution: PropTypes.func.isRequired,
   currentTab: PropTypes.string.isRequired,
   currentExerciseFile: PropTypes.object,
   currentSolutionFile: PropTypes.object,
   solutionFiles: PropTypes.array.isRequired,
   exerciseFiles: PropTypes.array.isRequired,
+  solveAttempts: PropTypes.array.isRequired,
 
   selectTab: PropTypes.func.isRequired,
   selectExerciseFile: PropTypes.func.isRequired,
@@ -131,6 +111,7 @@ SolutionEditor.propTypes = {
   deleteSolutionFile: PropTypes.func.isRequired,
   solutionFileUpdate: PropTypes.func.isRequired,
   saveSolutionFile: PropTypes.func.isRequired,
+  createSolveAttempt: PropTypes.func.isRequired,
 };
 
 export default compose(
@@ -141,6 +122,7 @@ export default compose(
       currentSolutionFile: SELECTORS.solutionEditor.getCurrentSolutionFile(state),
       solutionFiles: SELECTORS.solutionEditor.getSolutionFiles(state),
       exerciseFiles: SELECTORS.solutionEditor.getExerciseFiles(state),
+      solveAttempts: SELECTORS.solutionEditor.getSolveAttempts(state),
     }),
     {
       selectTab: Action.selectTab,
@@ -150,6 +132,7 @@ export default compose(
       deleteSolutionFile: Action.deleteSolutionFile,
       solutionFileUpdate: Action.solutionFileUpdate,
       saveSolutionFile: Action.saveSolutionFile,
+      createSolveAttempt: Action.createSolveAttempt,
     }
   )
 )(SolutionEditor);

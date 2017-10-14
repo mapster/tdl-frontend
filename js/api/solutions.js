@@ -6,6 +6,7 @@ const SOLUTIONS_PATH = Host + '/users/solutions';
 const SOLUTION_PATH = SOLUTIONS_PATH + '/:exerciseId';
 const SOURCE_FILES_PATH = SOLUTION_PATH + '/source_files';
 const SOURCE_FILE_PATH = SOURCE_FILES_PATH + '/:sourceFileId';
+const SOLVE_ATTEMPT_PATH = SOLUTION_PATH + '/solve_attempts';
 
 const onlyModifiableSourceFileFields = ({name, contents}) => ({name, contents});
 
@@ -22,3 +23,10 @@ export const putSolutionSourceFile = (exerciseId, sourceFile) => axios.put(
   resolveParams(SOURCE_FILE_PATH, {exerciseId, sourceFileId: sourceFile.id}),
   onlyModifiableSourceFileFields(sourceFile)
 );
+
+export const postSolutionSolveAttempt = (exerciseId, sourceFiles) => axios.post(
+  resolveParams(SOLVE_ATTEMPT_PATH, {exerciseId}),
+  {source_files: sourceFiles.map(onlyModifiableSourceFileFields)}
+);
+
+export const getSolutionSolveAttempts = (exerciseId) => axios.get(resolveParams(SOLVE_ATTEMPT_PATH, {exerciseId}));

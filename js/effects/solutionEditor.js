@@ -22,7 +22,7 @@ function* getSolution(id) {
       yield put(Notification.error('No such exercise: ' + id));
       return false;
     } else {
-      handleErrorResponse(status, data);
+      yield handleErrorResponse(status, data);
       return false
     }
   }
@@ -39,9 +39,21 @@ function* getSolutionSourceFiles(id) {
       yield put(Notification.error('Could not fetch solution source files: ' + id));
       return false;
     } else {
-      handleErrorResponse(status, data);
+      yield handleErrorResponse(status, data);
       return false;
     }
+  }
+}
+
+function* getSolveAttempts(id) {
+  try {
+    const {data: solveAttempts} = yield call(SolutionsApi.getSolutionSolveAttempts, id);
+    yield put(Action.solveAttemptsUpdateFromServer(solveAttempts));
+    return true;
+  } catch (e) {
+    const {status, data} = e.response;
+    yield handleErrorResponse(status, data);
+    return false;
   }
 }
 
@@ -82,6 +94,18 @@ function* saveSolutionFile({data: sourceFile}) {
   }
 }
 
+function* createSolveAttempt() {
+  const {exercise_id: exerciseId} = yield select(SELECTORS.solutionEditor.getSolution);
+  const solutionFiles = yield select(SELECTORS.solutionEditor.getSolutionSourceFiles);
+  try {
+    const {data: solveAttempt} = yield call(SolutionsApi.postSolutionSolveAttempt, exerciseId, solutionFiles);
+    yield put(Action.newSolveAttempt(solveAttempt));
+  } catch (e) {
+    // TODO: Handle errors
+    console.log(e.response);
+  }
+}
+
 function* navigateToSolutionEditor({payload: {location: {pathname}}}) {
   const path = matchPath(pathname, ROUTE.tdl_exercises_solve.matcher);
   if (path) {
@@ -90,6 +114,7 @@ function* navigateToSolutionEditor({payload: {location: {pathname}}}) {
     if (success) {
       yield fork(getSolutionSourceFiles, id);
       yield fork(getExerciseSourceFiles, id)
+      yield fork(getSolveAttempts, id);
     } else {
       yield put(push(ROUTE.tdl_exercises()));
     }
@@ -98,5 +123,6 @@ function* navigateToSolutionEditor({payload: {location: {pathname}}}) {
 
 export default function* solutionEditorEffects() {
   yield takeEvery([type.LOCATION_CHANGE, type.INIT], navigateToSolutionEditor);
-  yield takeLatest(type.SOLUTION_EDITOR_SOLUTION_FILE_SAVE, saveSolutionFile);
+  yield takeLatest(type.SOLUTION_EDITOR_SOLUTION_SOURCE_FILE_SAVE, saveSolutionFile);
+  yield takeEvery(type.SOLUTION_EDITOR_SOLVE_ATTEMPT_CREATE, createSolveAttempt);
 }

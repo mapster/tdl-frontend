@@ -1,34 +1,32 @@
-function junitFailure(f) {
-  var r = {
+function junitFailure(failure) {
+  return {
     type: 'junitFailure',
-    getKey: function() {
+    getKey: function () {
       return this.testClassName + '_' + this.testMethodName;
     },
-    toString: function() {
+    toString: function () {
       return 'Test failed - ' + this.testClassName + ': ' + this.testMethodName;
-    }
+    },
+    ...failure,
   };
-  Object.keys(f).forEach((k) => r[k] = f[k]);
-  return r;
 }
 
-function compilationFailure(f) {
-  var r = {
+function compilationFailure(failure) {
+  return {
     type: 'compilationFailure',
-    getKey: function() {
+    getKey: function () {
       return this.sourceName + '_' + this.lineNumber + '_' + this.columnNumber;
     },
-    toString: function() {
+    toString: function () {
       return 'Compilation failed - ' + this.sourceName;
-    }
+    },
+    ...failure,
   };
-  Object.keys(f).forEach((k) => r[k] = f[k]);
-  return r;
 }
 
 function junitReport(junitReport) {
-  var {failedTests, failures, runTime, tests} = junitReport;
-  var success = failedTests == 0 && failures.length == 0 && true;
+  const {failedTests, failures, runTime, tests} = junitReport;
+  const success = failedTests === 0 && failures.length === 0;
   return {
     type: 'junitReport',
     success,
@@ -36,7 +34,7 @@ function junitReport(junitReport) {
     failedTests,
     runTime,
     tests,
-    failures: failures.map((f) => junitFailure(f)),
+    failures: failures.map(junitFailure),
     toString: function() {
       if(this.success) {
         return 'JUnit tests successful: ' + tests + ' tests.';
@@ -47,10 +45,10 @@ function junitReport(junitReport) {
 }
 
 function compilationReport(compilationReport) {
-  var {entries} = compilationReport;
+  const {entries} = compilationReport;
   return {
     type: 'compilationReport',
-    success: entries.length == 0,
+    success: entries.length === 0,
     style: 'danger',
     failures: entries.map((f) => compilationFailure(f)),
     toString: function() {
@@ -70,12 +68,12 @@ function serverErrorReport(serverError) {
   };
 }
 
-module.exports = function(report){
-  if ('junitReport' in report) {
+export default function (report) {
+  if (report.junitReport) {
     return junitReport(report.junitReport);
-  } else if ('compilationReport' in report) {
+  } else if (report.compilationReport) {
     return compilationReport(report.compilationReport);
   } else {
     return serverErrorReport(report.server_error);
   }
-};
+}

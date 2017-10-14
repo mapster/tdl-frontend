@@ -32,31 +32,31 @@ export const solutionSourceFilesUpdateFromServer = (sourceFiles) => ({
 });
 
 export const solutionFileUpdateFromServer = (sourceFile) => ({
-  type: type.SOLUTION_EDITOR_SOLUTION_FILE_UPDATE_FROM_SERVER,
+  type: type.SOLUTION_EDITOR_SOLUTION_SOURCE_FILE_UPDATE_FROM_SERVER,
   data: sourceFile,
 });
 
 export const solutionFileUpdate = (data, isChanged = true) => ({
-  type: type.SOLUTION_EDITOR_SOLUTION_FILE_UPDATE,
+  type: type.SOLUTION_EDITOR_SOLUTION_SOURCE_FILE_UPDATE,
   data: data,
   isChanged,
 });
 
 export function saveSolutionFile(sourceFile) {
   return {
-    type: type.SOLUTION_EDITOR_SOLUTION_FILE_SAVE,
+    type: type.SOLUTION_EDITOR_SOLUTION_SOURCE_FILE_SAVE,
     data: sourceFile,
   };
 }
 
 export const createNewSolutionFile = () => ({
-  type: type.SOLUTION_EDITOR_SOLUTION_FILE_NEW,
+  type: type.SOLUTION_EDITOR_SOLUTION_SOURCE_FILE_NEW,
 });
 
 
 export const deleteSolutionFile = (sourceFile, confirm = false) => {
   const action = {
-    type: type.SOLUTION_EDITOR_SOLUTION_FILE_DELETE,
+    type: type.SOLUTION_EDITOR_SOLUTION_SOURCE_FILE_DELETE,
     data: sourceFile,
   };
   if (confirm) {
@@ -68,3 +68,17 @@ export const deleteSolutionFile = (sourceFile, confirm = false) => {
   }
   return action;
 };
+
+export const createSolveAttempt = () => ({
+  type: type.SOLUTION_EDITOR_SOLVE_ATTEMPT_CREATE,
+});
+
+export const newSolveAttempt = (solveAttempt) => ({
+  type: type.SOLUTION_EDITOR_SOLVE_ATTEMPT_NEW,
+  data: solveAttempt,
+});
+
+export const solveAttemptsUpdateFromServer = (solveAttempts) => ({
+  type: type.SOLUTION_EDITOR_SOLVE_ATTEMPTS_UPDATE_FROM_SERVER,
+  data: solveAttempts,
+});

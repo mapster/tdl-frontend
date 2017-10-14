@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {Button, Glyphicon} from 'react-bootstrap';
 
-import ExerciseConstants from '../../constants/ExerciseConstants';
+import ExerciseConstants from '../../constants/exercise';
 import TextInput from '../TextInput';
 import SelectInput from '../SelectInput';
 

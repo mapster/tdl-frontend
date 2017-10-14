@@ -3,66 +3,56 @@ export const INIT = 'INIT';
 export const LOCATION_CHANGE = '@@router/LOCATION_CHANGE';
 
 // Exercises
-export const EXERCISES_GET = 'EXERCISES_GET';
-export const EXERCISES_UPDATE = 'EXERCISES_UPDATE';
-export const EXERCISE_SOURCES_UPDATE = 'EXERCISE_SOURCES_UPDATE';
-export const UPDATE_EDIT_EXERCISE_STATE = 'UPDATE_EDIT_EXERCISE_STATE';
+export const EXERCISES_GET = '[Exercises] Get';
+export const EXERCISES_UPDATE = '[Exercises] Update';
 
 // SolutionEditor
-export const SOLUTION_EDITOR_CHANGE_TAB = 'SOLUTION_EDITOR_CHANGE_TAB';
-export const SOLUTION_EDITOR_SET_CURRENT_EXERCISE_FILE = 'SOLUTION_EDITOR_SET_CURRENT_EXERCISE_FILE';
-export const SOLUTION_EDITOR_SET_CURRENT_SOLUTION_FILE = 'SOLUTION_EDITOR_SET_CURRENT_SOLUTION_FILE';
-export const SOLUTION_EDITOR_SOLUTION_UPDATE_FROM_SERVER = 'SOLUTION_EDITOR_SOLUTION_UPDATE_FROM_SERVER';
-export const SOLUTION_EDITOR_EXERCISE_SOURCE_FILES_UPDATE_FROM_SERVER = 'SOLUTION_EDITOR_EXERCISE_SOURCE_FILES_UPDATE_FROM_SERVER';
-export const SOLUTION_EDITOR_SOLUTION_SOURCE_FILES_UPDATE_FROM_SERVER = 'SOLUTION_EDITOR_SOLUTION_SOURCE_FILES_UPDATE_FROM_SERVER';
-export const SOLUTION_EDITOR_SOLUTION_FILE_UPDATE_FROM_SERVER = 'SOLUTION_EDITOR_SOLUTION_FILE_UPDATE_FROM_SERVER';
-export const SOLUTION_EDITOR_SOLUTION_FILE_UPDATE = 'SOLUTION_EDITOR_SOLUTION_FILE_UPDATE';
-export const SOLUTION_EDITOR_SOLUTION_FILE_SAVE = 'SOLUTION_EDITOR_SOLUTION_FILE_SAVE';
-export const SOLUTION_EDITOR_SOLUTION_FILE_NEW = 'SOLUTION_EDITOR_SOLUTION_FILE_NEW';
-export const SOLUTION_EDITOR_SOLUTION_FILE_DELETE = 'SOLUTION_EDITOR_SOLUTION_FILE_DELETE';
-
-export const SOLUTION_UPDATE = 'SOLUTION_UPDATE';
-export const SOLUTIONS_UPDATE = 'SOLUTIONS_UPDATE';
-export const SOLUTION_SOURCES_UPDATE = 'SOLUTION_SOURCES_UPDATE';
-export const SOLUTION_DELETE_SOURCE_FILE = 'SOLUTION_DELETE_SOURCE_FILE';
-export const SOLVE_ATTEMPTS_UPDATE = 'SOLVE_ATTEMPTS_UPDATE';
-export const NEW_SOLVE_ATTEMPT = 'NEW_SOLVE_ATTEMPT';
+export const SOLUTION_EDITOR_CHANGE_TAB = '[Solution editor] Change tab';
+export const SOLUTION_EDITOR_SET_CURRENT_EXERCISE_FILE = '[Solution Editor] Set current exercise file';
+export const SOLUTION_EDITOR_SET_CURRENT_SOLUTION_FILE = '[Solution Editor] Set current solution file';
+export const SOLUTION_EDITOR_SOLUTION_UPDATE_FROM_SERVER = '[Solution Editor] Solution update from server';
+export const SOLUTION_EDITOR_EXERCISE_SOURCE_FILES_UPDATE_FROM_SERVER = '[Solution Editor] Exercise source files update from server';
+export const SOLUTION_EDITOR_SOLUTION_SOURCE_FILES_UPDATE_FROM_SERVER = '[Solution Editor] Solution source files update from server';
+export const SOLUTION_EDITOR_SOLUTION_SOURCE_FILE_UPDATE_FROM_SERVER = '[Solution Editor] Solution source file update from server';
+export const SOLUTION_EDITOR_SOLUTION_SOURCE_FILE_UPDATE = '[Solution Editor] Solution source file update';
+export const SOLUTION_EDITOR_SOLUTION_SOURCE_FILE_SAVE = '[Solution Editor] Solution source file save';
+export const SOLUTION_EDITOR_SOLUTION_SOURCE_FILE_NEW = '[Solution Editor] Solution source file new';
+export const SOLUTION_EDITOR_SOLUTION_SOURCE_FILE_DELETE = '[Solution Editor] Solution source file delete';
+export const SOLUTION_EDITOR_SOLVE_ATTEMPT_CREATE = '[Solution Editor] Solve attempt create';
+export const SOLUTION_EDITOR_SOLVE_ATTEMPT_NEW = '[Solution Editor] Solve attempt new';
+export const SOLUTION_EDITOR_SOLVE_ATTEMPTS_UPDATE_FROM_SERVER = '[Solution Editor] Solve attempts update from server';
 
 // Notification
-export const NOTIFICATION = 'NOTIFICATION';
-export const NOTIFICATION_DISMISS = 'NOTIFICATION_DISMISS';
+export const NOTIFICATION = '[Notification] Set';
+export const NOTIFICATION_DISMISS = '[Notification] Dismiss';
 
 // Confirmation
-export const CONFIRMATION_REQUEST = 'CONFIRMATION_REQUEST';
-export const CONFIRMATION_DECLINE = 'CONFIRMATION_DECLINE';
-export const CONFIRMATION_CONFIRM = 'CONFIRMATION_CONFIRM';
-
-// User
-export const USER_UPDATE = 'USER_UPDATE';
+export const CONFIRMATION_REQUEST = '[Confirmation] Request';
+export const CONFIRMATION_DECLINE = '[Confirmation] Decline';
+export const CONFIRMATION_CONFIRM = '[Confirmation] Confirm';
 
 // Session
-export const SESSION_AUTH_UPDATE = 'SESSION_AUTH_UPDATE';
-export const SESSION_UPDATE = 'SESSION_UPDATE';
-export const SESSION_GET = 'SESSION_GET';
-export const SESSION_LOGIN = 'SESSION_LOGIN';
-export const SESSION_LOGOUT = 'SESSION_LOGOUT';
-export const SESSION_REDIRECT_TO_LOGIN = 'SESSION_REDIRECT_TO_LOGIN';
+export const SESSION_AUTH_UPDATE = '[Session] Auth update';
+export const SESSION_UPDATE = '[Session] Update';
+export const SESSION_GET = '[Session] Get';
+export const SESSION_LOGIN = '[Session] Login';
+export const SESSION_LOGOUT = '[Session] Logout';
+export const SESSION_REDIRECT_TO_LOGIN = '[Session] Redirect to login';
 
 // ExerciseManager
-export const EXERCISE_MANAGER_NEW = 'EXERCISE_MANAGER_NEW';
-export const EXERCISE_MANAGER_DELETE_EXERCISE = 'EXERCISE_MANAGER_DELETE_EXERCISE';
+export const EXERCISE_MANAGER_DELETE_EXERCISE = '[Exercise manager] Delete exercise';
 
 // ExerciseEditor
-export const EXERCISE_EDITOR_NEW = 'EXERCISE_EDITOR_NEW';
-export const EXERCISE_EDITOR_CHANGE_TAB = 'EXERCISE_EDITOR_CHANGE_TAB';
-export const EXERCISE_EDITOR_SET_CURRENT_FILE = 'EXERCISE_EDITOR_SET_CURRENT_FILE';
-export const EXERCISE_EDITOR_PROPERTIES_UPDATE = 'EXERCISE_EDITOR_PROPERTIES_UPDATE';
-export const EXERCISE_EDITOR_PROPERTIES_UPDATE_FROM_SERVER = 'EXERCISE_EDITOR_PROPERTIES_UPDATE_FROM_SERVER';
-export const EXERCISE_EDITOR_SET_PROPERTIES_FEEDBACK = 'EXERCISE_EDITOR_SET_PROPERTIES_FEEDBAC';
-export const EXERCISE_EDITOR_SAVE_PROPERTIES = 'EXERCISE_EDITOR_SAVE_PROPERTIES';
-export const EXERCISE_EDITOR_SOURCE_FILES_UPDATE_FROM_SERVER = 'EXERCISE_EDITOR_SOURCE_FILES_UPDATE_FROM_SERVER_FROM_SERVER';
-export const EXERCISE_EDITOR_SOURCE_FILE_UPDATE = 'EXERCISE_EDITOR_SOURCE_FILE_UPDATE';
-export const EXERCISE_EDITOR_SOURCE_FILE_UPDATE_FROM_SERVER = 'EXERCISE_EDITOR_SOURCE_FILE_UPDATE_FROM_SERVER';
-export const EXERCISE_EDITOR_SOURCE_FILE_SAVE = 'EXERCISE_EDITOR_SOURCE_FILE_SAVE';
-export const EXERCISE_EDITOR_SOURCE_FILE_CREATE_NEW = 'EXERCISE_EDITOR_SOURCE_FILE_CREATE_NEW';
-export const EXERCISE_EDITOR_SOURCE_FILE_DELETE = 'EXERCISE_EDITOR_SOURCE_FILE_DELETE';
+export const EXERCISE_EDITOR_NEW = '[Exercise editor] New exercise';
+export const EXERCISE_EDITOR_CHANGE_TAB = '[Exercise editor] Change tab';
+export const EXERCISE_EDITOR_SET_CURRENT_FILE = '[Exercise editor] Set current file';
+export const EXERCISE_EDITOR_PROPERTIES_UPDATE = '[Exercise editor] Properties update';
+export const EXERCISE_EDITOR_PROPERTIES_UPDATE_FROM_SERVER = '[Exercise editor] Properties update from server';
+export const EXERCISE_EDITOR_SET_PROPERTIES_FEEDBACK = '[Exercise editor] Set properties feedback';
+export const EXERCISE_EDITOR_SAVE_PROPERTIES = '[Exercise editor] Save properties';
+export const EXERCISE_EDITOR_SOURCE_FILES_UPDATE_FROM_SERVER = '[Exercise editor] Source files update from server';
+export const EXERCISE_EDITOR_SOURCE_FILE_UPDATE = '[Exercise editor] Source file update';
+export const EXERCISE_EDITOR_SOURCE_FILE_UPDATE_FROM_SERVER = '[Exercise editor] Source file update from server';
+export const EXERCISE_EDITOR_SOURCE_FILE_SAVE = '[Exercise editor] Source file save';
+export const EXERCISE_EDITOR_SOURCE_FILE_CREATE_NEW = '[Exercise editor] Source file create new';
+export const EXERCISE_EDITOR_SOURCE_FILE_DELETE = '[Exercise editor] Source file delete';
