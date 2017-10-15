@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {OverlayTrigger, Popover} from 'react-bootstrap';
 
-import Report from '../Report';
+import Report from '../models/Report';
 
 const SolveAttempts = ({attempts = []}) => {
   let striped = false;

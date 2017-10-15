@@ -21,6 +21,7 @@ export const SOLUTION_EDITOR_SOLUTION_SOURCE_FILE_DELETE = '[Solution Editor] So
 export const SOLUTION_EDITOR_SOLVE_ATTEMPT_CREATE = '[Solution Editor] Solve attempt create';
 export const SOLUTION_EDITOR_SOLVE_ATTEMPT_NEW = '[Solution Editor] Solve attempt new';
 export const SOLUTION_EDITOR_SOLVE_ATTEMPTS_UPDATE_FROM_SERVER = '[Solution Editor] Solve attempts update from server';
+export const SOLUTION_EDITOR_GOTO_TEST = '[Solution editor] Goto test';
 
 // Notification
 export const NOTIFICATION = '[Notification] Set';

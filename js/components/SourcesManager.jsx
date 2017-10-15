@@ -78,6 +78,8 @@ const SourcesManager = ({
               theme="github"
               width='100%'
               editorProps={{$blockScrolling: true}}
+              showPrintMargin={false}
+              highlightActiveLine={true}
             />
           )}
         </Nav>

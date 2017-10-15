@@ -8,17 +8,8 @@ import * as Action from '../actions/solutionEditor';
 import SourcesManager from '../components/SourcesManager';
 import {SELECTORS} from '../reducers';
 import SolveAttempts from '../components/SolveAttempts';
-// var FailureList = require('../components/FailureList.react');
-// var SolveAttempts = require('../components/SolveAttempts.react');
-
-      //
-      // <Row>
-      //   <Col lg={12}>
-      //     <FailureList attempt={lastAttempt}/>
-      //   </Col>
-      // </Row>
-
-
+import FailureList from '../components/FailureList';
+import solutionConstants from '../constants/solutionEditor';
 
 const tabTitle = (text, unsaved = false) => {
   if (unsaved) {
@@ -43,21 +34,22 @@ const SolutionEditor = ({
                           solutionFileUpdate,
                           saveSolutionFile,
                           createSolveAttempt,
+                          gotoTest,
                         }) => (
   <div>
     <Tab.Container id='tabs' activeKey={currentTab} onSelect={selectTab}>
-      <Row className="clearfix">
+      <Row>
         <Col lg={2}>
           <Nav bsStyle="pills" stacked>
-            <NavItem eventKey='solution_sources'>
+            <NavItem eventKey={solutionConstants.tabs.solutionSources}>
               {tabTitle('Solution sources', solutionFiles.some(file => file.isChanged))}
             </NavItem>
-            <NavItem eventKey='exercise_sources'>Exercise sources</NavItem>
+            <NavItem eventKey={solutionConstants.tabs.exerciseSources}>Exercise sources</NavItem>
           </Nav>
         </Col>
-        <Col lg={10}>
+        <Col lg={8}>
           <Tab.Content>
-            <Tab.Pane eventKey='solution_sources'>
+            <Tab.Pane eventKey={solutionConstants.tabs.solutionSources}>
               <SourcesManager
                 files={solutionFiles}
                 currentFile={currentSolutionFile}
@@ -68,7 +60,7 @@ const SolutionEditor = ({
                 sourceFileUpdate={solutionFileUpdate}
               />
             </Tab.Pane>
-            <Tab.Pane eventKey='exercise_sources'>
+            <Tab.Pane eventKey={solutionConstants.tabs.exerciseSources}>
               <SourcesManager
                 files={exerciseFiles}
                 currentFile={currentExerciseFile}
@@ -77,6 +69,9 @@ const SolutionEditor = ({
               />
             </Tab.Pane>
           </Tab.Content>
+        </Col>
+        <Col lg={2}>
+          <FailureList gotoTest={gotoTest} attempt={solveAttempts && solveAttempts[solveAttempts.length - 1]}/>
         </Col>
       </Row>
     </Tab.Container>
@@ -112,6 +107,7 @@ SolutionEditor.propTypes = {
   solutionFileUpdate: PropTypes.func.isRequired,
   saveSolutionFile: PropTypes.func.isRequired,
   createSolveAttempt: PropTypes.func.isRequired,
+  gotoTest: PropTypes.func.isRequired,
 };
 
 export default compose(
@@ -133,6 +129,7 @@ export default compose(
       solutionFileUpdate: Action.solutionFileUpdate,
       saveSolutionFile: Action.saveSolutionFile,
       createSolveAttempt: Action.createSolveAttempt,
+      gotoTest: Action.gotoTest,
     }
   )
 )(SolutionEditor);

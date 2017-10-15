@@ -1,5 +1,5 @@
 import React from 'react';
-import {Grid, Row, Col} from 'react-bootstrap';
+import {Row, Col} from 'react-bootstrap';
 
 import * as ROUTE from '../routes';
 import Header from './Header';
@@ -14,19 +14,17 @@ const menu = [
 ];
 
 const UserApp = () => (
-  <div className='container'>
-    <Grid>
-      <Row>
-        <Col lg={12}>
-          <Header title='JavaTDL' menu={menu}/>
-        </Col>
-      </Row>
-      <Switch>
-        <Route path={ROUTE.tdl_exercises()} component={Exercises}/>
-        <Route path={ROUTE.tdl_editor()} component={Editor}/>
-        <Route component={NotFound}/>
-      </Switch>
-    </Grid>
+  <div>
+    <Row>
+      <Col lg={12}>
+        <Header title='JavaTDL' menu={menu}/>
+      </Col>
+    </Row>
+    <Switch>
+      <Route path={ROUTE.tdl_exercises()} component={Exercises}/>
+      <Route path={ROUTE.tdl_editor()} component={Editor}/>
+      <Route component={NotFound}/>
+    </Switch>
   </div>
 );
 

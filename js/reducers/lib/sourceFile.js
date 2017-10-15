@@ -67,3 +67,5 @@ export const reduceSourceFilesIntoExisting = (existingFiles, updatedFiles) => {
     return [newFile({id: uuid(), name: 'new'}, true, true)];
   }
 };
+
+export const findClass = (sourceFiles, name) => sourceFiles.map(sf => sf.data).filter(sf => sf.name === `${name}.java`)[0];

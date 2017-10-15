@@ -82,3 +82,8 @@ export const solveAttemptsUpdateFromServer = (solveAttempts) => ({
   type: type.SOLUTION_EDITOR_SOLVE_ATTEMPTS_UPDATE_FROM_SERVER,
   data: solveAttempts,
 });
+
+export const gotoTest = (clazz, method) => ({
+  type: type.SOLUTION_EDITOR_GOTO_TEST,
+  data: {class: clazz, method}
+});

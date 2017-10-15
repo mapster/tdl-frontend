@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {compose} from 'redux';
 import {connect} from 'react-redux';
-import {Grid, Row, Col} from 'react-bootstrap';
+import {Row, Col} from 'react-bootstrap';
 
 import * as ROUTE from '../../routes';
 import {SELECTORS} from '../../reducers';
@@ -27,25 +27,23 @@ const createMenu = (auth) => {
 };
 
 const AdminApp = ({auth}) => (
-  <div className='container'>
-    <Grid>
-      <Row>
-        <Col lg={12}>
-          <Header title='JavaTDL Admin' menu={createMenu(auth)}/>
-        </Col>
-      </Row>
-      <Row>
-        <Col lg={12}>
-          <Switch>
-            <Route path={ROUTE.admin_exercises()} component={ExerciseManager}/>
-            <Route path={ROUTE.admin()} exact>
-              <Redirect to={ROUTE.admin_exercises()} />
-            </Route>
-            <Route component={NotFound}/>
-          </Switch>
-        </Col>
-      </Row>
-    </Grid>
+  <div>
+    <Row>
+      <Col lg={12}>
+        <Header title='JavaTDL Admin' menu={createMenu(auth)}/>
+      </Col>
+    </Row>
+    <Row>
+      <Col lg={12}>
+        <Switch>
+          <Route path={ROUTE.admin_exercises()} component={ExerciseManager}/>
+          <Route path={ROUTE.admin()} exact>
+            <Redirect to={ROUTE.admin_exercises()}/>
+          </Route>
+          <Route component={NotFound}/>
+        </Switch>
+      </Col>
+    </Row>
   </div>
 );
 AdminApp.propTypes = {

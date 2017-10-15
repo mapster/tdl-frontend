@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import {Provider} from 'react-redux';
 import {Redirect, Route, Switch} from 'react-router-dom';
 import {ConnectedRouter} from 'connected-react-router';
+import {Grid} from 'react-bootstrap';
 
 import * as ROUTE from '../routes.js';
 import UserApp from './UserApp';
@@ -16,7 +17,7 @@ const Root = ({store, history}) => {
   return (
     <Provider store={store}>
       <ConnectedRouter history={history}>
-        <div className='container'>
+        <Grid fluid={true}>
           <Switch>
             <Route path={ROUTE.admin()} component={AdminApp}/>
             <Route path={ROUTE.tdl()} component={UserApp}/>
@@ -28,7 +29,7 @@ const Root = ({store, history}) => {
           </Switch>
           <Notifications/>
           <Confirmation/>
-        </div>
+        </Grid>
       </ConnectedRouter>
     </Provider>
   );

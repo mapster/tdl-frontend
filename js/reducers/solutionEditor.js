@@ -3,15 +3,17 @@ import uuid from 'uuid/v4';
 import * as type from '../constants/actionTypes';
 import createReducer from './lib/createReducer';
 import * as SourceFile from './lib/sourceFile';
+import solutionConstants from '../constants/solutionEditor';
 
 const initialState = {
   solution: {},
   solutionFiles: [],
   exerciseFiles: [],
   solveAttempts: [],
-  currentTab: 'solution_sources',
+  currentTab: solutionConstants.tabs.solutionSources,
   currentExerciseFileId: null,
   currentSolutionFileId: null,
+  markers: [],
 };
 
 const solutionUpdateFromServer = (state, {data: solution}) => {
@@ -126,6 +128,15 @@ const newSolveAttempt = (state, {data: solveAttempt}) => ({
   solveAttempts: [...state.solveAttempts.slice(-9), solveAttempt],
 });
 
+const gotoTest = (state, {data: {class: clazz, method}}) => {
+  const file = SourceFile.findClass(state.exerciseFiles, clazz);
+  return {
+    ...state,
+    currentTab: solutionConstants.tabs.exerciseSources,
+    currentExerciseFileId: file.id,
+  };
+};
+
 const reducers = {
   [type.SOLUTION_EDITOR_SOLUTION_UPDATE_FROM_SERVER]: solutionUpdateFromServer,
   [type.SOLUTION_EDITOR_CHANGE_TAB]: changeTab,
@@ -139,6 +150,7 @@ const reducers = {
   [type.SOLUTION_EDITOR_SOLUTION_SOURCE_FILE_DELETE]: deleteSolutionFile,
   [type.SOLUTION_EDITOR_SOLVE_ATTEMPTS_UPDATE_FROM_SERVER]: solveAttemptsUpdateFromServer,
   [type.SOLUTION_EDITOR_SOLVE_ATTEMPT_NEW]: newSolveAttempt,
+  [type.SOLUTION_EDITOR_GOTO_TEST]: gotoTest,
 };
 
 const getExerciseFiles = (state) => state.solutionEditor.exerciseFiles;

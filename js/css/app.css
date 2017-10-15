@@ -1,8 +1,5 @@
 @import url("../../node_modules/bootstrap/dist/css/bootstrap.css");
-@import url("pages/app.css");
-@import url("pages/stopwatch.css");
-@import url("components/admin/sources-manager.css");
-@import url("components/timer.css");
+@import url("components/sources-manager.css");
 @import url("components/exercise.css");
 @import url("components/edit-user-modal.css");
 @import url("notification.css");
@@ -13,11 +10,11 @@
     text-align: right;
 }
 
-.vcenter {
-    display: inline-block;
-    vertical-align: middle;
-    float: none;
-}
+/*.vcenter {*/
+    /*display: inline-block;*/
+    /*vertical-align: middle;*/
+    /*float: none;*/
+/*}*/
 
 .inline {
     display: inline;
