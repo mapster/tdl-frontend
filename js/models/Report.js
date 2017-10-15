@@ -1,6 +1,17 @@
+const FailureType = {
+  Junit: 'junitFailure',
+  Compilation: 'compilationFailure',
+};
+
+const Type = {
+  Junit: 'junitReport',
+  Compilation: 'compilationReport',
+  ServerError: 'serverError',
+};
+
 function junitFailure(failure) {
   return {
-    type: 'junitFailure',
+    type: FailureType.Junit,
     getKey: function () {
       return this.testClassName + '_' + this.testMethodName;
     },
@@ -13,7 +24,7 @@ function junitFailure(failure) {
 
 function compilationFailure(failure) {
   return {
-    type: 'compilationFailure',
+    type: FailureType.Compilation,
     getKey: function () {
       return this.sourceName + '_' + this.lineNumber + '_' + this.columnNumber;
     },
@@ -28,7 +39,7 @@ function junitReport(junitReport) {
   const {failedTests, failures, runTime, tests} = junitReport;
   const success = failedTests === 0 && failures.length === 0;
   return {
-    type: 'junitReport',
+    type: Type.Junit,
     success,
     style: success ? 'success' : 'warning',
     failedTests,
@@ -47,7 +58,7 @@ function junitReport(junitReport) {
 function compilationReport(compilationReport) {
   const {entries} = compilationReport;
   return {
-    type: 'compilationReport',
+    type: Type.Compilation,
     success: entries.length === 0,
     style: 'danger',
     failures: entries.map((f) => compilationFailure(f)),
@@ -59,16 +70,16 @@ function compilationReport(compilationReport) {
 
 function serverErrorReport(serverError) {
   return {
-    type: 'serverError',
+    type: Type.ServerError,
     style: 'danger',
-    failures: serverError,
+    text: serverError,
     toString: function() {
       return 'Failed to compile and test: ' + serverError;
     }
   };
 }
 
-export default function (report) {
+const Report = (report) => {
   if (report.junitReport) {
     return junitReport(report.junitReport);
   } else if (report.compilationReport) {
@@ -76,4 +87,9 @@ export default function (report) {
   } else {
     return serverErrorReport(report.server_error);
   }
-}
+};
+
+Report.Type = Type;
+Report.FailureType = FailureType;
+
+export default Report;

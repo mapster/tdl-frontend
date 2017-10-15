@@ -1,10 +1,6 @@
 @import url("../../node_modules/bootstrap/dist/css/bootstrap.css");
-@import url("components/sources-manager.css");
-@import url("components/exercise.css");
-@import url("components/edit-user-modal.css");
 @import url("notification.css");
-
-/*@import url("bs-grid-highlight.css");*/
+@import url("components/index.css");
 
 .right {
     text-align: right;

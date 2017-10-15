@@ -5,18 +5,22 @@ import {ListGroup, ListGroupItem} from 'react-bootstrap';
 import Report from '../models/Report';
 
 const FailureList = ({attempt, gotoTest}) => {
-  if (attempt === undefined) {
+  if (!attempt || !attempt.report) {
     return false;
   }
-  const report = attempt.report;
-  if (report === undefined) {
-    return false;
+  const report = Report(attempt.report);
+
+  if (report.type === Report.Type.ServerError) {
+    return (
+      <ListGroup>
+        <ListGroupItem>Server error: {report.text}</ListGroupItem>
+      </ListGroup>
+    );
   }
-  const failures = Report(report).failures || [];
 
   return (
     <ListGroup>
-      {failures.map(function (f) {
+      {report.failures.map(function (f) {
         return (<ListGroupItem onClick={() => gotoTest && gotoTest(f.testClassName, f. testMethodName)} key={f.getKey()}>{f.toString()}</ListGroupItem>);
       })}
     </ListGroup>
@@ -25,7 +29,7 @@ const FailureList = ({attempt, gotoTest}) => {
 
 FailureList.propTypes = {
   attempt: PropTypes.object,
-  gotoTest: PropTypes.func,
+  gotoTest: PropTypes.func.isRequired,
 };
 
 export default FailureList;

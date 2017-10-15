@@ -13,6 +13,7 @@ const initialState = {
   currentTab: solutionConstants.tabs.solutionSources,
   currentExerciseFileId: null,
   currentSolutionFileId: null,
+  activeSolveAttemptId: null,
   markers: [],
 };
 
@@ -121,14 +122,16 @@ const deleteSolutionFile = (state, {data: sourceFile}) => {
 const solveAttemptsUpdateFromServer = (state, {data: solveAttempts}) => ({
   ...state,
   solveAttempts,
+  activeSolveAttemptId: solveAttempts[solveAttempts.length - 1].id,
 });
 
 const newSolveAttempt = (state, {data: solveAttempt}) => ({
   ...state,
   solveAttempts: [...state.solveAttempts.slice(-9), solveAttempt],
+  activeSolveAttemptId: solveAttempt.id,
 });
 
-const gotoTest = (state, {data: {class: clazz, method}}) => {
+const gotoTest = (state, {data: {class: clazz}}) => {
   const file = SourceFile.findClass(state.exerciseFiles, clazz);
   return {
     ...state,
@@ -136,6 +139,11 @@ const gotoTest = (state, {data: {class: clazz, method}}) => {
     currentExerciseFileId: file.id,
   };
 };
+
+const selectSolveAttempt = (state, {data: {id}}) => ({
+  ...state,
+  activeSolveAttemptId: id,
+});
 
 const reducers = {
   [type.SOLUTION_EDITOR_SOLUTION_UPDATE_FROM_SERVER]: solutionUpdateFromServer,
@@ -151,6 +159,7 @@ const reducers = {
   [type.SOLUTION_EDITOR_SOLVE_ATTEMPTS_UPDATE_FROM_SERVER]: solveAttemptsUpdateFromServer,
   [type.SOLUTION_EDITOR_SOLVE_ATTEMPT_NEW]: newSolveAttempt,
   [type.SOLUTION_EDITOR_GOTO_TEST]: gotoTest,
+  [type.SOLUTION_EDITOR_SELECT_SOLVE_ATTEMPT]: selectSolveAttempt,
 };
 
 const getExerciseFiles = (state) => state.solutionEditor.exerciseFiles;
@@ -165,6 +174,7 @@ export const SELECTORS = {
   getExerciseFiles: getExerciseFiles,
   getSolutionSourceFiles: state => getSolutionFiles(state).map(file => file.data),
   getSolveAttempts: state => state.solutionEditor.solveAttempts,
+  getActiveSolveAttemptId: state => state.solutionEditor.activeSolveAttemptId,
 };
 
 export default createReducer(initialState, reducers);

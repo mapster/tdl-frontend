@@ -87,3 +87,8 @@ export const gotoTest = (clazz, method) => ({
   type: type.SOLUTION_EDITOR_GOTO_TEST,
   data: {class: clazz, method}
 });
+
+export const selectSolveAttempt = id => ({
+  type: type.SOLUTION_EDITOR_SELECT_SOLVE_ATTEMPT,
+  data: {id},
+});

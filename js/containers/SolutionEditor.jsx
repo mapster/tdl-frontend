@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {compose} from 'redux';
 import {connect} from 'react-redux';
-import {Button, Col, Glyphicon, Media, Nav, NavItem, Row, Tab, Tabs} from 'react-bootstrap';
+import {Button, Col, Media, Nav, NavItem, Row, Tab} from 'react-bootstrap';
 
 import * as Action from '../actions/solutionEditor';
 import SourcesManager from '../components/SourcesManager';
@@ -25,6 +25,7 @@ const SolutionEditor = ({
                           solutionFiles,
                           exerciseFiles,
                           solveAttempts,
+                          activeSolveAttemptId,
 
                           selectTab,
                           selectExerciseFile,
@@ -35,6 +36,7 @@ const SolutionEditor = ({
                           saveSolutionFile,
                           createSolveAttempt,
                           gotoTest,
+                          selectSolveAttempt,
                         }) => (
   <div>
     <Tab.Container id='tabs' activeKey={currentTab} onSelect={selectTab}>
@@ -71,16 +73,17 @@ const SolutionEditor = ({
           </Tab.Content>
         </Col>
         <Col lg={2}>
-          <FailureList gotoTest={gotoTest} attempt={solveAttempts && solveAttempts[solveAttempts.length - 1]}/>
+          <FailureList gotoTest={gotoTest} attempt={solveAttempts.find(attempt => attempt.id === activeSolveAttemptId)}/>
         </Col>
       </Row>
     </Tab.Container>
     <Row>
-      <Col lg={11}>
+      <Col lg={2}/>
+      <Col lg={7}>
         <Media>
           <Media.Body>
             <Media.Heading>Solve Attempts</Media.Heading>
-            <SolveAttempts attempts={solveAttempts}/>
+            <SolveAttempts attempts={solveAttempts} activeAttemptId={activeSolveAttemptId} selectSolveAttempt={selectSolveAttempt}/>
           </Media.Body>
         </Media>
       </Col>
@@ -98,6 +101,7 @@ SolutionEditor.propTypes = {
   solutionFiles: PropTypes.array.isRequired,
   exerciseFiles: PropTypes.array.isRequired,
   solveAttempts: PropTypes.array.isRequired,
+  activeSolveAttemptId: PropTypes.number,
 
   selectTab: PropTypes.func.isRequired,
   selectExerciseFile: PropTypes.func.isRequired,
@@ -108,6 +112,7 @@ SolutionEditor.propTypes = {
   saveSolutionFile: PropTypes.func.isRequired,
   createSolveAttempt: PropTypes.func.isRequired,
   gotoTest: PropTypes.func.isRequired,
+  selectSolveAttempt: PropTypes.func.isRequired,
 };
 
 export default compose(
@@ -119,6 +124,7 @@ export default compose(
       solutionFiles: SELECTORS.solutionEditor.getSolutionFiles(state),
       exerciseFiles: SELECTORS.solutionEditor.getExerciseFiles(state),
       solveAttempts: SELECTORS.solutionEditor.getSolveAttempts(state),
+      activeSolveAttemptId: SELECTORS.solutionEditor.getActiveSolveAttemptId(state),
     }),
     {
       selectTab: Action.selectTab,
@@ -130,6 +136,7 @@ export default compose(
       saveSolutionFile: Action.saveSolutionFile,
       createSolveAttempt: Action.createSolveAttempt,
       gotoTest: Action.gotoTest,
+      selectSolveAttempt: Action.selectSolveAttempt,
     }
   )
 )(SolutionEditor);
