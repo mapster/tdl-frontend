@@ -53,9 +53,9 @@
     "webpack-validator": "^3.0.0"
   },
   "scripts": {
-    "start": "webpack-dev-server",
-    "build": "webpack",
-    "stats": "webpack --profile --json > stats.json",
-    "test:lint": "eslint client --ext .js --ext .jsx --cache --format node_modules/eslint-friendly-formatter || true"
+    "start": "./node_modules/.bin/webpack-dev-server",
+    "build": "./node_modules/.bin/webpack",
+    "stats": "./node_modules/.bin/webpack --profile --json > stats.json",
+    "test:lint": "./node_module/.bin/eslint client --ext .js --ext .jsx --cache --format node_modules/eslint-friendly-formatter || true"
   }
 }
