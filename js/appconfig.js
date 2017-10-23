@@ -1,1 +1,1 @@
-export const Host = '/rest';
+export const Host = '/api';
