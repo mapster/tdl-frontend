@@ -122,7 +122,7 @@ const deleteSolutionFile = (state, {data: sourceFile}) => {
 const solveAttemptsUpdateFromServer = (state, {data: solveAttempts}) => ({
   ...state,
   solveAttempts,
-  activeSolveAttemptId: solveAttempts[solveAttempts.length - 1].id,
+  activeSolveAttemptId: (solveAttempts[solveAttempts.length - 1] || {}).id,
 });
 
 const newSolveAttempt = (state, {data: solveAttempt}) => ({
