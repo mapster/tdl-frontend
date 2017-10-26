@@ -10,6 +10,7 @@ import * as ExercisesApi from '../api/exercises';
 import * as type from '../constants/actionTypes';
 import * as Notification from '../actions/notification';
 import {SELECTORS} from '../reducers';
+import NotLoggedInException from './NotLoggedInException';
 
 function* getSolution(id) {
   try {
@@ -22,8 +23,11 @@ function* getSolution(id) {
       yield put(Notification.error('No such exercise: ' + id));
       return false;
     } else {
-      yield handleErrorResponse(status, data);
-      return false
+      const result = yield handleErrorResponse(status, data);
+      if (result instanceof NotLoggedInException) {
+        return result;
+      }
+      return false;
     }
   }
 }
@@ -35,13 +39,8 @@ function* getSolutionSourceFiles(id) {
     return true;
   } catch (e) {
     const {status, data} = e.response;
-    if (status === 404) {
-      yield put(Notification.error('Could not fetch solution source files: ' + id));
-      return false;
-    } else {
-      yield handleErrorResponse(status, data);
-      return false;
-    }
+    yield handleErrorResponse(status, data);
+    return false;
   }
 }
 
@@ -64,13 +63,8 @@ function* getExerciseSourceFiles(id) {
     return true;
   } catch (e) {
     const {status, data} = e.response;
-    if (status === 404) {
-      yield put(Notification.error('Could not fetch exercise source files: ' + id));
-      return false;
-    } else {
-      handleErrorResponse(status, data);
-      return false;
-    }
+    yield handleErrorResponse(status, data);
+    return false;
   }
 }
 
@@ -101,8 +95,8 @@ function* createSolveAttempt() {
     const {data: solveAttempt} = yield call(SolutionsApi.postSolutionSolveAttempt, exerciseId, solutionFiles);
     yield put(Action.newSolveAttempt(solveAttempt));
   } catch (e) {
-    // TODO: Handle errors
-    console.log(e.response);
+    const {status, data} = e.response;
+    yield handleErrorResponse(status, data);
   }
 }
 
@@ -110,12 +104,14 @@ function* navigateToSolutionEditor({payload: {location: {pathname}}}) {
   const path = matchPath(pathname, ROUTE.tdl_exercises_solve.matcher);
   if (path) {
     const id = path.params.exerciseId;
+
     const success = yield call(getSolution, id);
     if (success) {
       yield fork(getSolutionSourceFiles, id);
       yield fork(getExerciseSourceFiles, id)
       yield fork(getSolveAttempts, id);
-    } else {
+
+    } else if (!(success instanceof NotLoggedInException)) {
       yield put(push(ROUTE.tdl_exercises()));
     }
   }

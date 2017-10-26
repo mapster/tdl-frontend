@@ -8,6 +8,7 @@ import * as ROUTE from '../routes';
 import {push} from 'connected-react-router';
 import {matchPath} from 'react-router-dom';
 import handleErrorResponse from './errorResponse';
+import * as Notification from '../actions/notification';
 
 function* login(action) {
   const {username, password} = action.data;
@@ -15,7 +16,12 @@ function* login(action) {
     const session = yield call(Api.login, username, password);
     yield put(Action.sessionUpdate(session.data));
   } catch (e) {
-    // TODO: Handle 404 - Invalid email/password combination
+    const {status, data} = e.response;
+    if (status === 404) {
+      yield put(Notification.error('Invalid user/password combination'))
+    } else {
+      yield handleErrorResponse(status, data);
+    }
   }
 }
 
@@ -24,7 +30,11 @@ function* logout() {
     yield call(Api.logout);
     yield put(Action.sessionUpdate(null));
   } catch (e) {
-    // TODO: Handle errors
+    const {status, data} = e.response;
+    // We don't need to react to 404 on logout since it doesn't matter that we're already logged out
+    if (status !== 404) {
+      handleErrorResponse(status, data);
+    }
   }
 }
 
@@ -34,12 +44,7 @@ function* getSession() {
     yield put(Action.sessionUpdate(session.data));
   } catch (e) {
     const {data, status} = e.response;
-    if (status === 404) {
-      const from = yield select(SELECTORS.router.getLocation);
-      yield put(Action.redirectToLogin(from));
-    } else {
-      yield handleErrorResponse(status, data);
-    }
+    yield handleErrorResponse(status, data);
   }
 }
 
@@ -48,7 +53,8 @@ function* getAuth() {
     const auth = yield call(Api.getAuth);
     yield put(Action.authUpdate(auth.data));
   } catch (e) {
-    // TODO: Handle error
+    const {data, status} = e.response;
+    yield handleErrorResponse(status, data);
   }
 }
 

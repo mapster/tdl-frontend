@@ -9,6 +9,7 @@ import * as Api from '../../api/exercises';
 import {SELECTORS} from '../../reducers';
 import handleErrorResponse from '../errorResponse';
 import {push} from 'connected-react-router';
+import NotLoggedInException from '../NotLoggedInException';
 
 function* getExercise(id) {
   try {
@@ -17,12 +18,15 @@ function* getExercise(id) {
     return true;
   } catch (e) {
     const {status, data} = e.response;
+
     if (status === 404) {
       yield put(Notification.error('No such exercise: ' + id));
       return false;
     } else {
-      handleErrorResponse(status, data);
-      return false
+      const result = handleErrorResponse(status, data);
+      if (result instanceof NotLoggedInException) {
+        return result;
+      }
     }
   }
 }
@@ -34,6 +38,7 @@ function* getExerciseSourceFiles(id) {
     return true;
   } catch (e) {
     const {status, data} = e.response;
+
     if (status === 404) {
       yield put(Notification.error('No such exercise: ' + id));
       return false;
@@ -59,8 +64,14 @@ function* navigateToExerciseEditor({payload: {location: {pathname}}}) {
     const isNotChangedAndNotNew = yield select(SELECTORS.exerciseEditor.isNotChangedAndNotNew, id);
     if (currentId !== id || isNotChangedAndNotNew) {
       const success = yield call(getExercise, id);
-      if (!success) {
+
+      // If the exercise does not exist navigate back to exercise list
+      if (success === false) {
         yield put(push(ROUTE.admin_exercises()));
+        return;
+
+      // If getExercise wasn't successful then don't continue
+      } else if (success !== true) {
         return;
       }
     }

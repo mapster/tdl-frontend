@@ -18,7 +18,7 @@ function* getExercises() {
 
 function* navigateToExercises({payload: {location: {pathname}}}) {
   if (matchPath(pathname, ROUTE.tdl_exercises.matcher)) {
-    yield put(Action.getExercises());
+    yield call(getExercises);
   }
 }
 
