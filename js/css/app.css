@@ -1,0 +1,17 @@
+@import url("../../node_modules/bootstrap/dist/css/bootstrap.css");
+@import url("notification.css");
+@import url("components/index.css");
+
+.right {
+    text-align: right;
+}
+
+/*.vcenter {*/
+    /*display: inline-block;*/
+    /*vertical-align: middle;*/
+    /*float: none;*/
+/*}*/
+
+.inline {
+    display: inline;
+}
