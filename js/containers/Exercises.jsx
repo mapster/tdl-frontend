@@ -15,7 +15,7 @@ const Exercises = ({exercises, goToSolution}) => {
   return (
     <Switch>
       <Route path={ROUTE.tdl_exercises()} exact render={props => (
-        <ExerciseList {...props} exercises={exercises} deleteExercise={() => {}} editExercise={goToSolution} createNewExercise={() => {}}/>
+        <ExerciseList {...props} exercises={exercises} editExercise={goToSolution} />
       )}/>
       <Route path={ROUTE.tdl_exercises_solve()} component={SolutionEditor}/>
       <Route component={NotFound} />

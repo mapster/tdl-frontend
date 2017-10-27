@@ -17,7 +17,7 @@ function* deleteExercise({data: {id}}) {
 }
 
 function* navigateToExerciseManager({payload: {location: {pathname}}}) {
-  if (matchPath(pathname, ROUTE.admin_exercises())) {
+  if (matchPath(pathname, ROUTE.admin_exercises.matcher)) {
     yield put(ExercisesAction.getExercises());
   }
 }

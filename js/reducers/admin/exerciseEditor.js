@@ -35,6 +35,7 @@ const exerciseUpdateFromServer = (state, {data: exercise}) => ({
   ...state,
   exercise,
   isChanged: false,
+  isNew: false,
   feedback: {},
 });
 

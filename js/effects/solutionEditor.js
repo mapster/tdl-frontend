@@ -68,25 +68,58 @@ function* getExerciseSourceFiles(id) {
   }
 }
 
+function* deleteSourceFile({data: sourceFile}) {
+  try {
+    const {exercise_id: exerciseId} = yield select(SELECTORS.solutionEditor.getSolution);
+
+    if (sourceFile.isNew !== true) {
+      yield call(SolutionsApi.deleteSourceFile, exerciseId, sourceFile.id);
+    }
+
+    yield call(getSolutionSourceFiles, exerciseId);
+  } catch (e) {
+    const {status, data} = e.response;
+    yield handleErrorResponse(status, data);
+  }
+}
+
 function* saveSolutionFile({data: sourceFile}) {
   try {
     const {exercise_id: exerciseId} = yield select(SELECTORS.solutionEditor.getSolution);
     const request = sourceFile.isNew ? SolutionsApi.postSolutionSourceFile : SolutionsApi.putSolutionSourceFile;
     const {data: savedFile} = yield call(request, exerciseId, sourceFile.data);
+
     if (sourceFile.isNew) {
       yield put(Action.deleteSolutionFile(sourceFile));
+      const {data: updatedFiles} = yield call(SolutionsApi.getSolutionSourceFiles, exerciseId);
+      yield put(Action.solutionSourceFilesUpdateFromServer(updatedFiles));
     }
-    yield put(Action.solutionFileUpdateFromServer(savedFile));
+
     yield put(Action.selectSolutionFile(savedFile.id));
   } catch (e) {
     const {data, status} = e.response;
-    if (status === 409) {
+    if (status === 400) {
+      if (data.name) {
+        yield put(Notification.error('Name can\'t be blank'));
+      }
+      if (data.contents) {
+        yield put(Notification.error('Contents can\'t be blank'));
+      }
+    } else if (status === 409) {
       yield put(Notification.error(data));
     } else {
       yield handleErrorResponse(status, data instanceof Object ? JSON.stringify(data) : data);
     }
   }
 }
+
+const CANT_BE_BLANK_MSG = 'can\'t be blank';
+const createSolutionAttemptValidation = (sourceFiles) => {
+  const blankContents = sourceFiles.filter(f => f.contents).filter(f => f.contents.indexOf(CANT_BE_BLANK_MSG) > -1).length;
+  const blankNames = sourceFiles.filter(f => f.name).filter(f => f.name.indexOf(CANT_BE_BLANK_MSG)).length;
+
+  return { contents: blankContents, name: blankNames };
+};
 
 function* createSolveAttempt() {
   const {exercise_id: exerciseId} = yield select(SELECTORS.solutionEditor.getSolution);
@@ -96,7 +129,20 @@ function* createSolveAttempt() {
     yield put(Action.newSolveAttempt(solveAttempt));
   } catch (e) {
     const {status, data} = e.response;
-    yield handleErrorResponse(status, data);
+
+    if (status === 400) {
+      const validation = createSolutionAttemptValidation(data.source_files);
+      console.log(data);
+      if (validation.contents > 0) {
+        yield put(Notification.error(`${validation.contents} blank file(s)`));
+      }
+
+      if (validation.blankFilenames) {
+        yield put(Notification.error(`${validation.blankFilenames} file(s) without names`));
+      }
+    } else {
+      yield handleErrorResponse(status, data);
+    }
   }
 }
 
@@ -121,4 +167,5 @@ export default function* solutionEditorEffects() {
   yield takeEvery([type.LOCATION_CHANGE, type.INIT], navigateToSolutionEditor);
   yield takeLatest(type.SOLUTION_EDITOR_SOLUTION_SOURCE_FILE_SAVE, saveSolutionFile);
   yield takeEvery(type.SOLUTION_EDITOR_SOLVE_ATTEMPT_CREATE, createSolveAttempt);
+  yield takeLatest(type.SOLUTION_EDITOR_SOLUTION_SOURCE_FILE_DELETE, deleteSourceFile);
 }

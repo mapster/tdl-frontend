@@ -24,6 +24,10 @@ export const putSolutionSourceFile = (exerciseId, sourceFile) => axios.put(
   onlyModifiableSourceFileFields(sourceFile)
 );
 
+export const deleteSourceFile = (exerciseId, sourceFileId) => axios.delete(
+  resolveParams(SOURCE_FILE_PATH, {exerciseId, sourceFileId})
+);
+
 export const postSolutionSolveAttempt = (exerciseId, sourceFiles) => axios.post(
   resolveParams(SOLVE_ATTEMPT_PATH, {exerciseId}),
   {source_files: sourceFiles.map(onlyModifiableSourceFileFields)}

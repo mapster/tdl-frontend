@@ -105,16 +105,9 @@ const createNewSolutionFile = (state) => {
 const deleteSolutionFile = (state, {data: sourceFile}) => {
   const index = SourceFile.findSourceFileIndex(state.solutionFiles, sourceFile.id);
   const newCurrentSourceFileId = SourceFile.getNewCurrentSourceFileId(state.solutionFiles, index);
-  if (sourceFile.isNew) {
-    return {
-      ...state,
-      solutionFiles: state.solutionFiles.filter(file => file.id !== sourceFile.id),
-      currentSolutionFileId: newCurrentSourceFileId,
-    };
-  }
   return {
     ...state,
-    solutionFiles: SourceFile.reduceExistingSourceFile(state.solutionFiles, sourceFile.data, sourceFile.isChanged, true),
+    solutionFiles: state.solutionFiles.filter(file => file.id !== sourceFile.id),
     currentSolutionFileId: newCurrentSourceFileId,
   };
 };

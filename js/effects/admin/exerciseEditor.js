@@ -21,13 +21,14 @@ function* getExercise(id) {
 
     if (status === 404) {
       yield put(Notification.error('No such exercise: ' + id));
-      return false;
     } else {
       const result = handleErrorResponse(status, data);
       if (result instanceof NotLoggedInException) {
         return result;
       }
     }
+
+    return false;
   }
 }
 
@@ -61,7 +62,7 @@ function* navigateToExerciseEditor({payload: {location: {pathname}}}) {
     const id = path.params.id;
     // Check if the exercise should be fetched from API
     const {id: currentId} = yield select(SELECTORS.exerciseEditor.getExerciseProperties);
-    const isNotChangedAndNotNew = yield select(SELECTORS.exerciseEditor.isNotChangedAndNotNew, id);
+    const isNotChangedAndNotNew = yield select(SELECTORS.exerciseEditor.isNotChangedAndNotNew);
     if (currentId !== id || isNotChangedAndNotNew) {
       const success = yield call(getExercise, id);
 
