@@ -6,11 +6,9 @@ import Header from './Header';
 import Exercises from './Exercises';
 import {Route, Switch} from 'react-router-dom';
 import NotFound from '../components/NotFound';
-import Editor from './Editor';
 
 const menu = [
   {href: ROUTE.tdl_exercises(), text: 'Exercises'},
-  {href: ROUTE.tdl_editor(), text: 'Editor'}
 ];
 
 const UserApp = () => (
@@ -22,7 +20,6 @@ const UserApp = () => (
     </Row>
     <Switch>
       <Route path={ROUTE.tdl_exercises()} component={Exercises}/>
-      <Route path={ROUTE.tdl_editor()} component={Editor}/>
       <Route component={NotFound}/>
     </Switch>
   </div>

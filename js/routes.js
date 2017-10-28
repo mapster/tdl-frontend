@@ -34,7 +34,6 @@ export const home = exactRoute(HOME_PATH);
 export const tdl = exactRoute(TDL_PATH);
 export const tdl_exercises = exactRoute(TDL_EXERCISES_PATH);
 export const tdl_exercises_solve = exactRoute(TDL_EXERCISES_SOLVE_PATH);
-export const tdl_editor = exactRoute(TDL_EDITOR_PATH);
 
 // Admin
 export const admin = exactRoute(ADMIN_PATH);
