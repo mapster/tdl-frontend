@@ -89,11 +89,16 @@ function* saveSolutionFile({data: sourceFile}) {
     const request = sourceFile.isNew ? SolutionsApi.postSolutionSourceFile : SolutionsApi.putSolutionSourceFile;
     const {data: savedFile} = yield call(request, exerciseId, sourceFile.data);
 
+    // If the saved file was new we need to make sure the isNew flag is false and that we replace it with
+    // the one we received from the api
     if (sourceFile.isNew) {
       yield put(Action.deleteSolutionFile(sourceFile));
       const {data: updatedFiles} = yield call(SolutionsApi.getSolutionSourceFiles, exerciseId);
       yield put(Action.solutionSourceFilesUpdateFromServer(updatedFiles));
+    } else {
+      yield put(Action.solutionFileUpdateFromServer(savedFile));
     }
+
 
     yield put(Action.selectSolutionFile(savedFile.id));
   } catch (e) {

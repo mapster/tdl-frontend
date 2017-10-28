@@ -126,11 +126,15 @@ const newSolveAttempt = (state, {data: solveAttempt}) => ({
 
 const gotoTest = (state, {data: {class: clazz}}) => {
   const file = SourceFile.findClass(state.exerciseFiles, clazz);
-  return {
-    ...state,
-    currentTab: solutionConstants.tabs.exerciseSources,
-    currentExerciseFileId: file.id,
-  };
+  if (file) {
+    return {
+      ...state,
+      currentTab: solutionConstants.tabs.exerciseSources,
+      currentExerciseFileId: file.id,
+    };
+  } else {
+    return state;
+  }
 };
 
 const selectSolveAttempt = (state, {data: {id}}) => ({
