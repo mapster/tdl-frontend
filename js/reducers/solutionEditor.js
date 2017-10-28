@@ -137,6 +137,27 @@ const gotoTest = (state, {data: {class: clazz}}) => {
   }
 };
 
+const gotoSourceFile = (state, {data: {name}}) => {
+  const solutionFile = state.solutionFiles.map(sourceFile => sourceFile.data).filter(file => name === file.name)[0];
+  const exerciseFile = state.exerciseFiles.map(exerciseFile => exerciseFile.data).filter(file => name === file.name)[0];
+
+  if (solutionFile) {
+    return {
+      ...state,
+      currentTab: (solutionConstants.tabs.solutionSources),
+      currentSolutionFileId: solutionFile.id,
+    };
+  } else if(exerciseFile) {
+    return {
+      ...state,
+      currentTab: solutionConstants.tabs.exerciseSources,
+      currentExerciseFileId: exerciseFile.id,
+    };
+  } else {
+    return state;
+  }
+};
+
 const selectSolveAttempt = (state, {data: {id}}) => ({
   ...state,
   activeSolveAttemptId: id,
@@ -157,6 +178,7 @@ const reducers = {
   [type.SOLUTION_EDITOR_SOLVE_ATTEMPT_NEW]: newSolveAttempt,
   [type.SOLUTION_EDITOR_GOTO_TEST]: gotoTest,
   [type.SOLUTION_EDITOR_SELECT_SOLVE_ATTEMPT]: selectSolveAttempt,
+  [type.SOLUTION_EDITOR_GOTO_SOURCE_FILE]: gotoSourceFile,
 };
 
 const getExerciseFiles = (state) => state.solutionEditor.exerciseFiles;

@@ -16,7 +16,7 @@ function junitFailure(failure) {
       return this.testClassName + '_' + this.testMethodName;
     },
     toString: function () {
-      return 'Test failed - ' + this.testClassName + ': ' + this.testMethodName;
+      return this.testMethodName;
     },
     ...failure,
   };

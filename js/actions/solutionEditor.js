@@ -88,6 +88,11 @@ export const gotoTest = (clazz, method) => ({
   data: {class: clazz, method}
 });
 
+export const gotoSourceFile = (name) => ({
+  type: type.SOLUTION_EDITOR_GOTO_SOURCE_FILE,
+  data: {name}
+});
+
 export const selectSolveAttempt = id => ({
   type: type.SOLUTION_EDITOR_SELECT_SOLVE_ATTEMPT,
   data: {id},

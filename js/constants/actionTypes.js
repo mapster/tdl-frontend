@@ -22,6 +22,7 @@ export const SOLUTION_EDITOR_SOLVE_ATTEMPT_CREATE = '[Solution Editor] Solve att
 export const SOLUTION_EDITOR_SOLVE_ATTEMPT_NEW = '[Solution Editor] Solve attempt new';
 export const SOLUTION_EDITOR_SOLVE_ATTEMPTS_UPDATE_FROM_SERVER = '[Solution Editor] Solve attempts update from server';
 export const SOLUTION_EDITOR_GOTO_TEST = '[Solution editor] Goto test';
+export const SOLUTION_EDITOR_GOTO_SOURCE_FILE = '[Solution editor] Goto source file';
 export const SOLUTION_EDITOR_SELECT_SOLVE_ATTEMPT = '[Solution editor] Select solve attempt';
 
 // Notification

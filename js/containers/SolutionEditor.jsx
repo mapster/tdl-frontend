@@ -37,6 +37,7 @@ const SolutionEditor = ({
                           createSolveAttempt,
                           gotoTest,
                           selectSolveAttempt,
+                          gotoSourceFile
                         }) => (
   <div>
     <Tab.Container id='tabs' activeKey={currentTab} onSelect={selectTab}>
@@ -73,7 +74,9 @@ const SolutionEditor = ({
           </Tab.Content>
         </Col>
         <Col lg={2}>
-          <FailureList gotoTest={gotoTest} attempt={solveAttempts.find(attempt => attempt.id === activeSolveAttemptId)}/>
+          <FailureList gotoTest={gotoTest}
+                       gotoSourceFile={gotoSourceFile}
+                       attempt={solveAttempts.find(attempt => attempt.id === activeSolveAttemptId)}/>
         </Col>
       </Row>
     </Tab.Container>
@@ -83,7 +86,8 @@ const SolutionEditor = ({
         <Media>
           <Media.Body>
             <Media.Heading>Solve Attempts</Media.Heading>
-            <SolveAttempts attempts={solveAttempts} activeAttemptId={activeSolveAttemptId} selectSolveAttempt={selectSolveAttempt}/>
+            <SolveAttempts attempts={solveAttempts} activeAttemptId={activeSolveAttemptId}
+                           selectSolveAttempt={selectSolveAttempt}/>
           </Media.Body>
         </Media>
       </Col>
@@ -113,6 +117,7 @@ SolutionEditor.propTypes = {
   createSolveAttempt: PropTypes.func.isRequired,
   gotoTest: PropTypes.func.isRequired,
   selectSolveAttempt: PropTypes.func.isRequired,
+  gotoSourceFile: PropTypes.func.isRequired,
 };
 
 export default compose(
@@ -137,6 +142,7 @@ export default compose(
       createSolveAttempt: Action.createSolveAttempt,
       gotoTest: Action.gotoTest,
       selectSolveAttempt: Action.selectSolveAttempt,
+      gotoSourceFile: Action.gotoSourceFile,
     }
   )
 )(SolutionEditor);

@@ -4,7 +4,23 @@ import {ListGroup, ListGroupItem} from 'react-bootstrap';
 
 import Report from '../models/Report';
 
-const FailureList = ({attempt, gotoTest}) => {
+const JUnitFailureList = ({failures, gotoTest}) => (
+  <ListGroup>
+    {failures.map(failure => (
+      <ListGroupItem bsStyle='warning'
+                     onClick={() => gotoTest(failure.testClassName, failure.testMethodName)}
+                     key={failure.getKey()}>
+        {failure.toString()}
+      </ListGroupItem>
+    ))}
+  </ListGroup>
+);
+JUnitFailureList.propTypes = {
+  failures: PropTypes.object.isRequired,
+  gotoTest: PropTypes.func.isRequired,
+};
+
+const FailureList = ({attempt, gotoTest, gotoSourceFile}) => {
   if (!attempt || !attempt.report) {
     return false;
   }
@@ -16,20 +32,43 @@ const FailureList = ({attempt, gotoTest}) => {
         <ListGroupItem>Server error: {report.text}</ListGroupItem>
       </ListGroup>
     );
-  }
 
-  return (
-    <ListGroup>
-      {report.failures.map(function (f) {
-        return (<ListGroupItem onClick={() => gotoTest && gotoTest(f.testClassName, f. testMethodName)} key={f.getKey()}>{f.toString()}</ListGroupItem>);
-      })}
-    </ListGroup>
-  );
+  } else if (report.type === Report.Type.Junit) {
+    const testClasses = [...new Set(report.failures.map(f => f.testClassName))];
+
+    return (
+      <div>
+        <h3>Test failures</h3>
+        {testClasses.map(name => (
+          <div key={name}>
+            <h4>{name}</h4>
+            <JUnitFailureList gotoTest={gotoTest}
+                              failures={report.failures.filter(failure => failure.testClassName === name)}/>
+          </div>
+        ))}
+      </div>
+    );
+
+  } else if (report.type === Report.Type.Compilation) {
+    const classes = [...new Set(report.failures.map(f => f.sourceName))];
+
+    return (
+      <div>
+        <h3>Compilation errors</h3>
+        <ListGroup>
+          {classes.map(sourceName => (
+            <ListGroupItem bsStyle='danger' key={sourceName} onClick={() => gotoSourceFile(sourceName)}>{sourceName}</ListGroupItem>
+          ))}
+        </ListGroup>
+      </div>
+    );
+  }
 };
 
 FailureList.propTypes = {
   attempt: PropTypes.object,
   gotoTest: PropTypes.func.isRequired,
+  gotoSourceFile: PropTypes.func.isRequired,
 };
 
 export default FailureList;
