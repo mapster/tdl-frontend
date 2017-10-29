@@ -11,7 +11,8 @@ import * as Action from '../actions/notification';
 const Notifications = ({notification, dismissNotification}) => {
   if (notification) {
     return (
-      <Notification action='Dismiss'
+      <Notification className={`notification-${notification.kind}`}
+                    action='Dismiss'
                     style={false}
                     onClick={() => dismissNotification(notification)}
                     isActive={true}

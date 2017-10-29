@@ -1,4 +1,5 @@
 import sessionSaga from './session';
+import editProfileSaga from './editProfile';
 import exercisesSaga from './exercises';
 import exerciseManagerSaga from './admin/exerciseManager';
 import exerciseEditorSaga from './admin/exerciseEditor';
@@ -8,6 +9,7 @@ import solutionEditorSaga from './solutionEditor';
 
 export const SAGAS = [
   sessionSaga,
+  editProfileSaga,
   exercisesSaga,
   solutionEditorSaga,
   exerciseManagerSaga,

@@ -40,6 +40,6 @@ export const SELECTORS = {
  getSession: (state) => state.session.user,
  getAuth: (state) => state.session.auth,
  getRedirectFrom: (state) => state.session.redirectFrom,
-}
+};
 
 export default createReducer(initialState, reducers);

@@ -1,7 +1,8 @@
 import {call, put, takeLatest, select, fork} from 'redux-saga/effects';
 
 import * as type from '../constants/actionTypes';
-import * as Api from '../api/session';
+import * as SessionApi from '../api/session';
+import * as UserApi from '../api/users';
 import * as Action from '../actions/session';
 import {SELECTORS} from '../reducers/index';
 import * as ROUTE from '../routes';
@@ -13,7 +14,7 @@ import * as Notification from '../actions/notification';
 function* login(action) {
   const {username, password} = action.data;
   try {
-    const session = yield call(Api.login, username, password);
+    const session = yield call(SessionApi.login, username, password);
     yield put(Action.sessionUpdate(session.data));
   } catch (e) {
     const {status, data} = e.response;
@@ -27,7 +28,7 @@ function* login(action) {
 
 function* logout() {
   try {
-    yield call(Api.logout);
+    yield call(SessionApi.logout);
     yield put(Action.sessionUpdate(null));
   } catch (e) {
     const {status, data} = e.response;
@@ -40,7 +41,7 @@ function* logout() {
 
 function* getSession() {
   try {
-    const session = yield call(Api.getSession);
+    const session = yield call(SessionApi.getSession);
     yield put(Action.sessionUpdate(session.data));
   } catch (e) {
     const {data, status} = e.response;
@@ -50,7 +51,7 @@ function* getSession() {
 
 function* getAuth() {
   try {
-    const auth = yield call(Api.getAuth);
+    const auth = yield call(UserApi.getAuth);
     yield put(Action.authUpdate(auth.data));
   } catch (e) {
     const {data, status} = e.response;

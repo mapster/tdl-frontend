@@ -5,6 +5,7 @@ const HOME_PATH = '/';
 const TDL_PATH = '/tdl';
 const TDL_EXERCISES_PATH = TDL_PATH + '/exercises';
 const TDL_EXERCISES_SOLVE_PATH = TDL_EXERCISES_PATH + '/:exerciseId';
+const TDL_PROFILE_PATH = TDL_PATH + '/profile';
 
 // Admin
 const ADMIN_PATH = '/admin';
@@ -33,6 +34,7 @@ export const home = exactRoute(HOME_PATH);
 export const tdl = exactRoute(TDL_PATH);
 export const tdl_exercises = exactRoute(TDL_EXERCISES_PATH);
 export const tdl_exercises_solve = exactRoute(TDL_EXERCISES_SOLVE_PATH);
+export const tdl_profile = exactRoute(TDL_PROFILE_PATH);
 
 // Admin
 export const admin = exactRoute(ADMIN_PATH);

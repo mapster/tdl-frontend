@@ -15,7 +15,8 @@ const LoggedInNavigation = ({show = true, userName = '', isAdmin = false, doLogo
     return (
       <Nav pullRight>
         <NavDropdown title={userName || ''} id="session-nav">
-          {isAdmin && <MenuItem onClick={() => navigateTo(ROUTE.admin())}>Admin</MenuItem>}
+          {isAdmin && <MenuItem onSelect={() => navigateTo(ROUTE.admin())}>Admin</MenuItem>}
+          <MenuItem onSelect={() => navigateTo(ROUTE.tdl_profile())}>Profile</MenuItem>
           <MenuItem onSelect={doLogout}>Logout</MenuItem>
         </NavDropdown>
       </Nav>

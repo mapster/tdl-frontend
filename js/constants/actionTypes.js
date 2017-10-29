@@ -46,6 +46,13 @@ export const SESSION_LOGIN = '[Session] Login';
 export const SESSION_LOGOUT = '[Session] Logout';
 export const SESSION_REDIRECT_TO_LOGIN = '[Session] Redirect to login';
 
+// Edit Profile
+export const PROFILE_UPDATE_FROM_SERVER = '[Profile] Update from server';
+export const PROFILE_UPDATE = '[Profile] Update';
+export const PROFILE_RESET = '[Profile] Reset';
+export const PROFILE_SAVE = '[Profile] Save';
+export const PROFILE_SET_FEEDBACK = '[Profile] Set feedback';
+
 // ExerciseManager
 export const EXERCISE_MANAGER_DELETE_EXERCISE = '[Exercise manager] Delete exercise';
 

@@ -14,6 +14,15 @@ export function error(message) {
   };
 }
 
+export const success = message => ({
+  type: type.NOTIFICATION,
+  data: {
+    id: uuid(),
+    kind: kind.SUCCESS,
+    message
+  },
+});
+
 export const dismissNotification = ({id}) => ({
   type: type.NOTIFICATION_DISMISS,
   data: {id}
