@@ -5,7 +5,6 @@ const HOME_PATH = '/';
 const TDL_PATH = '/tdl';
 const TDL_EXERCISES_PATH = TDL_PATH + '/exercises';
 const TDL_EXERCISES_SOLVE_PATH = TDL_EXERCISES_PATH + '/:exerciseId';
-const TDL_EDITOR_PATH = TDL_PATH + '/editor';
 
 // Admin
 const ADMIN_PATH = '/admin';

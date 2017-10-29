@@ -10,6 +10,8 @@ const SOLVE_ATTEMPT_PATH = SOLUTION_PATH + '/solve_attempts';
 
 const onlyModifiableSourceFileFields = ({name, contents}) => ({name, contents});
 
+export const getSolutions = () => axios.get(SOLUTIONS_PATH);
+
 export const getSolution = exerciseId => axios.get(resolveParams(SOLUTION_PATH, {exerciseId}));
 
 export const getSolutionSourceFiles = exerciseId => axios.get(resolveParams(SOURCE_FILES_PATH, {exerciseId}));

@@ -6,7 +6,7 @@ import {connect} from 'react-redux';
 import {Route, Switch} from 'react-router-dom';
 
 import Forbidden from '../../components/Forbidden';
-import ExerciseList from '../../components/ExerciseList';
+import ExerciseList from '../../components/admin/ExerciseList';
 import {SELECTORS} from '../../reducers';
 import * as Action from '../../actions/admin/exerciseManager';
 import * as ROUTE from '../../routes';

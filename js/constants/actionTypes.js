@@ -6,6 +6,10 @@ export const LOCATION_CHANGE = '@@router/LOCATION_CHANGE';
 export const EXERCISES_GET = '[Exercises] Get';
 export const EXERCISES_UPDATE = '[Exercises] Update';
 
+// Solutions
+export const SOLUTIONS_GET = '[Solutions] Get';
+export const SOLUTIONS_UPDATE = '[Solutions] Update';
+
 // SolutionEditor
 export const SOLUTION_EDITOR_CHANGE_TAB = '[Solution editor] Change tab';
 export const SOLUTION_EDITOR_SET_CURRENT_EXERCISE_FILE = '[Solution Editor] Set current exercise file';
