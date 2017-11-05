@@ -6,6 +6,7 @@ import exerciseEditorSaga from './admin/exerciseEditor';
 import notificationEffects from './notifications';
 import confirmationEffects from './confirmation';
 import solutionEditorSaga from './solutionEditor';
+import userManagerSaga from './admin/userManager';
 
 export const SAGAS = [
   sessionSaga,
@@ -16,4 +17,5 @@ export const SAGAS = [
   exerciseEditorSaga,
   notificationEffects,
   confirmationEffects,
+  userManagerSaga,
 ];

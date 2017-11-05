@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import {OverlayTrigger, Popover} from 'react-bootstrap';
 
 import Report from '../models/Report';
-import {selectSolveAttempt} from '../actions/solutionEditor';
 
 const SolveAttempts = ({attempts = [], activeAttemptId, selectSolveAttempt}) => {
   let striped = false;

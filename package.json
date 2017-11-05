@@ -12,7 +12,7 @@
     "prop-types": "^15.5.10",
     "react": "15.6.1",
     "react-ace": "^5.1.1",
-    "react-bootstrap": "0.31.1",
+    "react-bootstrap": "0.31.3",
     "react-dom": "15.6.1",
     "react-notification": "^6.7.1",
     "react-redux": "5.0.5",

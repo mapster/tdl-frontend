@@ -12,6 +12,7 @@ const ADMIN_PATH = '/admin';
 const ADMIN_EXERCISES_PATH = ADMIN_PATH + '/exercises';
 const ADMIN_EXERCISES_EDIT_PATH = ADMIN_EXERCISES_PATH + '/:id';
 const ADMIN_USERS_PATH = ADMIN_PATH + '/users';
+const ADMIN_USERS_EDIT_PATH = ADMIN_USERS_PATH + '/:id';
 
 export const resolveParams = (path, params = {}) => {
   return Object.keys(params).reduce(
@@ -43,3 +44,4 @@ export const admin_exercises_edit = exactRoute(ADMIN_EXERCISES_EDIT_PATH);
 export const admin_exercises_edit_new = () => admin_exercises_edit({id: 'new'});
 admin_exercises_edit_new.matcher = exactMatcher(admin_exercises_edit_new());
 export const admin_users = exactRoute(ADMIN_USERS_PATH);
+export const admin_users_edit = exactRoute(ADMIN_USERS_EDIT_PATH);

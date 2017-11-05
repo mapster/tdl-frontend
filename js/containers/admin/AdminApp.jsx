@@ -10,6 +10,7 @@ import Header from '../Header';
 import ExerciseManager from './ExerciseManager';
 import {Redirect, Route, Switch} from 'react-router-dom';
 import NotFound from '../../components/NotFound';
+import UserManager from './UserManager';
 
 const authorizedMenuItems = {
   'manage_exercises': {href: ROUTE.admin_exercises(), text: 'Exercises'},
@@ -37,6 +38,7 @@ const AdminApp = ({auth}) => (
       <Col lg={12}>
         <Switch>
           <Route path={ROUTE.admin_exercises()} component={ExerciseManager}/>
+          <Route path={ROUTE.admin_users()} component={UserManager}/>
           <Route path={ROUTE.admin()} exact>
             <Redirect to={ROUTE.admin_exercises()}/>
           </Route>

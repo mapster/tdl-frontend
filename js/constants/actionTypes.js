@@ -70,3 +70,9 @@ export const EXERCISE_EDITOR_SOURCE_FILE_UPDATE_FROM_SERVER = '[Exercise editor]
 export const EXERCISE_EDITOR_SOURCE_FILE_SAVE = '[Exercise editor] Source file save';
 export const EXERCISE_EDITOR_SOURCE_FILE_CREATE_NEW = '[Exercise editor] Source file create new';
 export const EXERCISE_EDITOR_SOURCE_FILE_DELETE = '[Exercise editor] Source file delete';
+
+// UserManager
+export const USER_MANAGER_USERS_UPDATE_FROM_SERVER = '[User manager] Users update from server';
+export const USER_MANAGER_GET_USERS = '[User manager] Get users';
+export const USER_MANAGER_SAVE_USER_AUTHORIZATIONS = '[User manager] Save user authorizations';
+export const USER_MANAGER_USER_AUTHORIZATION_UPDATE_FROM_SERVER = '[User manager] User authorization update from server';
