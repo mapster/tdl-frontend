@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import {Button, ButtonGroup, Glyphicon, Table, ToggleButton, ToggleButtonGroup} from 'react-bootstrap';
 import Authorizations from '../../constants/authorizations';
 
-const AuthorizationsList = ({user, user_authorization, saveAuths}) => {
+const AuthorizationsList = ({user_authorization, saveAuths}) => {
   const authorizations = Object.keys(Authorizations).filter(auth => user_authorization[auth] === true);
   const doSaveAuths = (auth) => {
     const newAuths = {...user_authorization};
@@ -20,12 +20,11 @@ const AuthorizationsList = ({user, user_authorization, saveAuths}) => {
   );
 };
 AuthorizationsList.propTypes = {
-  user: PropTypes.object.isRequired,
   user_authorization: PropTypes.object.isRequired,
   saveAuths: PropTypes.func.isRequired,
 };
 
-const UserList = ({users, saveUserAuthorizations}) => (
+const UserList = ({users, saveUserAuthorizations, doEditUser}) => (
   <Table striped bordered condensed hover>
     <thead>
       <tr>
@@ -42,11 +41,11 @@ const UserList = ({users, saveUserAuthorizations}) => (
         <td>{user.name}</td>
         <td>{user.email}</td>
         <td>
-          <AuthorizationsList user={user} saveAuths={saveUserAuthorizations} user_authorization={user.user_authorization} />
+          <AuthorizationsList saveAuths={saveUserAuthorizations} user_authorization={user.user_authorization} />
         </td>
         <td>
           <ButtonGroup className='pull-right'>
-            <Button bsSize='small' onClick={() => {}}><Glyphicon glyph='pencil'/></Button>
+            <Button bsSize='small' onClick={() => doEditUser(user.id)}><Glyphicon glyph='pencil'/></Button>
             <Button bsSize='small' onClick={() => {}}><Glyphicon glyph='trash'/></Button>
           </ButtonGroup>
         </td>
@@ -57,6 +56,7 @@ const UserList = ({users, saveUserAuthorizations}) => (
 UserList.propTypes = {
   users: PropTypes.array.isRequired,
   saveUserAuthorizations: PropTypes.func.isRequired,
+  doEditUser: PropTypes.func.isRequired,
 };
 
 export default UserList;
