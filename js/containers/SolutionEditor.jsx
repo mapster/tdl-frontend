@@ -50,7 +50,7 @@ const SolutionEditor = ({
             <NavItem eventKey={solutionConstants.tabs.exerciseSources}>Exercise sources</NavItem>
           </Nav>
         </Col>
-        <Col lg={8}>
+        <Col lg={7}>
           <Tab.Content>
             <Tab.Pane eventKey={solutionConstants.tabs.solutionSources}>
               <SourcesManager
@@ -73,7 +73,7 @@ const SolutionEditor = ({
             </Tab.Pane>
           </Tab.Content>
         </Col>
-        <Col lg={2}>
+        <Col lg={3}>
           <FailureList gotoTest={gotoTest}
                        gotoSourceFile={gotoSourceFile}
                        attempt={solveAttempts.find(attempt => attempt.id === activeSolveAttemptId)}/>

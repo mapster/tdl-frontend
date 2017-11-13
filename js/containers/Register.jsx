@@ -2,22 +2,31 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {compose} from 'redux';
 import {connect} from 'react-redux';
-import {Jumbotron} from 'react-bootstrap';
+import {Jumbotron, Row, Col} from 'react-bootstrap';
+import {Link} from 'react-router-dom';
 
 import UserProfileForm from '../components/UserProfileForm';
 import {SELECTORS} from '../reducers';
 import * as Action from '../actions/register';
+import * as ROUTE from '../routes';
 
 const Register = ({registration, feedback, updateRegistration, resetRegistration, submitRegistration}) => (
-  <Jumbotron>
-    <h1>Register for Test Driven Learning</h1>
-    <UserProfileForm profile={registration}
-                     feedback={feedback}
-                     updateProfile={updateRegistration}
-                     resetProfile={resetRegistration}
-                     saveProfile={submitRegistration}
-    />
-  </Jumbotron>
+  <Row>
+    <Col lg={2}/>
+    <Col lg={8}>
+      <Jumbotron>
+        <Link to={ROUTE.login()}>Login</Link>
+        <h1>Register for Test Driven Learning</h1>
+        <UserProfileForm profile={registration}
+                         feedback={feedback}
+                         updateProfile={updateRegistration}
+                         resetProfile={resetRegistration}
+                         saveProfile={submitRegistration}
+        />
+      </Jumbotron>
+    </Col>
+    <Col lg={2}/>
+  </Row>
 );
 Register.propTypes = {
   registration: PropTypes.object.isRequired,

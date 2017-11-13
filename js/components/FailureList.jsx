@@ -8,6 +8,7 @@ const JUnitFailureList = ({failures, gotoTest}) => (
   <ListGroup>
     {failures.map(failure => (
       <ListGroupItem bsStyle='warning'
+                     className='failure-list-item'
                      onClick={() => gotoTest(failure.testClassName, failure.testMethodName)}
                      key={failure.getKey()}>
         {failure.toString()}
