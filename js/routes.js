@@ -1,4 +1,5 @@
 const LOGIN_PATH = '/login';
+const REGISTER_PATH = '/register';
 const HOME_PATH = '/';
 
 // User
@@ -30,6 +31,7 @@ const exactRoute = (path) => {
 // App
 export const login = exactRoute(LOGIN_PATH);
 export const home = exactRoute(HOME_PATH);
+export const register = exactRoute(REGISTER_PATH);
 
 // User
 export const tdl = exactRoute(TDL_PATH);

@@ -2,6 +2,12 @@
 export const INIT = 'INIT';
 export const LOCATION_CHANGE = '@@router/LOCATION_CHANGE';
 
+// Register
+export const REGISTER_UPDATE = '[Register] Update';
+export const REGISTER_SET_FEEDBACK = '[Register] Set feedback';
+export const REGISTER_RESET = '[Register] Reset';
+export const REGISTER_SUBMIT = '[Register] Submit';
+
 // Exercises
 export const EXERCISES_GET = '[Exercises] Get';
 export const EXERCISES_UPDATE = '[Exercises] Update';

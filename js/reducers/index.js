@@ -1,5 +1,6 @@
 import {combineReducers} from 'redux';
 
+import register, {SELECTORS as registerSelectors} from './register';
 import exercises, {SELECTORS as exerciseSelectors} from './exercises';
 import solutions, {SELECTORS as solutionSelectors} from './solutions';
 import session, {SELECTORS as sessionSelectors} from './session';
@@ -14,6 +15,7 @@ const getLocation = (state) => state.router.location;
 
 export const SELECTORS = {
   session: sessionSelectors,
+  register: registerSelectors,
   editProfile: editProfileSelectors,
   exercises: exerciseSelectors,
   solutions: solutionSelectors,
@@ -26,6 +28,7 @@ export const SELECTORS = {
 };
 
 export default combineReducers({
+  register,
   session,
   editProfile,
   exercises,

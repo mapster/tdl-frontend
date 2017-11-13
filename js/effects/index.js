@@ -1,3 +1,4 @@
+import registerSaga from './register';
 import sessionSaga from './session';
 import editProfileSaga from './editProfile';
 import exercisesSaga from './exercises';
@@ -9,6 +10,7 @@ import solutionEditorSaga from './solutionEditor';
 import userManagerSaga from './admin/userManager';
 
 export const SAGAS = [
+  registerSaga,
   sessionSaga,
   editProfileSaga,
   exercisesSaga,
