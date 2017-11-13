@@ -7,7 +7,8 @@ function onTextChange(field, value) {
   this.setState({[field]: value});
 }
 
-function login() {
+function login(event) {
+  event.preventDefault();
   this.props.doLogin(this.state.email, this.state.password);
 }
 
@@ -22,10 +23,10 @@ class LoginForm extends React.Component {
 
   render() {
     return (
-      <form>
+      <form onSubmit={login.bind(this)}>
         <TextInput id='email' type='email' placeholder='user@email.com' onChange={onTextChange.bind(this, 'email')}/>
         <TextInput id='email' type='password' placeholder='password' onChange={onTextChange.bind(this, 'password')}/>
-        <Button bsStyle='primary' onClick={login.bind(this)}>Login</Button>
+        <Button type='submit' bsStyle='primary'>Login</Button>
       </form>
     );
   }
