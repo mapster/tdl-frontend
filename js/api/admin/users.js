@@ -25,3 +25,5 @@ export const putUserAuthorizations = (authorizations) => axios.put(
   resolveParams(USER_AUTHORIZATIONS_RESOURCE_URL, {userId: authorizations.user_id}),
   onlyModifiableUserAuthorizationFields(authorizations),
 );
+
+export const deleteUser = (userId) => axios.delete(resolveParams(USER_RESOURCE_URL, {userId}));

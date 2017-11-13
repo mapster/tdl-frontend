@@ -78,6 +78,7 @@ export const USER_MANAGER_SAVE_USER_AUTHORIZATIONS = '[User manager] Save user 
 export const USER_MANAGER_USER_AUTHORIZATION_UPDATE_FROM_SERVER = '[User manager] User authorization update from server';
 export const USER_MANAGER_EDIT_USER_UPDATE_FROM_SERVER = '[User manager] Edit user update from server';
 export const USER_MANAGER_SAVE_USER = '[User manager] Save user';
+export const USER_MANAGER_DELETE_USER = '[User manager] Delete user';
 export const USER_MANAGER_SET_EDIT_USER_FEEDBACK = '[User manager] Set edit user feedback';
 export const USER_MANAGER_EDIT_USER_UPDATE = '[User manager] Edit user update';
 export const USER_MANAGER_EDIT_USER_RESET = '[User manager] Edit user reset';

@@ -11,7 +11,7 @@ import {SELECTORS} from '../../reducers';
 import UserList from '../../components/admin/UserList';
 import UserEditor from './UserEditor';
 
-const UserManager = ({auth, users, saveUserAuthorizations, doEditUser}) => {
+const UserManager = ({auth, users, saveUserAuthorizations, doEditUser, doDeleteUser}) => {
   const authorized = auth && auth.manage_users;
   if (!authorized) {
     return (<Forbidden/>);
@@ -23,7 +23,11 @@ const UserManager = ({auth, users, saveUserAuthorizations, doEditUser}) => {
         <Switch>
           <Route path={ROUTE.admin_users_edit()} component={UserEditor}/>
           <Route path={ROUTE.admin_users()} render={() =>
-            <UserList saveUserAuthorizations={saveUserAuthorizations} doEditUser={doEditUser} users={users} />
+            <UserList saveUserAuthorizations={saveUserAuthorizations}
+                      doEditUser={doEditUser}
+                      doDeleteUser={doDeleteUser}
+                      users={users}
+            />
           }/>
         </Switch>
       </Col>
@@ -36,6 +40,7 @@ UserManager.propTypes = {
   editUser: PropTypes.object,
   saveUserAuthorizations: PropTypes.func.isRequired,
   doEditUser: PropTypes.func.isRequired,
+  doDeleteUser: PropTypes.func.isRequired,
 };
 
 export default compose(
@@ -45,5 +50,6 @@ export default compose(
   }), {
     doEditUser: Action.editUser,
     saveUserAuthorizations: Action.saveUserAuthorizations,
+    doDeleteUser: Action.deleteUser,
   })
 )(UserManager);

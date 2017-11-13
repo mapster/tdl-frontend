@@ -49,6 +49,16 @@ function* saveUser({data: user}) {
   }
 }
 
+function* deleteUser({data: userId}) {
+  try {
+    yield call(Api.deleteUser, userId);
+    yield call(getUsers);
+  } catch (e) {
+    const {staus, data} = e.response;
+    yield handleErrorResponse(staus, data);
+  }
+}
+
 function* saveUserAuthorizations({data: authorizations}) {
   try {
     const savedAuthorizations = yield call(Api.putUserAuthorizations, authorizations);
@@ -101,5 +111,6 @@ export default function* userManagerSaga() {
   yield takeLatest(type.USER_MANAGER_GET_USERS, getUsers);
   yield takeEvery(type.USER_MANAGER_SAVE_USER_AUTHORIZATIONS, saveUserAuthorizations);
   yield takeLatest(type.USER_MANAGER_SAVE_USER, saveUser);
+  yield takeLatest(type.USER_MANAGER_DELETE_USER, deleteUser);
   yield takeEvery(type.USER_MANAGER_EDIT_USER_RESET, resetUser);
 }

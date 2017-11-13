@@ -4,6 +4,8 @@ import {Button, ButtonGroup, Glyphicon, Table, ToggleButton, ToggleButtonGroup} 
 import Authorizations from '../../constants/authorizations';
 
 const AuthorizationsList = ({user_authorization, saveAuths}) => {
+  user_authorization = user_authorization || {};
+
   const authorizations = Object.keys(Authorizations).filter(auth => user_authorization[auth] === true);
   const doSaveAuths = (auth) => {
     const newAuths = {...user_authorization};
@@ -20,11 +22,11 @@ const AuthorizationsList = ({user_authorization, saveAuths}) => {
   );
 };
 AuthorizationsList.propTypes = {
-  user_authorization: PropTypes.object.isRequired,
+  user_authorization: PropTypes.object,
   saveAuths: PropTypes.func.isRequired,
 };
 
-const UserList = ({users, saveUserAuthorizations, doEditUser}) => (
+const UserList = ({users, saveUserAuthorizations, doEditUser, doDeleteUser}) => (
   <Table striped bordered condensed hover>
     <thead>
       <tr>
@@ -46,7 +48,7 @@ const UserList = ({users, saveUserAuthorizations, doEditUser}) => (
         <td>
           <ButtonGroup className='pull-right'>
             <Button bsSize='small' onClick={() => doEditUser(user.id)}><Glyphicon glyph='pencil'/></Button>
-            <Button bsSize='small' onClick={() => {}}><Glyphicon glyph='trash'/></Button>
+            <Button bsSize='small' onClick={() => doDeleteUser(user)}><Glyphicon glyph='trash'/></Button>
           </ButtonGroup>
         </td>
       </tr>
@@ -57,6 +59,7 @@ UserList.propTypes = {
   users: PropTypes.array.isRequired,
   saveUserAuthorizations: PropTypes.func.isRequired,
   doEditUser: PropTypes.func.isRequired,
+  doDeleteUser: PropTypes.func.isRequired,
 };
 
 export default UserList;

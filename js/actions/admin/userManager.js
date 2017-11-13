@@ -1,6 +1,7 @@
 import * as type from '../../constants/actionTypes';
 import {push} from 'connected-react-router';
 import * as ROUTE from '../../routes';
+import * as Confirmation from '../confirmation';
 
 export const usersUpdateFromServer = users => ({
   type: type.USER_MANAGER_USERS_UPDATE_FROM_SERVER,
@@ -47,3 +48,15 @@ export const resetEditUser = (id) => ({
 });
 
 export const editUser = (id) => push(ROUTE.admin_users_edit({id}));
+
+export const deleteUser = (user) => {
+  const action = {
+    type: type.USER_MANAGER_DELETE_USER,
+    data: user.id,
+  };
+  const confirm = {
+    title: 'Delete user?',
+    text: `${user.email}: ${user.name}`,
+  };
+  return Confirmation.request(confirm, action)
+};
