@@ -40,21 +40,20 @@ const Header = ({auth, menu = [], session = false, title = '', doLogout, navigat
   const isAdmin = auth && Object.keys(auth).length > 0;
 
   return (
-    <div>
-      <Row>
-        <Col lg={12}>
-          <Navbar>
-            <Navbar.Brand><Link to={ROUTE.tdl()}>{title}</Link></Navbar.Brand>
-            <Nav>
-              {menu.map(function(item, index) {
-                return <NavItem key={index} onClick={() => navigateTo(item.href)}>{item.text}</NavItem>;
-              })}
-            </Nav>
-            <LoggedInNavigation navigateTo={navigateTo} doLogout={doLogout} show={isLoggedIn} userName={userName} isAdmin={isAdmin}/>
-          </Navbar>
-        </Col>
-      </Row>
-    </div>
+    <Row>
+      <Navbar inverse>
+        <Navbar.Header>
+          <Navbar.Brand><Link to={ROUTE.tdl()}>{title}</Link></Navbar.Brand>
+        </Navbar.Header>
+        <Nav>
+          {menu.map(function (item, index) {
+            return <NavItem key={index} onClick={() => navigateTo(item.href)}>{item.text}</NavItem>;
+          })}
+        </Nav>
+        <LoggedInNavigation navigateTo={navigateTo} doLogout={doLogout} show={isLoggedIn} userName={userName}
+                            isAdmin={isAdmin}/>
+      </Navbar>
+    </Row>
   );
 };
 Header.propTypes = {

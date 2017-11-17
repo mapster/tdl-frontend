@@ -41,16 +41,21 @@ const SolutionEditor = ({
                         }) => (
   <div>
     <Tab.Container id='tabs' activeKey={currentTab} onSelect={selectTab}>
-      <Row>
-        <Col lg={2}>
-          <Nav bsStyle="pills" stacked>
-            <NavItem eventKey={solutionConstants.tabs.solutionSources}>
-              {tabTitle('Solution sources', solutionFiles.some(file => file.isChanged))}
-            </NavItem>
-            <NavItem eventKey={solutionConstants.tabs.exerciseSources}>Exercise sources</NavItem>
-          </Nav>
-        </Col>
-        <Col lg={8}>
+      <div>
+        <Row>
+          <Col lg={12}>
+            <Nav className='source-sets' bsStyle="tabs" justified>
+              <NavItem eventKey={solutionConstants.tabs.solutionSources}>
+                <h3>{tabTitle('Solution sources', solutionFiles.some(file => file.isChanged))}</h3>
+              </NavItem>
+              <NavItem eventKey={solutionConstants.tabs.exerciseSources}>
+                <h3>Exercise sources</h3>
+              </NavItem>
+            </Nav>
+          </Col>
+        </Row>
+        <Row className='space-row'/>
+        <Row>
           <Tab.Content>
             <Tab.Pane eventKey={solutionConstants.tabs.solutionSources}>
               <SourcesManager
@@ -72,29 +77,33 @@ const SolutionEditor = ({
               />
             </Tab.Pane>
           </Tab.Content>
-        </Col>
-        <Col lg={2}>
-          <FailureList gotoTest={gotoTest}
-                       gotoSourceFile={gotoSourceFile}
-                       attempt={solveAttempts.find(attempt => attempt.id === activeSolveAttemptId)}/>
-        </Col>
-      </Row>
+          <Col lg={4}>
+            <FailureList gotoTest={gotoTest}
+                         gotoSourceFile={gotoSourceFile}
+                         attempt={solveAttempts.find(attempt => attempt.id === activeSolveAttemptId)}/>
+          </Col>
+        </Row>
+        <Row className='solve-attempts-row'>
+          <Col lg={1}/>
+          <Col lg={7}>
+            <Row>
+              <Col lg={11}>
+                <Media>
+                  <Media.Body>
+                    <Media.Heading>Solve Attempts</Media.Heading>
+                    <SolveAttempts attempts={solveAttempts} activeAttemptId={activeSolveAttemptId}
+                                   selectSolveAttempt={selectSolveAttempt}/>
+                  </Media.Body>
+                </Media>
+              </Col>
+              <Col lg={1}>
+                <Button bsSize='large' bsStyle="success" onClick={createSolveAttempt}>Run</Button>
+              </Col>
+            </Row>
+          </Col>
+        </Row>
+      </div>
     </Tab.Container>
-    <Row>
-      <Col lg={2}/>
-      <Col lg={7}>
-        <Media>
-          <Media.Body>
-            <Media.Heading>Solve Attempts</Media.Heading>
-            <SolveAttempts attempts={solveAttempts} activeAttemptId={activeSolveAttemptId}
-                           selectSolveAttempt={selectSolveAttempt}/>
-          </Media.Body>
-        </Media>
-      </Col>
-      <Col lg={1}>
-        <Button bsStyle="success" onClick={createSolveAttempt}>Run</Button>
-      </Col>
-    </Row>
   </div>
 );
 
@@ -121,28 +130,28 @@ SolutionEditor.propTypes = {
 };
 
 export default compose(
-  connect(
-    state => ({
-      currentTab: SELECTORS.solutionEditor.getCurrentTab(state),
-      currentExerciseFile: SELECTORS.solutionEditor.getCurrentExerciseFile(state),
-      currentSolutionFile: SELECTORS.solutionEditor.getCurrentSolutionFile(state),
-      solutionFiles: SELECTORS.solutionEditor.getSolutionFiles(state),
-      exerciseFiles: SELECTORS.solutionEditor.getExerciseFiles(state),
-      solveAttempts: SELECTORS.solutionEditor.getSolveAttempts(state),
-      activeSolveAttemptId: SELECTORS.solutionEditor.getActiveSolveAttemptId(state),
-    }),
-    {
-      selectTab: Action.selectTab,
-      selectExerciseFile: Action.selectExerciseFile,
-      selectSolutionFile: Action.selectSolutionFile,
-      createNewSolutionFile: Action.createNewSolutionFile,
-      deleteSolutionFile: Action.deleteSolutionFile,
-      solutionFileUpdate: Action.solutionFileUpdate,
-      saveSolutionFile: Action.saveSolutionFile,
-      createSolveAttempt: Action.createSolveAttempt,
-      gotoTest: Action.gotoTest,
-      selectSolveAttempt: Action.selectSolveAttempt,
-      gotoSourceFile: Action.gotoSourceFile,
-    }
-  )
+connect(
+state => ({
+  currentTab: SELECTORS.solutionEditor.getCurrentTab(state),
+  currentExerciseFile: SELECTORS.solutionEditor.getCurrentExerciseFile(state),
+  currentSolutionFile: SELECTORS.solutionEditor.getCurrentSolutionFile(state),
+  solutionFiles: SELECTORS.solutionEditor.getSolutionFiles(state),
+  exerciseFiles: SELECTORS.solutionEditor.getExerciseFiles(state),
+  solveAttempts: SELECTORS.solutionEditor.getSolveAttempts(state),
+  activeSolveAttemptId: SELECTORS.solutionEditor.getActiveSolveAttemptId(state),
+}),
+{
+  selectTab: Action.selectTab,
+  selectExerciseFile: Action.selectExerciseFile,
+  selectSolutionFile: Action.selectSolutionFile,
+  createNewSolutionFile: Action.createNewSolutionFile,
+  deleteSolutionFile: Action.deleteSolutionFile,
+  solutionFileUpdate: Action.solutionFileUpdate,
+  saveSolutionFile: Action.saveSolutionFile,
+  createSolveAttempt: Action.createSolveAttempt,
+  gotoTest: Action.gotoTest,
+  selectSolveAttempt: Action.selectSolveAttempt,
+  gotoSourceFile: Action.gotoSourceFile,
+}
+)
 )(SolutionEditor);

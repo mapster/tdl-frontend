@@ -60,15 +60,29 @@ const SourcesManager = ({
     }
   }
   return (
-    <Row>
-      <Col lg={10}>
+    <div>
+      <Col lg={1}>
+        <Row className='space-row'/>
+        {!readOnly &&
+          <ButtonGroup className='file-buttons' vertical>
+            {createNewFile && (<Button onClick={createNewFile}>New file</Button>)}
+            {onFileChange && (<Button onClick={openRenameModal}>Rename</Button>)}
+            {saveSourceFile && (<Button onClick={() => saveSourceFile(currentFile)}>Save</Button>)}
+            {deleteSourceFile && (<Button onClick={() => deleteSourceFile(currentFile)}>Delete</Button>)}
+          </ButtonGroup>
+        }
+      </Col>
+      <Col lg={7}>
+        <Row className='space-row'/>
         <Nav bsStyle='tabs'>
           {files && files.map(file => (
             <NavItem key={file.data.id} active={currentFile.id === file.id} onClick={() => selectSourceFile(file.id)}>
               {tabTitle(file)}
             </NavItem>
           ))}
-          {currentFile.data && (
+        </Nav>
+        {currentFile.data && (
+          <div className='text-editor'>
             <AceEditor
               readOnly={readOnly}
               name={'ace-editor-' + currentFile.id}
@@ -81,19 +95,9 @@ const SourcesManager = ({
               showPrintMargin={false}
               highlightActiveLine={true}
             />
-          )}
-        </Nav>
+          </div>
+        )}
       </Col>
-      {!readOnly &&
-      <Col lg={2}>
-        <ButtonGroup vertical>
-          {createNewFile && (<Button onClick={createNewFile}>New file</Button>)}
-          {onFileChange && (<Button onClick={openRenameModal}>Rename</Button>)}
-          {saveSourceFile && (<Button onClick={() => saveSourceFile(currentFile)}>Save</Button>)}
-          {deleteSourceFile && (<Button onClick={() => deleteSourceFile(currentFile)}>Delete</Button>)}
-        </ButtonGroup>
-      </Col>
-      }
       {currentFile.data.rename &&
       <SingleFieldModal
         doCancel={closeRename}
@@ -103,7 +107,7 @@ const SourcesManager = ({
         show={!!currentFile.data.rename}
         title='Rename'
         value={currentFile.data.rename}/>}
-    </Row>
+    </div>
   );
 };
 

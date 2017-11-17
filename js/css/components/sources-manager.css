@@ -2,3 +2,8 @@
   position: absolute;
   background-color: orange;
 }
+
+.text-editor {
+  border: 1px solid lightgray;
+  padding-top: 2px;
+}

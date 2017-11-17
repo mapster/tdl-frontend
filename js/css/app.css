@@ -15,3 +15,43 @@
 .inline {
     display: inline;
 }
+
+
+
+/* new stuff */
+.space-row {
+    height: 50px;
+}
+
+.file-buttons {
+    float: right;
+    padding-top: 45px;
+}
+
+.solve-attempts-row {
+    padding-top: 20px;
+}
+
+.solve-attempts-col {
+    padding-left: 15px;
+}
+
+.sources-manager {
+    border: 1px solid lightgray;
+}
+
+.exercise-list {
+    padding-top: 30px;
+}
+
+.container {
+    width: 100%;
+}
+
+ul.source-sets > li.active > a > h3 {
+    font-weight: bold;
+}
+
+.solve-attempt {
+    border: solid thin lightgray;
+}
