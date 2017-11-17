@@ -2,6 +2,12 @@
 export const INIT = 'INIT';
 export const LOCATION_CHANGE = '@@router/LOCATION_CHANGE';
 
+// Register
+export const REGISTER_UPDATE = '[Register] Update';
+export const REGISTER_SET_FEEDBACK = '[Register] Set feedback';
+export const REGISTER_RESET = '[Register] Reset';
+export const REGISTER_SUBMIT = '[Register] Submit';
+
 // Exercises
 export const EXERCISES_GET = '[Exercises] Get';
 export const EXERCISES_UPDATE = '[Exercises] Update';
@@ -70,3 +76,15 @@ export const EXERCISE_EDITOR_SOURCE_FILE_UPDATE_FROM_SERVER = '[Exercise editor]
 export const EXERCISE_EDITOR_SOURCE_FILE_SAVE = '[Exercise editor] Source file save';
 export const EXERCISE_EDITOR_SOURCE_FILE_CREATE_NEW = '[Exercise editor] Source file create new';
 export const EXERCISE_EDITOR_SOURCE_FILE_DELETE = '[Exercise editor] Source file delete';
+
+// UserManager
+export const USER_MANAGER_USERS_UPDATE_FROM_SERVER = '[User manager] Users update from server';
+export const USER_MANAGER_GET_USERS = '[User manager] Get users';
+export const USER_MANAGER_SAVE_USER_AUTHORIZATIONS = '[User manager] Save user authorizations';
+export const USER_MANAGER_USER_AUTHORIZATION_UPDATE_FROM_SERVER = '[User manager] User authorization update from server';
+export const USER_MANAGER_EDIT_USER_UPDATE_FROM_SERVER = '[User manager] Edit user update from server';
+export const USER_MANAGER_SAVE_USER = '[User manager] Save user';
+export const USER_MANAGER_DELETE_USER = '[User manager] Delete user';
+export const USER_MANAGER_SET_EDIT_USER_FEEDBACK = '[User manager] Set edit user feedback';
+export const USER_MANAGER_EDIT_USER_UPDATE = '[User manager] Edit user update';
+export const USER_MANAGER_EDIT_USER_RESET = '[User manager] Edit user reset';

@@ -21,7 +21,7 @@ const authUpdate = (state, action) => ({
 });
 
 const redirectToLogin = (state, {data: from}) => {
-  if (matchPath(from.pathname, ROUTE.login.matcher)) {
+  if (matchPath(from.pathname, ROUTE.login.matcher) || matchPath(from.pathname, ROUTE.register.matcher)) {
     from = initialState.redirectFrom;
   }
   return {

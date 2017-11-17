@@ -1,5 +1,6 @@
 import {combineReducers} from 'redux';
 
+import register, {SELECTORS as registerSelectors} from './register';
 import exercises, {SELECTORS as exerciseSelectors} from './exercises';
 import solutions, {SELECTORS as solutionSelectors} from './solutions';
 import session, {SELECTORS as sessionSelectors} from './session';
@@ -8,11 +9,13 @@ import exerciseEditor, {SELECTORS as exerciseEditorSelectors} from './admin/exer
 import notifications, {SELECTORS as notificationSelectors} from './notifications';
 import confirmation, {SELECTORS as confirmationSelectors} from './confirmation';
 import solutionEditor, {SELECTORS as solutionEditorSelectors} from './solutionEditor';
+import userManager, {SELECTORS as userManagerSelectors} from './admin/userManager';
 
 const getLocation = (state) => state.router.location;
 
 export const SELECTORS = {
   session: sessionSelectors,
+  register: registerSelectors,
   editProfile: editProfileSelectors,
   exercises: exerciseSelectors,
   solutions: solutionSelectors,
@@ -20,10 +23,12 @@ export const SELECTORS = {
   notifications: notificationSelectors,
   confirmation: confirmationSelectors,
   solutionEditor: solutionEditorSelectors,
+  userManager: userManagerSelectors,
   router: {getLocation},
 };
 
 export default combineReducers({
+  register,
   session,
   editProfile,
   exercises,
@@ -32,4 +37,5 @@ export default combineReducers({
   notifications,
   confirmation,
   solutionEditor,
+  userManager,
 });

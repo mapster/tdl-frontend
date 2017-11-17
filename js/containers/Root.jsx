@@ -12,6 +12,7 @@ import NotFound from '../components/NotFound';
 import Login from './Login';
 import Notifications from './Notifications';
 import Confirmation from './Confirmation';
+import Register from './Register';
 
 const Root = ({store, history}) => {
   return (
@@ -22,6 +23,7 @@ const Root = ({store, history}) => {
             <Route path={ROUTE.admin()} component={AdminApp}/>
             <Route path={ROUTE.tdl()} component={UserApp}/>
             <Route path={ROUTE.login()} component={Login}/>
+            <Route path={ROUTE.register()} component={Register}/>
             <Route path={ROUTE.home()} exact={true}>
               <Redirect to={ROUTE.tdl_exercises()}/>
             </Route>

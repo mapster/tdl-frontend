@@ -1,4 +1,6 @@
 import {call, put, takeLatest, select, fork} from 'redux-saga/effects';
+import {push} from 'connected-react-router';
+import {matchPath} from 'react-router-dom';
 
 import * as type from '../constants/actionTypes';
 import * as SessionApi from '../api/session';
@@ -6,8 +8,6 @@ import * as UserApi from '../api/users';
 import * as Action from '../actions/session';
 import {SELECTORS} from '../reducers/index';
 import * as ROUTE from '../routes';
-import {push} from 'connected-react-router';
-import {matchPath} from 'react-router-dom';
 import handleErrorResponse from './errorResponse';
 import * as Notification from '../actions/notification';
 
@@ -75,7 +75,15 @@ function* sessionUpdate({data: session}) {
   }
 }
 
+const REDIRECT_TO_LOGIN_EXCEPTIONS = [ROUTE.login.matcher, ROUTE.register.matcher];
+
 function* redirectToLogin() {
+  const {pathname: currentPath} = yield select(SELECTORS.router.getLocation);
+
+  // Do not redirect if current location is in the exception list
+  if (REDIRECT_TO_LOGIN_EXCEPTIONS.some(exception => matchPath(currentPath, exception))) {
+    return true;
+  }
   yield put(push(ROUTE.login()));
 }
 
