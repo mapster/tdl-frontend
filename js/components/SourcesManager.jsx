@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import AceEditor from 'react-ace';
+import {Button, ButtonGroup, Col, Nav, NavItem, Row} from 'react-bootstrap';
 /* eslint-disable no-unused-vars */
 import brace from 'brace';
 import brace0 from 'brace/mode/java';
@@ -8,7 +9,6 @@ import brace01 from 'brace/theme/github';
 import brace012 from 'brace/ext/language_tools';
 /* eslint-enable no-unused-vars */
 
-import {Button, ButtonGroup, Col, Nav, NavItem, Row} from 'react-bootstrap';
 import SingleFieldModal from './SingleFieldModal';
 
 const tabTitle = (file) => file.data.name + (file.isChanged ? '*' : '');
@@ -62,7 +62,6 @@ const SourcesManager = ({
   return (
     <div>
       <Col lg={1}>
-        <Row className='space-row'/>
         {!readOnly &&
           <ButtonGroup className='file-buttons' vertical>
             {createNewFile && (<Button onClick={createNewFile}>New file</Button>)}
@@ -72,8 +71,7 @@ const SourcesManager = ({
           </ButtonGroup>
         }
       </Col>
-      <Col lg={7}>
-        <Row className='space-row'/>
+      <Col lg={11}>
         <Nav bsStyle='tabs'>
           {files && files.map(file => (
             <NavItem key={file.data.id} active={currentFile.id === file.id} onClick={() => selectSourceFile(file.id)}>

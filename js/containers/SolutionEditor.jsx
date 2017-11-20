@@ -46,48 +46,49 @@ const SolutionEditor = ({
           <Col lg={12}>
             <Nav className='source-sets' bsStyle="tabs" justified>
               <NavItem eventKey={solutionConstants.tabs.solutionSources}>
-                <h3>{tabTitle('Solution sources', solutionFiles.some(file => file.isChanged))}</h3>
+                <h4>{tabTitle('Solution sources', solutionFiles.some(file => file.isChanged))}</h4>
               </NavItem>
               <NavItem eventKey={solutionConstants.tabs.exerciseSources}>
-                <h3>Exercise sources</h3>
+                <h4>Exercise sources</h4>
               </NavItem>
             </Nav>
           </Col>
         </Row>
-        <Row className='space-row'/>
-        <Row>
-          <Tab.Content>
-            <Tab.Pane eventKey={solutionConstants.tabs.solutionSources}>
-              <SourcesManager
-                files={solutionFiles}
-                currentFile={currentSolutionFile}
-                selectSourceFile={selectSolutionFile}
-                createNewFile={createNewSolutionFile}
-                deleteSourceFile={(sourceFile) => deleteSolutionFile(sourceFile, true)}
-                saveSourceFile={saveSolutionFile}
-                sourceFileUpdate={solutionFileUpdate}
-              />
-            </Tab.Pane>
-            <Tab.Pane eventKey={solutionConstants.tabs.exerciseSources}>
-              <SourcesManager
-                files={exerciseFiles}
-                currentFile={currentExerciseFile}
-                selectSourceFile={selectExerciseFile}
-                readOnly
-              />
-            </Tab.Pane>
-          </Tab.Content>
+        <Row className='small-top-padding'>
+          <Col lg={8}>
+            <Tab.Content>
+              <Tab.Pane eventKey={solutionConstants.tabs.solutionSources}>
+                <SourcesManager
+                  files={solutionFiles}
+                  currentFile={currentSolutionFile}
+                  selectSourceFile={selectSolutionFile}
+                  createNewFile={createNewSolutionFile}
+                  deleteSourceFile={(sourceFile) => deleteSolutionFile(sourceFile, true)}
+                  saveSourceFile={saveSolutionFile}
+                  sourceFileUpdate={solutionFileUpdate}
+                />
+              </Tab.Pane>
+              <Tab.Pane eventKey={solutionConstants.tabs.exerciseSources}>
+                <SourcesManager
+                  files={exerciseFiles}
+                  currentFile={currentExerciseFile}
+                  selectSourceFile={selectExerciseFile}
+                  readOnly
+                />
+              </Tab.Pane>
+            </Tab.Content>
+          </Col>
           <Col lg={4}>
             <FailureList gotoTest={gotoTest}
                          gotoSourceFile={gotoSourceFile}
                          attempt={solveAttempts.find(attempt => attempt.id === activeSolveAttemptId)}/>
           </Col>
         </Row>
-        <Row className='solve-attempts-row'>
-          <Col lg={1}/>
-          <Col lg={7}>
+        <Row className='small-top-padding'>
+          <Col lg={8}>
             <Row>
-              <Col lg={11}>
+              <Col lg={1}/>
+              <Col lg={9} className='medium-padding-left'>
                 <Media>
                   <Media.Body>
                     <Media.Heading>Solve Attempts</Media.Heading>
@@ -97,7 +98,7 @@ const SolutionEditor = ({
                 </Media>
               </Col>
               <Col lg={1}>
-                <Button bsSize='large' bsStyle="success" onClick={createSolveAttempt}>Run</Button>
+                <Button className='large-margin-left' bsSize='large' bsStyle="success" onClick={createSolveAttempt}>Run</Button>
               </Col>
             </Row>
           </Col>

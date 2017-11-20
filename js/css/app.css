@@ -24,12 +24,7 @@
 }
 
 .file-buttons {
-    float: right;
     padding-top: 45px;
-}
-
-.solve-attempts-row {
-    padding-top: 20px;
 }
 
 .solve-attempts-col {
@@ -54,4 +49,20 @@ ul.source-sets > li.active > a > h3 {
 
 .solve-attempt {
     border: solid thin lightgray;
+}
+
+.medium-top-padding {
+    padding-top: 30px;
+}
+
+.small-top-padding {
+    padding-top: 10px;
+}
+
+.medium-padding-left {
+    padding-left: 30px;
+}
+
+.large-margin-left {
+    margin-left: 40px;
 }

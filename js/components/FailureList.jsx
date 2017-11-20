@@ -38,7 +38,7 @@ const FailureList = ({attempt, gotoTest, gotoSourceFile}) => {
     const testClasses = [...new Set(report.failures.map(f => f.testClassName))];
 
     return (
-      <div>
+      <div className='small-top-padding'>
         <h4>Test failures</h4>
         <br />
         {testClasses.map(name => (
@@ -55,7 +55,7 @@ const FailureList = ({attempt, gotoTest, gotoSourceFile}) => {
     const classes = [...new Set(report.failures.map(f => f.sourceName))];
 
     return (
-      <div>
+      <div className='medium-top-padding'>
         <h4>Compilation errors</h4>
         <br />
         <br />
