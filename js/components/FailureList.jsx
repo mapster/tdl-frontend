@@ -38,11 +38,12 @@ const FailureList = ({attempt, gotoTest, gotoSourceFile}) => {
     const testClasses = [...new Set(report.failures.map(f => f.testClassName))];
 
     return (
-      <div>
-        <h3>Test failures</h3>
+      <div className='small-top-padding'>
+        <h4>Test failures</h4>
+        <br />
         {testClasses.map(name => (
           <div key={name}>
-            <h4>{name}</h4>
+            <h5>{name}</h5>
             <JUnitFailureList gotoTest={gotoTest}
                               failures={report.failures.filter(failure => failure.testClassName === name)}/>
           </div>
@@ -54,8 +55,10 @@ const FailureList = ({attempt, gotoTest, gotoSourceFile}) => {
     const classes = [...new Set(report.failures.map(f => f.sourceName))];
 
     return (
-      <div>
-        <h3>Compilation errors</h3>
+      <div className='medium-top-padding'>
+        <h4>Compilation errors</h4>
+        <br />
+        <br />
         <ListGroup>
           {classes.map(sourceName => (
             <ListGroupItem bsStyle='danger' key={sourceName} onClick={() => gotoSourceFile(sourceName)}>{sourceName}</ListGroupItem>

@@ -15,3 +15,54 @@
 .inline {
     display: inline;
 }
+
+
+
+/* new stuff */
+.space-row {
+    height: 50px;
+}
+
+.file-buttons {
+    padding-top: 45px;
+}
+
+.solve-attempts-col {
+    padding-left: 15px;
+}
+
+.sources-manager {
+    border: 1px solid lightgray;
+}
+
+.exercise-list {
+    padding-top: 30px;
+}
+
+.container {
+    width: 100%;
+}
+
+ul.source-sets > li.active > a > h3 {
+    font-weight: bold;
+}
+
+.solve-attempt {
+    border: solid thin lightgray;
+}
+
+.medium-top-padding {
+    padding-top: 30px;
+}
+
+.small-top-padding {
+    padding-top: 10px;
+}
+
+.medium-padding-left {
+    padding-left: 30px;
+}
+
+.large-margin-left {
+    margin-left: 40px;
+}

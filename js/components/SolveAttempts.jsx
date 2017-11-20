@@ -10,7 +10,7 @@ const SolveAttempts = ({attempts = [], activeAttemptId, selectSolveAttempt}) => 
     <div className='progress'>
       {attempts.map(function (attempt) {
         const report = Report(attempt.report);
-        let classes = 'progress-bar progress-bar-' + report.style + (!striped ? ' progress-bar-striped' : '');
+        let classes = 'solve-attempt progress-bar progress-bar-' + report.style + (!striped ? ' progress-bar-striped' : '');
         striped = !striped;
 
         if (activeAttemptId === attempt.id) {
@@ -40,7 +40,7 @@ const SolveAttempts = ({attempts = [], activeAttemptId, selectSolveAttempt}) => 
         }
 
         return (
-          <OverlayTrigger key={attempt.id} trigger={['hover', 'focus']} placement='bottom' overlay={popover} >
+          <OverlayTrigger key={attempt.id} trigger={['hover', 'focus']} placement='top' overlay={popover} >
             <div className={classes} role='progressbar' aria-valuenow='10' aria-valuemin={0} aria-valuemax={100}
                  style={{width: '10%'}} onClick={() => selectSolveAttempt(attempt.id)}/>
           </OverlayTrigger>

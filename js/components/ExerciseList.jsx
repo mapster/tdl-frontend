@@ -52,9 +52,9 @@ const ExerciseList = ({editExercise, exercises, solutions}) => (
       <Col lg={1}/>
       <Col lg={9}><h1 className='inline'>Exercises</h1></Col>
     </Row>
-    <Row>
+    <Row className='exercise-list'>
       <Col lg={1}/>
-      <Col lg={10}>
+      <Col lg={4}>
         <ListGroup>
           {exercises && Object.keys(exercises).map((id) => (
             <ExerciseListItem exercise={exercises[id]} solution={solutions[id]} editExercise={() => editExercise(id)}
