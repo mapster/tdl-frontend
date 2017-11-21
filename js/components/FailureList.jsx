@@ -17,7 +17,7 @@ const JUnitFailureList = ({failures, gotoTest}) => (
   </ListGroup>
 );
 JUnitFailureList.propTypes = {
-  failures: PropTypes.object.isRequired,
+  failures: PropTypes.array.isRequired,
   gotoTest: PropTypes.func.isRequired,
 };
 

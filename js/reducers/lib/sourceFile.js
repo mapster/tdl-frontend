@@ -1,5 +1,7 @@
 import uuid from 'uuid/v4';
 
+const NEW_FILE_CONTENTS = 'public class New {\n\n}'
+
 export const findSourceFileIndex = (sourceFiles, id) => sourceFiles.findIndex(file => file.id === id);
 
 export const findSourceFile = (sourceFiles, id) => sourceFiles[findSourceFileIndex(sourceFiles, id)];
@@ -32,7 +34,7 @@ export const getNewCurrentSourceFileId = (sourceFiles, index = -1) => {
 
 export const newFile = (data, isChanged = false, isNew = false, isReadOnly = false) => ({
   id: data.id,
-  data: {contents: '', ...data},
+  data: {contents: NEW_FILE_CONTENTS, ...data},
   isChanged,
   isNew,
   isReadOnly,
@@ -40,13 +42,18 @@ export const newFile = (data, isChanged = false, isNew = false, isReadOnly = fal
 
 
 export const reduceExistingSourceFile = (sourceFiles, data, isChanged, isDelete, index = -1) => {
+  const fileData = {
+    ...data,
+    name: data.name.endsWith('.java') ? data.name : data.name + '.java'
+  };
+
   if (index < 0) {
-    index = findSourceFileIndex(sourceFiles, data.id);
+    index = findSourceFileIndex(sourceFiles, fileData.id);
   }
   const reducedSourceFiles = [...sourceFiles];
   reducedSourceFiles[index] = {
     ...reducedSourceFiles[index],
-    data,
+    data: fileData,
     isChanged,
     isDelete,
   };

@@ -4,7 +4,7 @@ import {compose} from 'redux';
 import {connect} from 'react-redux';
 import {push} from 'connected-react-router';
 import {Link} from 'react-router-dom';
-import {Row, Col, Navbar, Nav, NavItem, NavDropdown, MenuItem} from 'react-bootstrap';
+import {Row, Navbar, Nav, NavItem, NavDropdown, MenuItem} from 'react-bootstrap';
 
 import * as ROUTE from '../routes';
 import {SELECTORS} from '../reducers';

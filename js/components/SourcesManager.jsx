@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import AceEditor from 'react-ace';
-import {Button, ButtonGroup, Col, Nav, NavItem, Row} from 'react-bootstrap';
+import {Button, ButtonGroup, Col, Nav, NavItem} from 'react-bootstrap';
 /* eslint-disable no-unused-vars */
 import brace from 'brace';
 import brace0 from 'brace/mode/java';

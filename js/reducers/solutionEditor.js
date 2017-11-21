@@ -96,7 +96,7 @@ const createNewSolutionFile = (state) => {
     ...state,
     solutionFiles: [
       ...state.solutionFiles,
-      SourceFile.newFile({id, name: 'new'}, true, true),
+      SourceFile.newFile({id, name: 'New.java'}, true, true),
     ],
     currentSolutionFileId: id,
   };
