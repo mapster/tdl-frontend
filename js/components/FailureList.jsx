@@ -6,7 +6,7 @@ import Report from '../models/Report';
 
 const JUnitFailureList = ({failures, gotoTest}) => (
   <ListGroup>
-    {failures.map(failure => (
+    {failures.sort((a, b) => a.testMethodName - b.testMethodName).map(failure => (
       <ListGroupItem bsStyle='warning'
                      className='failure-list-item'
                      onClick={() => gotoTest(failure.testClassName, failure.testMethodName)}
