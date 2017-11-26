@@ -4,9 +4,21 @@ import {ListGroup, ListGroupItem} from 'react-bootstrap';
 
 import Report from '../models/Report';
 
+const failureCompare = (f1, f2) => {
+  if (f1.testMethodName > f2.testMethodName) {
+    return 1;
+  }
+
+  if (f1.testMethodName < f2.testMethodName) {
+    return -1;
+  }
+
+  return 0;
+}
+
 const JUnitFailureList = ({failures, gotoTest}) => (
   <ListGroup>
-    {failures.sort((a, b) => a.testMethodName - b.testMethodName).map(failure => (
+    {failures.sort(failureCompare).map(failure => (
       <ListGroupItem bsStyle='warning'
                      className='failure-list-item'
                      onClick={() => gotoTest(failure.testClassName, failure.testMethodName)}
