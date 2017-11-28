@@ -24,7 +24,7 @@ const ExerciseListItem = ({exercise, solution, editExercise}) => {
     </Popover>
   );
   return (
-    <OverlayTrigger trigger={['hover', 'focus']} placement='bottom' overlay={popover}>
+    <OverlayTrigger trigger={['hover', 'focus']} placement='top' overlay={popover}>
       <ListGroupItem bsStyle={solution && SolutionConstants.statusStyle[solution.last_solve_attempt_status]}>
         <Row>
           <Col lg={6}>{exercise.name}</Col>
