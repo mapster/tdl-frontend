@@ -14,7 +14,7 @@ const failureCompare = (f1, f2) => {
   }
 
   return 0;
-}
+};
 
 const JUnitFailureList = ({failures, gotoTest}) => (
   <ListGroup>

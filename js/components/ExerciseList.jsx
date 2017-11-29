@@ -46,6 +46,18 @@ ExerciseListItem.propTypes = {
   deleteExercise: PropTypes.func,
 };
 
+const exercisesAlphabetical = (e1, e2) => {
+  if (e1.name > e2.name) {
+    return 1;
+  }
+
+  if (e1.name < e1.name) {
+    return -1;
+  }
+
+  return 0;
+};
+
 const ExerciseList = ({editExercise, exercises, solutions}) => (
   <div>
     <Row>
@@ -56,9 +68,9 @@ const ExerciseList = ({editExercise, exercises, solutions}) => (
       <Col lg={1}/>
       <Col lg={4}>
         <ListGroup>
-          {exercises && Object.keys(exercises).map((id) => (
-            <ExerciseListItem exercise={exercises[id]} solution={solutions[id]} editExercise={() => editExercise(id)}
-                              key={id}/>
+          {exercises && Object.keys(exercises).map(id => exercises[id]).sort(exercisesAlphabetical).map(exercise => (
+            <ExerciseListItem exercise={exercises} solution={solutions[exercise.id]} editExercise={() => editExercise(exercise.id)}
+                              key={exercise.id}/>
           ))}
         </ListGroup>
       </Col>
