@@ -47,11 +47,13 @@ ExerciseListItem.propTypes = {
 };
 
 const exercisesAlphabetical = (e1, e2) => {
-  if (e1.name > e2.name) {
+  const name1 = e1.name.toLowerCase();
+  const name2 = e2.name.toLowerCase();
+  if (name1 > name2) {
     return 1;
   }
 
-  if (e1.name < e1.name) {
+  if (name1 < name2) {
     return -1;
   }
 
@@ -69,7 +71,7 @@ const ExerciseList = ({editExercise, exercises, solutions}) => (
       <Col lg={4}>
         <ListGroup>
           {exercises && Object.keys(exercises).map(id => exercises[id]).sort(exercisesAlphabetical).map(exercise => (
-            <ExerciseListItem exercise={exercises} solution={solutions[exercise.id]} editExercise={() => editExercise(exercise.id)}
+            <ExerciseListItem exercise={exercise} solution={solutions[exercise.id]} editExercise={() => editExercise(exercise.id)}
                               key={exercise.id}/>
           ))}
         </ListGroup>
